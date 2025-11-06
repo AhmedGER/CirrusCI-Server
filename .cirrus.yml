@@ -1,81 +1,62 @@
-# .cirrus.yml – Fabric-1.21.4 | 8 vCPU 24 GB FREE | 20–22 GB Heap | SSD | Auto-Restart
+# .cirrus.yml
+container:
+  image: eclipse-temurin:21-jdk
+  cpu: 8
+  memory: 24G
+
 task:
-  name: "Fabric-1.21.4-FullPower-Free"
+  name: Minecraft Fabric Server 1.20.1
   timeout_in: 120m
-  env:
-    SERVER_DIR: /opt/minecraft
-    MAX_RUN_TIME: 6900          # دقيقتان أقل من timeout
-
-  container:                    # FREE: 8 vCPU + 24 GB RAM
-    image: ubuntu:22.04
-    cpu: 8
-    memory: 24G
-
-  setup_script:
-    - apt-get update && apt-get install -y curl openjdk-21-jre-headless git
-    - mkdir -p $SERVER_DIR && cd $SERVER_DIR
-    # نسخ كل المحتويات إلى الـ SSD (أسرع)
-    - cp -r $CIRRUS_WORKING_DIR/* .
-    - chmod +x playit-linux-amd64 2>/dev/null || true
-    # تحميل Fabric API فقط لو مش موجود
+  
+  setup_playit_script:
+    - chmod +x playit-linux-amd64
     - |
-      if [ ! -f mods/fabric-api*.jar ]; then
-        mkdir -p mods
-        API_VER=0.110.0+1.21.4
-        wget -O mods/fabric-api-${API_VER}.jar \
-          https://cdn.modrinth.com/data/P7dR8mSH/versions/${API_VER}/fabric-api-${API_VER}.jar
+      if [ -n "$CIRRUS_ENCRYPTED_PLAYIT_SECRET" ]; then
+        echo "$CIRRUS_ENCRYPTED_PLAYIT_SECRET" > playit.toml
       fi
-    # تحميل Fabric Server
+    - ./playit-linux-amd64 >/dev/null 2>&1 &
+    - sleep 10
+  
+  run_server_script:
     - |
-      MC=1.21.4
-      LOADER=0.16.10
-      INST=0.11.2
-      wget -O fabric-server.jar \
-        https://meta.fabricmc.net/v2/versions/loader/$MC/$LOADER/$INST/server/jar
-    - git init && git config user.email "ci@local" && git config user.name "CI"
-
-  playit_background_script: |
-    cd $SERVER_DIR
-    while true; do ./playit-linux-amd64 >/dev/null 2>&1; sleep 5; done &
-
-  server_script: |
-    cd $SERVER_DIR
-    echo "=== Starting FULL-POWER Fabric 1.21.4 (SSD) ==="
-    java -Xms20G -Xmx22G \
-      -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 \
-      -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch \
-      -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=16M \
-      -XX:ParallelGCThreads=8 -XX:ConcGCThreads=4 \
-      -jar fabric-server.jar nogui &
-    SERVER_PID=$!
-    echo "✔ PID: $SERVER_PID"
-
-    ELAPSED=0
-    while [ $ELAPSED -lt $MAX_RUN_TIME ]; do
-      sleep 10
-      ELAPSED=$((ELAPSED + 10))
-      kill -0 $SERVER_PID 2>/dev/null || { echo "Server exited cleanly"; break; }
-      [ $((ELAPSED % 1800)) -eq 0 ] && echo "⏰ Running... $((ELAPSED / 60)) min"
-    done
-
-    if kill -0 $SERVER_PID 2>/dev/null; then
-      echo "=== Time-limit – stopping ==="
-      kill -TERM $SERVER_PID && sleep 5 && kill -9 $SERVER_PID || true
-    fi
-    pkill -f playit-linux-amd64 || true
-    echo "✔ Server & tunnel stopped"
-
+      java -Xmx22G -Xms18G \
+        -XX:+UseG1GC \
+        -XX:+ParallelRefProcEnabled \
+        -XX:MaxGCPauseMillis=200 \
+        -XX:+UnlockExperimentalVMOptions \
+        -XX:+DisableExplicitGC \
+        -XX:+AlwaysPreTouch \
+        -XX:G1NewSizePercent=30 \
+        -XX:G1MaxNewSizePercent=40 \
+        -XX:G1HeapRegionSize=16M \
+        -XX:G1ReservePercent=20 \
+        -XX:G1HeapWastePercent=5 \
+        -XX:G1MixedGCCountTarget=4 \
+        -XX:InitiatingHeapOccupancyPercent=15 \
+        -XX:G1MixedGCLiveThresholdPercent=90 \
+        -XX:G1RSetUpdatingPauseTimePercent=5 \
+        -XX:SurvivorRatio=32 \
+        -XX:+PerfDisableSharedMem \
+        -XX:MaxTenuringThreshold=1 \
+        -jar fabric-server.jar nogui &
+      SERVER_PID=$!
+      
+      while kill -0 $SERVER_PID 2>/dev/null; do
+        sleep 10
+      done
+  
+  save_world_script:
+    - git config user.email "cirrus@ci.com"
+    - git config user.name "Cirrus CI"
+    - git add -A
+    - git diff --cached --quiet || git commit -m "Auto-save $(date)"
+    - git push origin main
+  
   always:
-    save_script: |
-      cd $SERVER_DIR
-      git add -A
-      git config user.name "CI" && git config user.email "ci@local"
-      git commit -m "Auto-save $(date -u '+%F %T UTC')" || true
-      git push https://x-access-token:${CIRRUS_REPO_CLONE_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git main --force || true
-
-    restart_script: |
-      cd $CIRRUS_WORKING_DIR
-      date +%s > restart-trigger
-      git add restart-trigger
-      git commit -m "Auto-restart trigger $(date -u '+%F %T UTC')" || true
-      git push https://x-access-token:${CIRRUS_REPO_CLONE_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git main --force || true
+    retrigger_script:
+      - |
+        if [ "$CIRRUS_BRANCH" = "main" ]; then
+          curl -X POST \
+            -H "Authorization: Bearer $CIRRUS_ENCRYPTED_API_TOKEN" \
+            "https://api.cirrus-ci.com/github/$CIRRUS_REPO_FULL_NAME/re-run?taskId=$CIRRUS_TASK_ID"
+        fi
