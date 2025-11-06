@@ -40,6 +40,8 @@ task:
         -XX:MaxTenuringThreshold=1 \
         -jar fabric-server.jar nogui &
       SERVER_PID=$!
+
+        sleep 360
       
       while kill -0 $SERVER_PID 2>/dev/null; do
         sleep 10
