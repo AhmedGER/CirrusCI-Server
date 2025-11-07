@@ -1,10 +1,12 @@
 # .cirrus.yml
 container:
+  # GraalVM أسرع أداء + أفضل لـ networking
   image: ghcr.io/graalvm/jdk-community:21
   cpu: 8
   memory: 24G
 
 env:
+  # ضيف الـ tokens المشفرة هنا
   GITHUB_TOKEN: ENCRYPTED[!4b0eae3c2c6c631068eeedfaa0d2c0aa44b3c52d2e3d50dc4f5fb71f958d334548e3f4d70eeb23292bfb454df755b503!]
   CIRRUS_API_TOKEN: ENCRYPTED[!4336ebf698c76189e6057b84bf85a3809af77f5e5db08cf99abeea89c96a5ef9b34480dad12847b35388578fef3ba6ed!]
 
@@ -12,16 +14,25 @@ task:
   name: Minecraft Fabric Server 1.20.1
   timeout_in: 120m
 
+  # ================
+  # 1️⃣ إعداد Playit
+  # ================
   setup_playit_script:
     - chmod +x playit-linux-amd64
-    - |
-      if [ -f playit.toml ]; then
-        ./playit-linux-amd64 >/dev/null 2>&1 &
-        sleep 10
-      fi
 
+  # ===================
+  # 2️⃣ تشغيل السيرفر
+  # ===================
   run_server_script:
     - |
+      # تشغيل playit في حلقة علشان مايقفلش
+      (while true; do
+        ./playit-linux-amd64 >/dev/null 2>&1
+        echo "Playit crashed, restarting in 5s..."
+        sleep 5
+      done) &
+
+      echo "Starting Minecraft server..."
       java -Xmx22G -Xms18G \
         -XX:+UseG1GC \
         -XX:+ParallelRefProcEnabled \
@@ -44,6 +55,10 @@ task:
         -jar fabric-server.jar nogui > server.log 2>&1 &
       SERVER_PID=$!
 
+      # طباعة اللوج مباشرة في Cirrus
+      tail -f server.log &
+      TAIL_PID=$!
+
       MAX_TIME=7000
       ELAPSED=0
 
@@ -55,21 +70,30 @@ task:
         ELAPSED=$((ELAPSED + 10))
       done
 
+      # إيقاف السيرفر و playit
       kill -TERM $SERVER_PID 2>/dev/null || true
+      kill -TERM $TAIL_PID 2>/dev/null || true
       pkill -TERM playit-linux-amd64 2>/dev/null || true
       sleep 5
 
+  # ===================
+  # 3️⃣ حفظ كل الملفات
+  # ===================
   save_everything_script:
     - apt-get update -qq && apt-get install -y git > /dev/null 2>&1
     - git config user.email "bot@cirrus-ci.com"
     - git config user.name "Cirrus Bot"
-    # ✅ نحذف الملفات اللي مش لازمة عشان ما يملأش الريبو بـ .zip وغيره
-    # ✅ نضيف كل الملفات في مجلد السيرفر بالكامل (مش بس world)
+    # نحذف أي ملفات قديمة مضغوطة
+    - rm -f world.zip 2>/dev/null || true
+    # نضيف كل الملفات في مجلد السيرفر بالكامل
     - git add -A
-    # ✅ لو في تغييرات نعمل commit ونرفعها
+    # لو في تغييرات نعمل commit ونرفعها
     - git diff --cached --quiet || git commit -m "Full auto-save $(date -u '+%Y-%m-%d %H:%M:%S')"
     - git push https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git HEAD:main || true
 
+  # ============================
+  # 4️⃣ إعادة تشغيل تلقائي للسيرفر
+  # ============================
   always:
     retrigger_script:
       - sleep 30
