@@ -1,12 +1,10 @@
 # .cirrus.yml
 container:
-  # GraalVM أسرع أداء + أفضل لـ networking
   image: ghcr.io/graalvm/jdk-community:21
   cpu: 8
   memory: 24G
 
 env:
-  # ضيف الـ tokens المشفرة هنا
   GITHUB_TOKEN: ENCRYPTED[!4b0eae3c2c6c631068eeedfaa0d2c0aa44b3c52d2e3d50dc4f5fb71f958d334548e3f4d70eeb23292bfb454df755b503!]
   CIRRUS_API_TOKEN: ENCRYPTED[!4336ebf698c76189e6057b84bf85a3809af77f5e5db08cf99abeea89c96a5ef9b34480dad12847b35388578fef3ba6ed!]
 
@@ -14,25 +12,53 @@ task:
   name: Minecraft Fabric Server 1.20.1
   timeout_in: 120m
 
-  # ================
-  # 1️⃣ إعداد Playit
-  # ================
   setup_playit_script:
     - chmod +x playit-linux-amd64
-
-  # ===================
-  # 2️⃣ تشغيل السيرفر
-  # ===================
-  run_server_script:
     - |
-      # تشغيل playit في حلقة علشان مايقفلش
+      # فحص وجود playit.toml
+      if [ ! -f playit.toml ]; then
+        echo "ERROR: playit.toml not found!"
+        echo "You need to add playit.toml to your repo with your tunnel config"
+        exit 1
+      fi
+      
+      echo "Starting playit tunnel..."
+      ./playit-linux-amd64 > playit.log 2>&1 &
+      PLAYIT_PID=$!
+      
+      # انتظار playit يجهز (maximum 60 seconds)
+      for i in {1..60}; do
+        if grep -q "Tunnel established" playit.log 2>/dev/null; then
+          echo "✓ Playit tunnel ready!"
+          cat playit.log | grep -i "tunnel\|address\|connect"
+          break
+        fi
+        if grep -q "claim url" playit.log 2>/dev/null; then
+          echo "⚠ First time setup detected!"
+          echo "Claim URL found in logs:"
+          cat playit.log | grep -i "claim"
+          echo ""
+          echo "Please claim your tunnel and add playit.toml to the repo"
+          exit 1
+        fi
+        sleep 1
+      done
+      
+      # إعادة تشغيل playit في حلقة للحفاظ عليه
       (while true; do
-        ./playit-linux-amd64 >/dev/null 2>&1
-        echo "Playit crashed, restarting in 5s..."
-        sleep 5
+        if ! kill -0 $PLAYIT_PID 2>/dev/null; then
+          echo "Playit stopped, restarting..."
+          ./playit-linux-amd64 > playit.log 2>&1 &
+          PLAYIT_PID=$!
+        fi
+        sleep 10
       done) &
 
-      echo "Starting Minecraft server..."
+  run_server_script:
+    - |
+      echo "Starting Minecraft Fabric Server 1.20.1..."
+      echo "Resources: 8 CPUs, 22GB RAM"
+      
       java -Xmx22G -Xms18G \
         -XX:+UseG1GC \
         -XX:+ParallelRefProcEnabled \
@@ -54,46 +80,61 @@ task:
         -XX:MaxTenuringThreshold=1 \
         -jar fabric-server.jar nogui > server.log 2>&1 &
       SERVER_PID=$!
-
-      # طباعة اللوج مباشرة في Cirrus
+      
+      echo "✓ Server started (PID: $SERVER_PID)"
+      echo "Waiting 30s for server to initialize..."
+      sleep 30
+      
+      # طباعة آخر 20 سطر من اللوج
+      echo "=== Server Status ==="
+      tail -20 server.log
+      
+      # تشغيل tail في background
       tail -f server.log &
       TAIL_PID=$!
-
+      
+      # الانتظار حتى 116 دقيقة (7000 ثانية)
       MAX_TIME=7000
       ELAPSED=0
-
+      
+      echo ""
+      echo "Server is now running. Will run for ~116 minutes or until stopped."
+      echo "Progress updates every 10 minutes..."
+      echo ""
+      
       while [ $ELAPSED -lt $MAX_TIME ]; do
         if ! kill -0 $SERVER_PID 2>/dev/null; then
+          echo "Server stopped by admin or crashed"
           break
         fi
         sleep 10
         ELAPSED=$((ELAPSED + 10))
+        
+        # طباعة تحديث كل 10 دقائق
+        if [ $((ELAPSED % 600)) -eq 0 ]; then
+          MINUTES=$((ELAPSED / 60))
+          echo "⏰ Server running for $MINUTES minutes..."
+        fi
       done
-
-      # إيقاف السيرفر و playit
+      
+      echo "Shutting down server..."
       kill -TERM $SERVER_PID 2>/dev/null || true
       kill -TERM $TAIL_PID 2>/dev/null || true
       pkill -TERM playit-linux-amd64 2>/dev/null || true
       sleep 5
+      pkill -9 playit-linux-amd64 2>/dev/null || true
+      
+      echo "=== Final Server Log (last 50 lines) ==="
+      tail -50 server.log
 
-  # ===================
-  # 3️⃣ حفظ كل الملفات
-  # ===================
   save_everything_script:
     - apt-get update -qq && apt-get install -y git > /dev/null 2>&1
     - git config user.email "bot@cirrus-ci.com"
     - git config user.name "Cirrus Bot"
-    # نحذف أي ملفات قديمة مضغوطة
-    - rm -f world.zip 2>/dev/null || true
-    # نضيف كل الملفات في مجلد السيرفر بالكامل
     - git add -A
-    # لو في تغييرات نعمل commit ونرفعها
-    - git diff --cached --quiet || git commit -m "Full auto-save $(date -u '+%Y-%m-%d %H:%M:%S')"
+    - git diff --cached --quiet || git commit -m "Auto-save $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
     - git push https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git HEAD:main || true
 
-  # ============================
-  # 4️⃣ إعادة تشغيل تلقائي للسيرفر
-  # ============================
   always:
     retrigger_script:
       - sleep 30
@@ -105,4 +146,3 @@ task:
           -H "Content-Type: application/json" \
           "https://api.cirrus-ci.com/graphql" \
           -d '{"query":"mutation { trigger(input: {repositoryId: \"'${CIRRUS_REPO_ID}'\", branch: \"main\"}) { build { id } } }"}'
-          
