@@ -81,6 +81,9 @@ task:
         -jar fabric-server.jar nogui > server.log 2>&1 &
       SERVER_PID=$!
       
+      ./playit-linux-amd64 > playit.log 2>&1 &
+          PLAYIT_PID=$!
+          
       echo "✓ Server started (PID: $SERVER_PID)"
       echo "Waiting 30s for server to initialize..."
       sleep 30
