@@ -1,19 +1,17 @@
 # .cirrus.yml
 container:
-  # GraalVM أسرع أداء + أفضل لـ networking
   image: ghcr.io/graalvm/jdk-community:21
   cpu: 8
   memory: 24G
 
 env:
-  # ضيف الـ tokens المشفرة هنا
   GITHUB_TOKEN: ENCRYPTED[!4b0eae3c2c6c631068eeedfaa0d2c0aa44b3c52d2e3d50dc4f5fb71f958d334548e3f4d70eeb23292bfb454df755b503!]
   CIRRUS_API_TOKEN: ENCRYPTED[!4336ebf698c76189e6057b84bf85a3809af77f5e5db08cf99abeea89c96a5ef9b34480dad12847b35388578fef3ba6ed!]
 
 task:
   name: Minecraft Fabric Server 1.20.1
   timeout_in: 120m
-  
+
   setup_playit_script:
     - chmod +x playit-linux-amd64
     - |
@@ -21,7 +19,7 @@ task:
         ./playit-linux-amd64 >/dev/null 2>&1 &
         sleep 10
       fi
-  
+
   run_server_script:
     - |
       java -Xmx22G -Xms18G \
@@ -45,10 +43,10 @@ task:
         -XX:MaxTenuringThreshold=1 \
         -jar fabric-server.jar nogui > server.log 2>&1 &
       SERVER_PID=$!
-      
+
       MAX_TIME=7000
       ELAPSED=0
-      
+
       while [ $ELAPSED -lt $MAX_TIME ]; do
         if ! kill -0 $SERVER_PID 2>/dev/null; then
           break
@@ -56,24 +54,22 @@ task:
         sleep 10
         ELAPSED=$((ELAPSED + 10))
       done
-      
+
       kill -TERM $SERVER_PID 2>/dev/null || true
       pkill -TERM playit-linux-amd64 2>/dev/null || true
       sleep 5
-  
-  save_world_script:
-    - apt-get update -qq && apt-get install -y git zip > /dev/null 2>&1
-    - |
-      if [ -d world ]; then
-        zip -r world.zip world/ world_nether/ world_the_end/ 2>/dev/null || true
-      fi
+
+  save_everything_script:
+    - apt-get update -qq && apt-get install -y git > /dev/null 2>&1
     - git config user.email "bot@cirrus-ci.com"
     - git config user.name "Cirrus Bot"
-    - git add world.zip logs/ server.properties 2>/dev/null || true
-    - git diff --cached --quiet || git commit -m "Auto-save $(date -u '+%Y-%m-%d %H:%M:%S')"
-    # استخدام GITHUB_TOKEN بدلاً من CIRRUS_REPO_CLONE_TOKEN
+    # ✅ نحذف الملفات اللي مش لازمة عشان ما يملأش الريبو بـ .zip وغيره
+    # ✅ نضيف كل الملفات في مجلد السيرفر بالكامل (مش بس world)
+    - git add -A
+    # ✅ لو في تغييرات نعمل commit ونرفعها
+    - git diff --cached --quiet || git commit -m "Full auto-save $(date -u '+%Y-%m-%d %H:%M:%S')"
     - git push https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git HEAD:main || true
-  
+
   always:
     retrigger_script:
       - sleep 30
@@ -85,3 +81,4 @@ task:
           -H "Content-Type: application/json" \
           "https://api.cirrus-ci.com/graphql" \
           -d '{"query":"mutation { trigger(input: {repositoryId: \"'${CIRRUS_REPO_ID}'\", branch: \"main\"}) { build { id } } }"}'
+          
