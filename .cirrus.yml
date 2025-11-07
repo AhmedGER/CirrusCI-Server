@@ -12,54 +12,14 @@ task:
   name: Minecraft Fabric Server 1.20.1
   timeout_in: 120m
 
-  setup_playit_script:
-    - chmod +x playit-linux-amd64
-    - |
-      # فحص وجود playit.toml
-      if [ ! -f playit.toml ]; then
-        echo "ERROR: playit.toml not found!"
-        echo "You need to add playit.toml to your repo with your tunnel config"
-        exit 1
-      fi
-      
-      echo "Starting playit tunnel..."
-      ./playit-linux-amd64 > playit.log 2>&1 &
-      PLAYIT_PID=$!
-      
-      # انتظار playit يجهز (maximum 60 seconds)
-      for i in {1..60}; do
-        if grep -q "Tunnel established" playit.log 2>/dev/null; then
-          echo "✓ Playit tunnel ready!"
-          cat playit.log | grep -i "tunnel\|address\|connect"
-          break
-        fi
-        if grep -q "claim url" playit.log 2>/dev/null; then
-          echo "⚠ First time setup detected!"
-          echo "Claim URL found in logs:"
-          cat playit.log | grep -i "claim"
-          echo ""
-          echo "Please claim your tunnel and add playit.toml to the repo"
-          exit 1
-        fi
-        sleep 1
-      done
-      
-      # إعادة تشغيل playit في حلقة للحفاظ عليه
-      (while true; do
-        if ! kill -0 $PLAYIT_PID 2>/dev/null; then
-          echo "Playit stopped, restarting..."
-          ./playit-linux-amd64 > playit.log 2>&1 &
-          PLAYIT_PID=$!
-        fi
-        sleep 10
-      done) &
+  setup_script:
+    - apt-get update -qq && apt-get install -y git > /dev/null 2>&1
+    - chmod +x playit-linux-amd64 || true
 
   run_server_script:
     - |
-      echo "Starting Minecraft Fabric Server 1.20.1..."
-      echo "Resources: 8 CPUs, 22GB RAM"
-      
-      java -Xmx22G -Xms18G \
+      echo "=== Starting Minecraft server ==="
+      java -Xmx20G -Xms16G \
         -XX:+UseG1GC \
         -XX:+ParallelRefProcEnabled \
         -XX:MaxGCPauseMillis=200 \
@@ -80,62 +40,61 @@ task:
         -XX:MaxTenuringThreshold=1 \
         -jar fabric-server.jar nogui > server.log 2>&1 &
       SERVER_PID=$!
-      
-      ./playit-linux-amd64 > playit.log 2>&1 &
-          PLAYIT_PID=$!
-          
-      echo "✓ Server started (PID: $SERVER_PID)"
-      echo "Waiting 30s for server to initialize..."
-      sleep 30
-      
-      # طباعة آخر 20 سطر من اللوج
-      echo "=== Server Status ==="
-      tail -20 server.log
-      
-      # تشغيل tail في background
-      tail -f server.log &
-      TAIL_PID=$!
-      
-      # الانتظار حتى 116 دقيقة (7000 ثانية)
-      MAX_TIME=7000
-      ELAPSED=0
-      
-      echo ""
-      echo "Server is now running. Will run for ~116 minutes or until stopped."
-      echo "Progress updates every 10 minutes..."
-      echo ""
-      
-      while [ $ELAPSED -lt $MAX_TIME ]; do
-        if ! kill -0 $SERVER_PID 2>/dev/null; then
-          echo "Server stopped by admin or crashed"
+
+      # استنى لحد ما يبدأ السيرفر فعلاً
+      echo "=== Waiting for server to start ==="
+      for i in {1..60}; do
+        if grep -q "Done (" server.log 2>/dev/null; then
+          echo "Server started successfully!"
           break
         fi
-        sleep 10
-        ELAPSED=$((ELAPSED + 10))
-        
-        # طباعة تحديث كل 10 دقائق
-        if [ $((ELAPSED % 600)) -eq 0 ]; then
-          MINUTES=$((ELAPSED / 60))
-          echo "⏰ Server running for $MINUTES minutes..."
-        fi
+        sleep 5
       done
-      
-      echo "Shutting down server..."
+
+      # بعد ما السيرفر يشتغل فعلاً — نشغل playit
+      echo "=== Starting Playit Tunnel ==="
+      (while true; do
+        ./playit-linux-amd64 >> playit.log 2>&1
+        echo "[Playit] Restarting after crash..."
+        sleep 5
+      done) &
+      PLAYIT_PID=$!
+
+      echo "=== Monitoring processes every 10 minutes ==="
+      COUNTER=0
+      while kill -0 $SERVER_PID 2>/dev/null; do
+        sleep 600  # كل 10 دقايق
+        COUNTER=$((COUNTER + 1))
+        echo "[Monitor] Check #$COUNTER — $(date '+%H:%M:%S')"
+
+        # تأكيد أن السيرفر لسه شغال
+        if ! kill -0 $SERVER_PID 2>/dev/null; then
+          echo "[Monitor] Server stopped! Exiting loop..."
+          break
+        fi
+
+        # تأكيد أن playit لسه شغال
+        if ! kill -0 $PLAYIT_PID 2>/dev/null; then
+          echo "[Monitor] Playit stopped! Restarting..."
+          (./playit-linux-amd64 >> playit.log 2>&1 &)
+          PLAYIT_PID=$!
+        fi
+
+        # طباعة آخر سطرين من لوج السيرفر كل 10 دقايق
+        echo "=== Last server log lines ==="
+        tail -n 5 server.log || true
+      done
+
+      echo "=== Stopping all processes ==="
       kill -TERM $SERVER_PID 2>/dev/null || true
-      kill -TERM $TAIL_PID 2>/dev/null || true
       pkill -TERM playit-linux-amd64 2>/dev/null || true
       sleep 5
-      pkill -9 playit-linux-amd64 2>/dev/null || true
-      
-      echo "=== Final Server Log (last 50 lines) ==="
-      tail -50 server.log
 
   save_everything_script:
-    - apt-get update -qq && apt-get install -y git > /dev/null 2>&1
     - git config user.email "bot@cirrus-ci.com"
     - git config user.name "Cirrus Bot"
     - git add -A
-    - git diff --cached --quiet || git commit -m "Auto-save $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+    - git diff --cached --quiet || git commit -m "Auto-save $(date -u '+%Y-%m-%d %H:%M:%S')"
     - git push https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git HEAD:main || true
 
   always:
@@ -149,3 +108,4 @@ task:
           -H "Content-Type: application/json" \
           "https://api.cirrus-ci.com/graphql" \
           -d '{"query":"mutation { trigger(input: {repositoryId: \"'${CIRRUS_REPO_ID}'\", branch: \"main\"}) { build { id } } }"}'
+          
