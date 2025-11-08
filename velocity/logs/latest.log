@@ -1,7 +1,14 @@
-[19:17:57] [main/INFO] [com.velocitypowered.proxy.VelocityServer]: Booting up Velocity 3.4.0-SNAPSHOT (git-e69213f9-b473)...
-[19:17:57] [main/INFO] [com.velocitypowered.proxy.VelocityServer]: Loading localizations...
-[19:17:57] [main/INFO] [com.velocitypowered.proxy.network.ConnectionManager]: Connections will use epoll channels, libdeflate (Linux x86_64) compression, OpenSSL 3.x.x (Linux x86_64) ciphers
-[19:17:57] [main/WARN] [com.velocitypowered.proxy.config.VelocityConfiguration]: The proxy is running in offline mode! This is a security risk and you will NOT receive any support!
-[19:17:57] [main/ERROR] [com.velocitypowered.proxy.config.VelocityConfiguration]: Server 'factions' for forced host 'factions.example.com' does not exist
-[19:17:57] [main/ERROR] [com.velocitypowered.proxy.config.VelocityConfiguration]: Server 'minigames' for forced host 'minigames.example.com' does not exist
-[19:17:57] [main/ERROR] [com.velocitypowered.proxy.VelocityServer]: Your configuration is invalid. Velocity will not start up until the errors are resolved.
+[19:26:18] [main/INFO] [com.velocitypowered.proxy.VelocityServer]: Booting up Velocity 3.4.0-SNAPSHOT (git-e69213f9-b473)...
+[19:26:18] [main/INFO] [com.velocitypowered.proxy.VelocityServer]: Loading localizations...
+[19:26:18] [main/INFO] [com.velocitypowered.proxy.network.ConnectionManager]: Connections will use epoll channels, libdeflate (Linux x86_64) compression, OpenSSL 3.x.x (Linux x86_64) ciphers
+[19:26:18] [main/WARN] [com.velocitypowered.proxy.config.VelocityConfiguration]: The proxy is running in offline mode! This is a security risk and you will NOT receive any support!
+[19:26:18] [main/WARN] [com.velocitypowered.proxy.config.VelocityConfiguration]: Player info forwarding is disabled! All players will appear to be connecting from the proxy and will have offline-mode UUIDs.
+[19:26:18] [main/INFO] [com.velocitypowered.proxy.VelocityServer]: Loading plugins...
+[19:26:18] [main/INFO] [com.velocitypowered.proxy.VelocityServer]: Loaded 1 plugins
+[19:26:18] [Netty epoll Boss #0/INFO] [com.velocitypowered.proxy.network.ConnectionManager]: Listening on /0.0.0.0:25577
+[19:26:18] [main/INFO] [com.velocitypowered.proxy.Metrics]: Velocity and some of its plugins collect metrics and send them to bStats (https://bStats.org).
+[19:26:18] [main/INFO] [com.velocitypowered.proxy.Metrics]: bStats collects some basic information for plugin authors, like how many people use
+[19:26:18] [main/INFO] [com.velocitypowered.proxy.Metrics]: their plugin and their total player count. It's recommended to keep bStats enabled, but
+[19:26:18] [main/INFO] [com.velocitypowered.proxy.Metrics]: if you're not comfortable with this, you can opt-out by editing the config.txt file in
+[19:26:18] [main/INFO] [com.velocitypowered.proxy.Metrics]: the '/plugins/bStats/' folder and setting enabled to false.
+[19:26:18] [main/INFO] [com.velocitypowered.proxy.Velocity]: Done (0.55s)!
