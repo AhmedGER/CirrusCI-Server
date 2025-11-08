@@ -1,8 +1,8 @@
-[20:12:54] [main/INFO]: Loading Minecraft 1.20.1 with Fabric Loader 0.16.10
-[20:12:54] [main/WARN]: Warnings were found!
+[20:28:57] [main/INFO]: Loading Minecraft 1.20.1 with Fabric Loader 0.16.10
+[20:28:58] [main/WARN]: Warnings were found!
  - Mod 'TAB' (tab) 4.1.2 recommends any version of fabric-permissions-api-v0, which is missing!
 	 - You should install any version of fabric-permissions-api-v0 for the optimal experience.
-[20:12:54] [main/INFO]: Loading 56 mods:
+[20:28:58] [main/INFO]: Loading 56 mods:
 	- fabric-api 0.92.6+1.20.1
 	   |-- fabric-api-base 0.4.32+1802ada577
 	   |-- fabric-api-lookup-api-v1 1.6.37+1802ada577
@@ -73,54 +73,54 @@
 	   \-- viafabric-mc1201 0.4.18+104-main
 	- viarewind 4.0.10
 	- viaversion 5.5.1
-[20:12:54] [main/INFO]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/tmp/cirrus-ci-build/libraries/net/fabricmc/sponge-mixin/0.15.4+mixin.0.8.7/sponge-mixin-0.15.4+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
-[20:12:54] [main/INFO]: Compatibility level set to JAVA_16
-[20:12:54] [main/INFO]: Compatibility level set to JAVA_17
-[20:12:54] [main/INFO]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.1).
-[20:12:59] [Via-Mappingloader-0/INFO]: Loading block connection mappings ...
-[20:12:59] [Via-Mappingloader-0/INFO]: Using FastUtil Long2ObjectOpenHashMap for block connections
-[20:12:59] [main/INFO]: Loading translations...
-[20:12:59] [main/INFO]: Registering protocols...
-[20:12:59] [main/INFO]: Registering protocols...
-[20:12:59] [main/INFO]: ViaVersion detected server version: 1.20-1.20.1 (763)
-[20:12:59] [ViaFabric-2/INFO]: Finished mapping loading, shutting down loader executor.
-[20:12:59] [main/INFO]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
-[20:13:00] [main/INFO]: registered playit command
-[20:13:00] [main/INFO]: Loaded 7 recipes
-[20:13:01] [main/INFO]: Loaded 1271 advancements
-[20:13:01] [main/INFO]: Applied 0 biome modifications to 0 of 64 new biomes in 1.195 ms
-[20:13:01] [Server thread/INFO]: Enabled in 99ms
-[20:13:01] [Server thread/INFO]: Starting minecraft server version 1.20.1
-[20:13:01] [Server thread/INFO]: Loading properties
-[20:13:01] [Server thread/INFO]: Default game type: SURVIVAL
-[20:13:01] [Server thread/INFO]: Generating keypair
-[20:13:01] [Server thread/INFO]: Starting Minecraft server on *:25565
-[20:13:01] [Server thread/INFO]: Using epoll channel type
-[20:13:01] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
-[20:13:01] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
-[20:13:01] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
-[20:13:01] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
-[20:13:01] [Server thread/INFO]: Preparing level "world"
-[20:13:02] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
-[20:13:03] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[20:13:03] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[20:13:03] [Worker-Main-3/INFO]: Preparing spawn area: 0%
-[20:13:04] [Worker-Main-3/INFO]: Preparing spawn area: 8%
-[20:13:04] [Worker-Main-6/INFO]: Preparing spawn area: 45%
-[20:13:05] [Worker-Main-1/INFO]: Preparing spawn area: 68%
-[20:13:05] [Worker-Main-2/INFO]: Preparing spawn area: 69%
-[20:13:06] [Worker-Main-7/INFO]: Preparing spawn area: 76%
-[20:13:06] [Worker-Main-4/INFO]: Preparing spawn area: 83%
-[20:13:07] [Worker-Main-2/INFO]: Preparing spawn area: 85%
-[20:13:07] [Worker-Main-3/INFO]: Preparing spawn area: 89%
-[20:13:08] [Worker-Main-3/INFO]: Preparing spawn area: 95%
-[20:13:08] [Worker-Main-1/INFO]: Preparing spawn area: 99%
-[20:13:08] [Server thread/INFO]: Time elapsed: 6012 ms
-[20:13:08] [Server thread/INFO]: Done (7.151s)! For help, type "help"
-[20:13:08] [Server thread/INFO]: Starting remote control listener
-[20:13:08] [Server thread/INFO]: Thread RCON Listener started
-[20:13:08] [Server thread/INFO]: RCON running on 0.0.0.0:25575
-[20:13:08] [Thread-6/INFO]: secret key found, checking
-[20:13:08] [Thread-6/INFO]: check secret
-[20:13:09] [Thread-6/INFO]: found minecraft java tunnel: password-version.gl.joinmc.link
-[20:13:09] [Thread-6/INFO]: keys and tunnel setup
+[20:28:58] [main/INFO]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/tmp/cirrus-ci-build/libraries/net/fabricmc/sponge-mixin/0.15.4+mixin.0.8.7/sponge-mixin-0.15.4+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
+[20:28:58] [main/INFO]: Compatibility level set to JAVA_16
+[20:28:58] [main/INFO]: Compatibility level set to JAVA_17
+[20:28:58] [main/INFO]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.1).
+[20:29:03] [Via-Mappingloader-0/INFO]: Loading block connection mappings ...
+[20:29:03] [Via-Mappingloader-0/INFO]: Using FastUtil Long2ObjectOpenHashMap for block connections
+[20:29:03] [main/INFO]: Loading translations...
+[20:29:03] [main/INFO]: Registering protocols...
+[20:29:03] [main/INFO]: Registering protocols...
+[20:29:03] [main/INFO]: ViaVersion detected server version: 1.20-1.20.1 (763)
+[20:29:03] [ViaFabric-2/INFO]: Finished mapping loading, shutting down loader executor.
+[20:29:03] [main/INFO]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[20:29:04] [main/INFO]: registered playit command
+[20:29:04] [main/INFO]: Loaded 7 recipes
+[20:29:04] [main/INFO]: Loaded 1271 advancements
+[20:29:05] [main/INFO]: Applied 0 biome modifications to 0 of 64 new biomes in 1.614 ms
+[20:29:05] [Server thread/INFO]: Enabled in 110ms
+[20:29:05] [Server thread/INFO]: Starting minecraft server version 1.20.1
+[20:29:05] [Server thread/INFO]: Loading properties
+[20:29:05] [Server thread/INFO]: Default game type: SURVIVAL
+[20:29:05] [Server thread/INFO]: Generating keypair
+[20:29:05] [Server thread/INFO]: Starting Minecraft server on *:25565
+[20:29:05] [Server thread/INFO]: Using epoll channel type
+[20:29:05] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[20:29:05] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
+[20:29:05] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[20:29:05] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[20:29:05] [Server thread/INFO]: Preparing level "world"
+[20:29:06] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[20:29:07] [Worker-Main-5/INFO]: Preparing spawn area: 0%
+[20:29:07] [Worker-Main-5/INFO]: Preparing spawn area: 0%
+[20:29:07] [Worker-Main-7/INFO]: Preparing spawn area: 0%
+[20:29:08] [Worker-Main-7/INFO]: Preparing spawn area: 2%
+[20:29:08] [Worker-Main-5/INFO]: Preparing spawn area: 29%
+[20:29:09] [Worker-Main-1/INFO]: Preparing spawn area: 65%
+[20:29:09] [Worker-Main-3/INFO]: Preparing spawn area: 68%
+[20:29:10] [Worker-Main-3/INFO]: Preparing spawn area: 72%
+[20:29:10] [Worker-Main-2/INFO]: Preparing spawn area: 80%
+[20:29:11] [Worker-Main-6/INFO]: Preparing spawn area: 84%
+[20:29:11] [Worker-Main-7/INFO]: Preparing spawn area: 86%
+[20:29:12] [Worker-Main-6/INFO]: Preparing spawn area: 91%
+[20:29:12] [Worker-Main-5/INFO]: Preparing spawn area: 95%
+[20:29:13] [Server thread/INFO]: Time elapsed: 6346 ms
+[20:29:13] [Server thread/INFO]: Done (7.533s)! For help, type "help"
+[20:29:13] [Server thread/INFO]: Starting remote control listener
+[20:29:13] [Server thread/INFO]: Thread RCON Listener started
+[20:29:13] [Server thread/INFO]: RCON running on 0.0.0.0:25575
+[20:29:13] [Thread-7/INFO]: secret key found, checking
+[20:29:13] [Thread-7/INFO]: check secret
+[20:29:13] [Thread-7/INFO]: found minecraft java tunnel: password-version.gl.joinmc.link
+[20:29:13] [Thread-7/INFO]: keys and tunnel setup
