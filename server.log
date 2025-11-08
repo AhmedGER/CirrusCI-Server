@@ -1,9 +1,9 @@
 Starting net.fabricmc.loader.impl.game.minecraft.BundlerClassPathCapture
-[18:53:59] [main/INFO]: Loading Minecraft 1.20.1 with Fabric Loader 0.16.10
-[18:53:59] [main/WARN]: Warnings were found!
+[19:11:23] [main/INFO]: Loading Minecraft 1.20.1 with Fabric Loader 0.16.10
+[19:11:23] [main/WARN]: Warnings were found!
  - Mod 'TAB' (tab) 4.1.2 recommends any version of fabric-permissions-api-v0, which is missing!
 	 - You should install any version of fabric-permissions-api-v0 for the optimal experience.
-[18:53:59] [main/INFO]: Loading 54 mods:
+[19:11:23] [main/INFO]: Loading 56 mods:
 	- fabric-api 0.92.6+1.20.1
 	   |-- fabric-api-base 0.4.32+1802ada577
 	   |-- fabric-api-lookup-api-v1 1.6.37+1802ada577
@@ -59,6 +59,8 @@ Starting net.fabricmc.loader.impl.game.minecraft.BundlerClassPathCapture
 	   \-- fabric-transitive-access-wideners-v1 4.3.2+1802ada577
 	- fabricloader 0.16.10
 	   \-- mixinextras 0.4.1
+	- fabricproxy-lite 2.6.0
+	   \-- com_moandjiezana_toml_toml4j 0.7.2
 	- java 21
 	- minecraft 1.20.1
 	- playit_fabric 1.3.2
@@ -72,31 +74,60 @@ Starting net.fabricmc.loader.impl.game.minecraft.BundlerClassPathCapture
 	   \-- viafabric-mc1201 0.4.18+104-main
 	- viarewind 4.0.10
 	- viaversion 5.5.1
-[18:53:59] [main/INFO]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/tmp/cirrus-ci-build/libraries/net/fabricmc/sponge-mixin/0.15.4+mixin.0.8.7/sponge-mixin-0.15.4+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
-[18:53:59] [main/INFO]: Compatibility level set to JAVA_16
-[18:53:59] [main/INFO]: Compatibility level set to JAVA_17
-[18:54:00] [main/INFO]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.1).
-[18:54:04] [Via-Mappingloader-0/INFO]: Loading block connection mappings ...
-[18:54:04] [Via-Mappingloader-0/INFO]: Using FastUtil Long2ObjectOpenHashMap for block connections
-[18:54:04] [main/INFO]: Loading translations...
-[18:54:04] [main/INFO]: Registering protocols...
-[18:54:05] [main/INFO]: Registering protocols...
-[18:54:05] [main/INFO]: ViaVersion detected server version: 1.20-1.20.1 (763)
-[18:54:05] [ViaFabric-2/INFO]: Finished mapping loading, shutting down loader executor.
-[18:54:05] [main/INFO]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
-[18:54:05] [main/INFO]: registered playit command
-[18:54:06] [main/INFO]: Loaded 7 recipes
-[18:54:06] [main/INFO]: Loaded 1271 advancements
-[18:54:06] [main/INFO]: Applied 0 biome modifications to 0 of 64 new biomes in 1.135 ms
-[18:54:06] [Server thread/INFO]: Enabled in 109ms
-[18:54:06] [Server thread/INFO]: Starting minecraft server version 1.20.1
-[18:54:06] [Server thread/INFO]: Loading properties
-[18:54:06] [Server thread/INFO]: Default game type: SURVIVAL
-[18:54:06] [Server thread/INFO]: Generating keypair
-[18:54:06] [Server thread/INFO]: Starting Minecraft server on *:25565
-[18:54:06] [Server thread/INFO]: Using epoll channel type
-[18:54:06] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
-[18:54:06] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
-[18:54:06] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
-[18:54:06] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
-[18:54:06] [Server thread/INFO]: Preparing level "world"
+[19:11:23] [main/INFO]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/tmp/cirrus-ci-build/libraries/net/fabricmc/sponge-mixin/0.15.4+mixin.0.8.7/sponge-mixin-0.15.4+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
+[19:11:23] [main/INFO]: Compatibility level set to JAVA_16
+[19:11:23] [main/INFO]: Compatibility level set to JAVA_17
+[19:11:24] [main/INFO]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.1).
+[19:11:28] [Via-Mappingloader-0/INFO]: Loading block connection mappings ...
+[19:11:28] [Via-Mappingloader-0/INFO]: Using FastUtil Long2ObjectOpenHashMap for block connections
+[19:11:28] [main/INFO]: Loading translations...
+[19:11:28] [main/INFO]: Registering protocols...
+[19:11:29] [main/INFO]: Registering protocols...
+[19:11:29] [main/INFO]: ViaVersion detected server version: 1.20-1.20.1 (763)
+[19:11:29] [ViaFabric-2/INFO]: Finished mapping loading, shutting down loader executor.
+[19:11:29] [main/INFO]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[19:11:30] [main/INFO]: registered playit command
+[19:11:30] [main/INFO]: Loaded 7 recipes
+[19:11:30] [main/INFO]: Loaded 1271 advancements
+[19:11:30] [main/INFO]: Applied 0 biome modifications to 0 of 64 new biomes in 1.186 ms
+[19:11:30] [Server thread/INFO]: Enabled in 104ms
+[19:11:30] [Server thread/INFO]: Starting minecraft server version 1.20.1
+[19:11:30] [Server thread/INFO]: Loading properties
+[19:11:30] [Server thread/INFO]: Default game type: SURVIVAL
+[19:11:30] [Server thread/INFO]: Generating keypair
+[19:11:31] [Server thread/INFO]: Starting Minecraft server on *:25565
+[19:11:31] [Server thread/INFO]: Using epoll channel type
+[19:11:31] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[19:11:31] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
+[19:11:31] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[19:11:31] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[19:11:31] [Server thread/INFO]: Preparing level "world"
+[19:11:32] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[19:11:33] [Worker-Main-3/INFO]: Preparing spawn area: 0%
+[19:11:33] [Worker-Main-3/INFO]: Preparing spawn area: 0%
+[19:11:33] [Worker-Main-3/INFO]: Preparing spawn area: 0%
+[19:11:33] [Worker-Main-3/INFO]: Preparing spawn area: 2%
+[19:11:34] [Worker-Main-3/INFO]: Preparing spawn area: 27%
+[19:11:34] [Worker-Main-2/INFO]: Preparing spawn area: 62%
+[19:11:35] [Worker-Main-1/INFO]: Preparing spawn area: 68%
+[19:11:35] [Worker-Main-4/INFO]: Preparing spawn area: 74%
+[19:11:36] [Worker-Main-6/INFO]: Preparing spawn area: 81%
+[19:11:36] [Worker-Main-6/INFO]: Preparing spawn area: 84%
+[19:11:37] [Worker-Main-1/INFO]: Preparing spawn area: 88%
+[19:11:37] [Worker-Main-2/INFO]: Preparing spawn area: 92%
+[19:11:38] [Worker-Main-7/INFO]: Preparing spawn area: 97%
+[19:11:38] [Server thread/INFO]: Time elapsed: 6220 ms
+[19:11:38] [Server thread/INFO]: Done (7.265s)! For help, type "help"
+[19:11:38] [Server thread/INFO]: Starting remote control listener
+[19:11:38] [Server thread/INFO]: Thread RCON Listener started
+[19:11:38] [Server thread/INFO]: RCON running on 0.0.0.0:25575
+[19:11:38] [Thread-8/INFO]: secret key found, checking
+[19:11:38] [Thread-8/INFO]: check secret
+[19:11:38] [Thread-8/INFO]: found minecraft java tunnel: password-version.gl.joinmc.link
+[19:11:38] [Thread-8/INFO]: keys and tunnel setup
+Nov 08, 2025 7:11:39 PM gg.playit.control.ChannelSetup$SetupRequireAuthentication authenticate
+INFO: request queued, waiting 1 second before resend
+Nov 08, 2025 7:15:42 PM gg.playit.control.PlayitControlChannel update
+INFO: send keep alive
+Nov 08, 2025 7:15:54 PM gg.playit.control.PlayitControlChannel update
+INFO: send keep alive

@@ -1,0 +1,26 @@
+bind = "0.0.0.0:25577"
+# What should be the MOTD? This gets displayed when the player adds your server to
+# their server list. Only MiniMessage format is accepted.
+motd = "Velocity + Fabric Server"
+show-max-players = 20
+online-mode = false
+player-info-forwarding-mode = "modern"
+#If you are using modern or BungeeGuard IP forwarding, configure a file that contains a unique secret here.
+#The file is expected to be UTF-8 encoded and not empty.
+forwarding-secret-file = "forwarding.secret"
+config-version = "2.7"
+#Should the proxy enforce the new public key security standard? By default, this is on.
+force-key-authentication = true
+
+[servers]
+	lobby = "127.0.0.1:25565"
+	try = ["lobby"]
+[advanced]
+	#Allows players transferred from other hosts via the
+	#Transfer packet (Minecraft 1.20.5) to be received.
+	accepts-transfers = false
+	compression-level = -1
+	compression-threshold = 256
+	login-ratelimit = 3000
+[query]
+	enabled = false
