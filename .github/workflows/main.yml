@@ -17,10 +17,6 @@ jobs:
 
       - name: Download Paper 1.16.5
         run: |
-          echo "=== Downloading Paper 1.16.5 ==="
-          curl -L -o server.jar \
-            https://fill-data.papermc.io/v1/objects/cabed3ae77cf55deba7c7d8722bc9cfd5e991201c211665f9265616d9fe5c77b/paper-1.20.4-499.jar
-          echo "✔ server.jar ready"
           
           if [ -f world.zip ]; then
             echo "=== Extracting world.zip ==="
@@ -79,7 +75,7 @@ jobs:
             -XX:MaxTenuringThreshold=1 \
             -Dusing.aikars.flags=https://mcflags.emc.gs \
             -Daikars.new.flags=true \
-            -jar server.jar --nogui &
+            -jar fabric-server.jar --nogui &
           PAPER_PID=$!
           
           echo "✔ Paper Server started (PID: $PAPER_PID)"
@@ -88,7 +84,7 @@ jobs:
           
           echo "=== Starting Velocity Proxy on port 25577 ==="
           
-          cd velocity_server
+          cd velocity
           java -Xmx512M -Xms512M \
             -XX:+UseG1GC \
             -XX:G1HeapRegionSize=4M \
