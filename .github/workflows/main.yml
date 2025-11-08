@@ -1,0 +1,180 @@
+name: server proxy
+on:
+  workflow_dispatch:
+
+jobs:
+  minecraft:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Download Paper 1.16.5
+        run: |
+          echo "=== Downloading Paper 1.16.5 ==="
+          curl -L -o server.jar \
+            https://fill-data.papermc.io/v1/objects/cabed3ae77cf55deba7c7d8722bc9cfd5e991201c211665f9265616d9fe5c77b/paper-1.20.4-499.jar
+          echo "✔ server.jar ready"
+          
+          if [ -f world.zip ]; then
+            echo "=== Extracting world.zip ==="
+            unzip -q world.zip
+            echo "✔ World extracted successfully"
+          else
+            echo "ℹ️ No world.zip found, using existing world"
+          fi
+          
+      - name: Setup Playit Tunnel with Auto-Restart
+        run: |
+          echo "=== Setting up Playit Tunnel with monitoring ==="
+          
+          chmod +x playit-linux-amd64
+          
+          if [ -n "${{ secrets.PLAYIT_SECRET }}" ]; then
+            echo "${{ secrets.PLAYIT_SECRET }}" > playit.toml
+            echo "✔ Playit configured from secrets"
+          elif [ -f playit.toml ]; then
+            echo "✔ Using existing playit.toml"
+          else
+            echo "⚠️ No playit config found"
+          fi
+          
+          while true; do
+            ./playit-linux-amd64 >/dev/null 2>&1 || sleep 5
+          done &
+          
+          echo "✔ Playit tunnel started with auto-restart"
+          echo "ℹ️ Paper port (25565) and Velocity port (25577) will be tunneled"
+          sleep 10
+          
+      - name: Run Both Servers
+        run: |
+          echo "=== Starting Paper Server on port 25565 ==="
+          
+          java -DPaper.IgnoreJavaVersion=true \
+            -Xmx14848M -Xms10240M \
+            -XX:+UseG1GC \
+            -XX:+ParallelRefProcEnabled \
+            -XX:MaxGCPauseMillis=200 \
+            -XX:+UnlockExperimentalVMOptions \
+            -XX:+DisableExplicitGC \
+            -XX:+AlwaysPreTouch \
+            -XX:G1NewSizePercent=30 \
+            -XX:G1MaxNewSizePercent=40 \
+            -XX:G1HeapRegionSize=16M \
+            -XX:G1ReservePercent=20 \
+            -XX:G1HeapWastePercent=5 \
+            -XX:G1MixedGCCountTarget=4 \
+            -XX:InitiatingHeapOccupancyPercent=15 \
+            -XX:G1MixedGCLiveThresholdPercent=90 \
+            -XX:G1RSetUpdatingPauseTimePercent=5 \
+            -XX:SurvivorRatio=32 \
+            -XX:+PerfDisableSharedMem \
+            -XX:MaxTenuringThreshold=1 \
+            -Dusing.aikars.flags=https://mcflags.emc.gs \
+            -Daikars.new.flags=true \
+            -jar server.jar --nogui &
+          PAPER_PID=$!
+          
+          echo "✔ Paper Server started (PID: $PAPER_PID)"
+          echo "⏳ Waiting 60 seconds for Paper to start..."
+          sleep 60
+          
+          echo "=== Starting Velocity Proxy on port 25577 ==="
+          
+          cd velocity_server
+          java -Xmx512M -Xms512M \
+            -XX:+UseG1GC \
+            -XX:G1HeapRegionSize=4M \
+            -XX:+UnlockExperimentalVMOptions \
+            -XX:+ParallelRefProcEnabled \
+            -XX:+DisableExplicitGC \
+            -XX:+AlwaysPreTouch \
+            -jar velocity.jar &
+          VELOCITY_PID=$!
+          cd ..
+          
+          echo "✔ Velocity Proxy started (PID: $VELOCITY_PID)"
+          echo ""
+          echo "=== Both Servers are now ONLINE ==="
+          echo "📍 Paper (Java players): port 25565"
+          echo "📍 Velocity (Eaglercraft): port 25577"
+          echo "ℹ️ Type 'stop' in Paper to shutdown everything"
+          
+          MAX_TIME=20700
+          ELAPSED=0
+          CHECK_INTERVAL=10
+          
+          while [ $ELAPSED -lt $MAX_TIME ]; do
+            # Check if Paper stopped
+            if ! kill -0 $PAPER_PID 2>/dev/null; then
+              echo ""
+              echo "=== Paper Server Stopped - Shutting down everything ==="
+              break
+            fi
+            
+            # Check if Velocity stopped unexpectedly
+            if ! kill -0 $VELOCITY_PID 2>/dev/null; then
+              echo ""
+              echo "⚠️ Velocity stopped unexpectedly - Continuing Paper server"
+            fi
+            
+            sleep $CHECK_INTERVAL
+            ELAPSED=$((ELAPSED + CHECK_INTERVAL))
+            
+            if [ $((ELAPSED % 1800)) -eq 0 ]; then
+              echo "⏰ Servers running... $((ELAPSED / 60)) minutes elapsed"
+            fi
+          done
+          
+          echo "⏹️ Stopping all processes..."
+          kill -TERM $PAPER_PID 2>/dev/null || true
+          kill -TERM $VELOCITY_PID 2>/dev/null || true
+          sleep 5
+          kill -9 $PAPER_PID 2>/dev/null || true
+          kill -9 $VELOCITY_PID 2>/dev/null || true
+          
+          pkill -TERM playit-linux-amd64 2>/dev/null || true
+          sleep 2
+          pkill -9 playit-linux-amd64 2>/dev/null || true
+          
+          echo "✔ All servers and tunnels stopped"
+          
+      - name: Save world and config
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add -A
+          
+          if ! git diff --cached --quiet 2>/dev/null; then
+            git commit -m "Auto-save: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+            git pull --rebase --autostash \
+              https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }}.git
+            git push https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }}.git
+            echo "✔ Changes saved to repository"
+          else
+            echo "ℹ️ No changes to save"
+          fi
+          
+      - name: Auto-retrigger workflow
+        if: github.run_attempt < 3
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
+        run: |
+          runs=$(gh run list -w main.yml --json status -q \
+               '[.[] | select(.status=="queued" or .status=="in_progress")] | length')
+          
+          if [ "$runs" -le 1 ]; then
+            echo "No other workflows running, retriggering..."
+            gh workflow run main.yml
+            echo "✔ Workflow retriggered"
+          else
+            echo "Other workflows are running, skipping retrigger"
+          fi
