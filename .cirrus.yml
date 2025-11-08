@@ -76,7 +76,7 @@ task:
       echo "Playit: Check logs for connection address"
       echo ""
       
-      MAX_TIME=900
+      MAX_TIME=6600
       ELAPSED=0
       
       while [ $ELAPSED -lt $MAX_TIME ]; do
