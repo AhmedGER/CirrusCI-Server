@@ -46,23 +46,6 @@ task:
       echo "Waiting for server to initialize..."
       sleep 5
       
-  #    echo "Starting Playit tunnel..."
-  #    chmod +x playit-linux-amd64
-      
-  #    if [ ! -f playit.toml ]; then
-  #      echo "ERROR: playit.toml not found!"
-  #      kill -9 $SERVER_PID
-  #      exit 1
-  #    fi
-      
-  #    (while true; do
-  #      ./playit-linux-amd64 2>&1 | tee -a playit.log
-  #      echo "Playit stopped, restarting in 5s..."
-  #      sleep 5
-  #    done) &
-      
-  #    echo "Playit started, tunnel should be active now"
-      
       MAX_TIME=6600
       ELAPSED=0
       
@@ -81,9 +64,7 @@ task:
       
       echo "Shutting down..."
       kill -TERM $SERVER_PID 2>/dev/null || true
-   #   pkill -TERM playit-linux-amd64 2>/dev/null || true
       sleep 10
-   #   pkill -9 playit-linux-amd64 2>/dev/null || true
       
       echo "=== Final 50 lines of server log ==="
       tail -50 server.log
