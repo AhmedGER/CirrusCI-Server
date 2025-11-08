@@ -16,30 +16,7 @@ task:
   install_java_script:
     - apt-get update -qq
     - apt-get install -y openjdk-21-jre-headless git curl jq > /dev/null 2>&1
-
-  setup_velocity_config_script:
-    - |
-      cat > velocity/velocity.toml << 'EOF'
-      bind = "0.0.0.0:25577"
-      motd = "Velocity + Fabric Server"
-      show-max-players = 20
-      online-mode = false
-      player-info-forwarding-mode = "modern"
-      
-      [servers]
-      lobby = "127.0.0.1:25565"
-      try = ["lobby"]
-      
-      [advanced]
-      compression-threshold = 256
-      compression-level = -1
-      login-ratelimit = 3000
-      
-      [query]
-      enabled = false
-      EOF
-    - mkdir -p velocity/plugins
-
+    
   run_server_script:
     - |
       echo "Starting Fabric Server on port 25565..."
