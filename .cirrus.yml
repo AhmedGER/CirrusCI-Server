@@ -11,7 +11,7 @@ env:
 
 task:
   name: Minecraft Fabric + Velocity
-  timeout_in: 120m
+  timeout_in: 180m
 
   install_java_script:
     - apt-get update -qq
