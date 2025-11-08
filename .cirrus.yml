@@ -1,25 +1,48 @@
 # .cirrus.yml
 container:
-  image: ghcr.io/graalvm/jdk-community:21
+  image: ubuntu:22.04
   cpu: 8
   memory: 24G
 
 env:
   GITHUB_TOKEN: ENCRYPTED[!4b0eae3c2c6c631068eeedfaa0d2c0aa44b3c52d2e3d50dc4f5fb71f958d334548e3f4d70eeb23292bfb454df755b503!]
   CIRRUS_API_TOKEN: ENCRYPTED[!4336ebf698c76189e6057b84bf85a3809af77f5e5db08cf99abeea89c96a5ef9b34480dad12847b35388578fef3ba6ed!]
+  DEBIAN_FRONTEND: noninteractive
 
 task:
   name: Minecraft Fabric Server 1.20.1
   timeout_in: 120m
 
-  setup_script:
-    - apt-get update -qq && apt-get install -y git > /dev/null 2>&1
-    - chmod +x playit-linux-amd64 || true
+  install_java_script:
+    - apt-get update -qq
+    - apt-get install -y openjdk-21-jre-headless git curl jq > /dev/null 2>&1
+
+  setup_playit_script:
+    - chmod +x playit-linux-amd64
+    - |
+      if [ ! -f playit.toml ]; then
+        echo "ERROR: playit.toml not found!"
+        exit 1
+      fi
+      
+      ./playit-linux-amd64 > playit.log 2>&1 &
+      sleep 15
+      
+      if grep -q "claim url" playit.log 2>/dev/null; then
+        cat playit.log | grep -i "claim"
+        exit 1
+      fi
+      
+      (while true; do
+        if ! pgrep -f playit-linux-amd64 > /dev/null; then
+          ./playit-linux-amd64 > playit.log 2>&1 &
+        fi
+        sleep 10
+      done) &
 
   run_server_script:
     - |
-      echo "=== Starting Minecraft server ==="
-      java -Xmx20G -Xms16G \
+      java -Xmx22G -Xms18G \
         -XX:+UseG1GC \
         -XX:+ParallelRefProcEnabled \
         -XX:MaxGCPauseMillis=200 \
@@ -40,72 +63,56 @@ task:
         -XX:MaxTenuringThreshold=1 \
         -jar fabric-server.jar nogui > server.log 2>&1 &
       SERVER_PID=$!
-
-      # استنى لحد ما يبدأ السيرفر فعلاً
-      echo "=== Waiting for server to start ==="
-      for i in {1..60}; do
-        if grep -q "Done (" server.log 2>/dev/null; then
-          echo "Server started successfully!"
-          break
-        fi
-        sleep 5
-      done
-
-      # بعد ما السيرفر يشتغل فعلاً — نشغل playit
-      echo "=== Starting Playit Tunnel ==="
-      (while true; do
-        ./playit-linux-amd64 >> playit.log 2>&1
-        echo "[Playit] Restarting after crash..."
-        sleep 5
-      done) &
-      PLAYIT_PID=$!
-
-      echo "=== Monitoring processes every 10 minutes ==="
-      COUNTER=0
-      while kill -0 $SERVER_PID 2>/dev/null; do
-        sleep 600  # كل 10 دقايق
-        COUNTER=$((COUNTER + 1))
-        echo "[Monitor] Check #$COUNTER — $(date '+%H:%M:%S')"
-
-        # تأكيد أن السيرفر لسه شغال
+      
+      sleep 30
+      tail -20 server.log
+      
+      tail -f server.log &
+      TAIL_PID=$!
+      
+      MAX_TIME=6600
+      ELAPSED=0
+      
+      while [ $ELAPSED -lt $MAX_TIME ]; do
         if ! kill -0 $SERVER_PID 2>/dev/null; then
-          echo "[Monitor] Server stopped! Exiting loop..."
           break
         fi
-
-        # تأكيد أن playit لسه شغال
-        if ! kill -0 $PLAYIT_PID 2>/dev/null; then
-          echo "[Monitor] Playit stopped! Restarting..."
-          (./playit-linux-amd64 >> playit.log 2>&1 &)
-          PLAYIT_PID=$!
+        sleep 10
+        ELAPSED=$((ELAPSED + 10))
+        
+        if [ $((ELAPSED % 600)) -eq 0 ]; then
+          echo "Running for $((ELAPSED / 60)) minutes..."
         fi
-
-        # طباعة آخر سطرين من لوج السيرفر كل 10 دقايق
-        echo "=== Last server log lines ==="
-        tail -n 5 server.log || true
       done
-
-      echo "=== Stopping all processes ==="
+      
       kill -TERM $SERVER_PID 2>/dev/null || true
+      kill -TERM $TAIL_PID 2>/dev/null || true
       pkill -TERM playit-linux-amd64 2>/dev/null || true
-      sleep 5
-
-  save_everything_script:
-    - git config user.email "bot@cirrus-ci.com"
-    - git config user.name "Cirrus Bot"
-    - git add -A
-    - git diff --cached --quiet || git commit -m "Auto-save $(date -u '+%Y-%m-%d %H:%M:%S')"
-    - git push https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git HEAD:main || true
+      sleep 10
+      
+      tail -50 server.log
 
   always:
+    save_world_script:
+      - git config user.email "bot@cirrus-ci.com"
+      - git config user.name "Cirrus Bot"
+      - git add -A
+      - git diff --cached --quiet || git commit -m "Auto-save $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+      - git push https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git HEAD:main || true
+    
     retrigger_script:
-      - sleep 30
-      - git fetch origin
-      - git reset --hard origin/main
+      - sleep 60
       - |
-        curl -X POST \
+        REPO_ID=$(curl -s \
           -H "Authorization: Bearer ${CIRRUS_API_TOKEN}" \
           -H "Content-Type: application/json" \
-          "https://api.cirrus-ci.com/graphql" \
-          -d '{"query":"mutation { trigger(input: {repositoryId: \"'${CIRRUS_REPO_ID}'\", branch: \"main\"}) { build { id } } }"}'
-          
+          -d '{"query":"query { githubRepository(owner: \"'$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f1)'\", name: \"'$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f2)'\") { id } }"}' \
+          https://api.cirrus-ci.com/graphql | jq -r '.data.githubRepository.id')
+        
+        if [ -n "$REPO_ID" ] && [ "$REPO_ID" != "null" ]; then
+          curl -X POST \
+            -H "Authorization: Bearer ${CIRRUS_API_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d '{"query":"mutation { trigger(input: {repositoryId: \"'$REPO_ID'\", branch: \"main\"}) { build { id } } }"}' \
+            https://api.cirrus-ci.com/graphql
+        fi
