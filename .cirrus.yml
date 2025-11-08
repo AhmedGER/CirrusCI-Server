@@ -17,31 +17,9 @@ task:
     - apt-get update -qq
     - apt-get install -y openjdk-21-jre-headless git curl jq > /dev/null 2>&1
 
-  setup_playit_script:
-    - chmod +x playit-linux-amd64
-    - |
-      if [ ! -f playit.toml ]; then
-        echo "ERROR: playit.toml not found!"
-        exit 1
-      fi
-      
-      ./playit-linux-amd64 > playit.log 2>&1 &
-      sleep 15
-      
-      if grep -q "claim url" playit.log 2>/dev/null; then
-        cat playit.log | grep -i "claim"
-        exit 1
-      fi
-      
-      (while true; do
-        if ! pgrep -f playit-linux-amd64 > /dev/null; then
-          ./playit-linux-amd64 > playit.log 2>&1 &
-        fi
-        sleep 10
-      done) &
-
   run_server_script:
     - |
+      echo "Starting Minecraft Fabric Server..."
       java -Xmx22G -Xms18G \
         -XX:+UseG1GC \
         -XX:+ParallelRefProcEnabled \
@@ -61,35 +39,53 @@ task:
         -XX:SurvivorRatio=32 \
         -XX:+PerfDisableSharedMem \
         -XX:MaxTenuringThreshold=1 \
-        -jar fabric-server.jar nogui > server.log 2>&1 &
+        -jar fabric-server.jar nogui 2>&1 | tee server.log &
       SERVER_PID=$!
       
-      sleep 30
-      tail -20 server.log
+      echo "Server started (PID: $SERVER_PID)"
+      echo "Waiting for server to initialize..."
+      sleep 5
       
-      tail -f server.log &
-      TAIL_PID=$!
+      echo "Starting Playit tunnel..."
+      chmod +x playit-linux-amd64
+      
+      if [ ! -f playit.toml ]; then
+        echo "ERROR: playit.toml not found!"
+        kill -9 $SERVER_PID
+        exit 1
+      fi
+      
+      (while true; do
+        ./playit-linux-amd64 2>&1 | tee -a playit.log
+        echo "Playit stopped, restarting in 5s..."
+        sleep 5
+      done) &
+      
+      echo "Playit started, tunnel should be active now"
       
       MAX_TIME=6600
       ELAPSED=0
       
       while [ $ELAPSED -lt $MAX_TIME ]; do
         if ! kill -0 $SERVER_PID 2>/dev/null; then
+          echo "Server stopped"
           break
         fi
         sleep 10
         ELAPSED=$((ELAPSED + 10))
         
         if [ $((ELAPSED % 600)) -eq 0 ]; then
-          echo "Running for $((ELAPSED / 60)) minutes..."
+          echo "=== Server running for $((ELAPSED / 60)) minutes ==="
         fi
       done
       
+      echo "Shutting down..."
       kill -TERM $SERVER_PID 2>/dev/null || true
-      kill -TERM $TAIL_PID 2>/dev/null || true
       pkill -TERM playit-linux-amd64 2>/dev/null || true
       sleep 10
+      pkill -9 playit-linux-amd64 2>/dev/null || true
       
+      echo "=== Final 50 lines of server log ==="
       tail -50 server.log
 
   always:
