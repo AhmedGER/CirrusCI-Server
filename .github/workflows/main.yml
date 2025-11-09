@@ -80,6 +80,8 @@ jobs:
             if ! kill -0 $SERVER_PID 2>/dev/null; then
               echo ""
               echo "=== Fabric Server Stopped - Shutting down everything ==="
+            break
+          fi
             
             sleep $CHECK_INTERVAL
             ELAPSED=$((ELAPSED + CHECK_INTERVAL))
@@ -89,7 +91,6 @@ jobs:
             fi 
           done
 
-          if kill -0 $SERVER_PID 2>/dev/null; then
           echo "⏹️ Stopping all processes..."
           kill -TERM $SERVER_PID 2>/dev/null || true
           sleep 5
