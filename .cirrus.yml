@@ -1,6 +1,6 @@
 # .cirrus.yml
 container:
-  image: ubuntu:22.04  # نفس Ubuntu بتاع GitHub
+  image: ubuntu:22.04
   cpu: 8
   memory: 24G
 
@@ -10,58 +10,27 @@ env:
   DEBIAN_FRONTEND: noninteractive
 
 task:
-  name: server proxy
-  timeout_in: 360m  # نفس 360 دقيقة زي GitHub
+  name: Minecraft Fabric Server
+  timeout_in: 120m
 
-  # Checkout (زي actions/checkout@v4)
-  clone_script:
-    - git config --global user.name "Cirrus Bot"
-    - git config --global user.email "bot@cirrus-ci.com"
-
-  # Setup Java 21 (زي actions/setup-java@v3)
-  setup_java_script:
+  install_java_script:
     - apt-get update -qq
     - apt-get install -y openjdk-21-jre-headless git curl jq > /dev/null 2>&1
-
-  # Download Paper 1.16.5 (نفس الخطوة)
-  download_paper_script:
+    
+  run_server_script:
     - |
-      if [ -f world.zip ]; then
-        echo "=== Extracting world.zip ==="
-        unzip -q world.zip
-        echo "✔ World extracted successfully"
-      else
-        echo "ℹ️ No world.zip found, using existing world"
-      fi
-
-  # Setup Playit Tunnel (نفس الخطوة بالظبط)
-  setup_playit_script:
-    - |
-      echo "=== Setting up Playit Tunnel with monitoring ==="
-      
+      echo "Starting Playit tunnel..."
       chmod +x playit-linux-amd64
-      
-      if [ -f playit.toml ]; then
-        echo "✔ Using existing playit.toml"
-      else
-        echo "⚠️ No playit config found"
-      fi
       
       while true; do
         ./playit-linux-amd64 >/dev/null 2>&1 || sleep 5
       done &
       
-      echo "✔ Playit tunnel started with auto-restart"
-      echo "ℹ️ Paper port (25565) and Velocity port (25577) will be tunneled"
+      echo "Playit started, waiting 10 seconds..."
       sleep 10
-
-  # Run Both Servers (نفس الخطوة بالظبط)
-  run_servers_script:
-    - |
-      echo "=== Starting Paper Server on port 25565 ==="
       
-      java -DPaper.IgnoreJavaVersion=true \
-        -Xmx14848M -Xms10240M \
+      echo "Starting Fabric Server..."
+      java -Xmx22G -Xms18G \
         -XX:+UseG1GC \
         -XX:+ParallelRefProcEnabled \
         -XX:MaxGCPauseMillis=200 \
@@ -80,99 +49,43 @@ task:
         -XX:SurvivorRatio=32 \
         -XX:+PerfDisableSharedMem \
         -XX:MaxTenuringThreshold=1 \
-        -Dusing.aikars.flags=https://mcflags.emc.gs \
-        -Daikars.new.flags=true \
         -jar fabric-server.jar --nogui &
-      PAPER_PID=$!
+      SERVER_PID=$!
       
-      echo "✔ Paper Server started (PID: $PAPER_PID)"
-      echo "⏳ Waiting 60 seconds for Paper to start..."
-      sleep 60
+      echo "Server started (PID: $SERVER_PID)"
       
-      echo "=== Starting Velocity Proxy on port 25577 ==="
-      
-      cd velocity
-      java -Xmx512M -Xms512M \
-        -XX:+UseG1GC \
-        -XX:G1HeapRegionSize=4M \
-        -XX:+UnlockExperimentalVMOptions \
-        -XX:+ParallelRefProcEnabled \
-        -XX:+DisableExplicitGC \
-        -XX:+AlwaysPreTouch \
-        -jar velocity.jar &
-      VELOCITY_PID=$!
-      cd ..
-      
-      echo "✔ Velocity Proxy started (PID: $VELOCITY_PID)"
-      echo ""
-      echo "=== Both Servers are now ONLINE ==="
-      echo "📍 Paper (Java players): port 25565"
-      echo "📍 Velocity (Eaglercraft): port 25577"
-      echo "ℹ️ Type 'stop' in Paper to shutdown everything"
-      
-      MAX_TIME=20700
+      MAX_TIME=6600
       ELAPSED=0
-      CHECK_INTERVAL=10
       
       while [ $ELAPSED -lt $MAX_TIME ]; do
-        # Check if Paper stopped
-        if ! kill -0 $PAPER_PID 2>/dev/null; then
-          echo ""
-          echo "=== Paper Server Stopped - Shutting down everything ==="
+        if ! kill -0 $SERVER_PID 2>/dev/null; then
+          echo "Server stopped"
           break
         fi
+        sleep 10
+        ELAPSED=$((ELAPSED + 10))
         
-        # Check if Velocity stopped unexpectedly
-        if ! kill -0 $VELOCITY_PID 2>/dev/null; then
-          echo ""
-          echo "⚠️ Velocity stopped unexpectedly - Continuing Paper server"
-        fi
-        
-        sleep $CHECK_INTERVAL
-        ELAPSED=$((ELAPSED + CHECK_INTERVAL))
-        
-        if [ $((ELAPSED % 1800)) -eq 0 ]; then
-          echo "⏰ Servers running... $((ELAPSED / 60)) minutes elapsed"
+        if [ $((ELAPSED % 600)) -eq 0 ]; then
+          echo "Running for $((ELAPSED / 60)) minutes..."
         fi
       done
       
-      echo "⏹️ Stopping all processes..."
-      kill -TERM $PAPER_PID 2>/dev/null || true
-      kill -TERM $VELOCITY_PID 2>/dev/null || true
-      sleep 5
-      kill -9 $PAPER_PID 2>/dev/null || true
-      kill -9 $VELOCITY_PID 2>/dev/null || true
-      
+      echo "Shutting down..."
+      kill -TERM $SERVER_PID 2>/dev/null || true
       pkill -TERM playit-linux-amd64 2>/dev/null || true
-      sleep 2
-      pkill -9 playit-linux-amd64 2>/dev/null || true
-      
-      echo "✔ All servers and tunnels stopped"
+      sleep 10
 
-  # Save world and config (always block زي GitHub)
   always:
     save_world_script:
-      - |
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        
-        git add -A
-        
-        if ! git diff --cached --quiet 2>/dev/null; then
-          git commit -m "Auto-save: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
-          git pull --rebase --autostash \
-            https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git
-          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git HEAD:main || true
-          echo "✔ Changes saved to repository"
-        else
-          echo "ℹ️ No changes to save"
-        fi
+      - git config user.email "bot@cirrus-ci.com"
+      - git config user.name "Cirrus Bot"
+      - git add -A
+      - git diff --cached --quiet || git commit -m "Auto-save $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+      - git push https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git HEAD:main || true
     
-    # Auto-retrigger workflow (زي GitHub)
     retrigger_script:
+      - sleep 60
       - |
-        sleep 30
-        
         REPO_ID=$(curl -s \
           -H "Authorization: Bearer ${CIRRUS_API_TOKEN}" \
           -H "Content-Type: application/json" \
@@ -180,21 +93,9 @@ task:
           https://api.cirrus-ci.com/graphql | jq -r '.data.githubRepository.id')
         
         if [ -n "$REPO_ID" ] && [ "$REPO_ID" != "null" ]; then
-          RUNNING_BUILDS=$(curl -s \
+          curl -X POST \
             -H "Authorization: Bearer ${CIRRUS_API_TOKEN}" \
             -H "Content-Type: application/json" \
-            -d '{"query":"query { githubRepository(owner: \"'$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f1)'\", name: \"'$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f2)'\") { builds(last: 5) { edges { node { status } } } } }"}' \
-            https://api.cirrus-ci.com/graphql | jq -r '.data.githubRepository.builds.edges[].node.status' | grep -c "EXECUTING" || echo "0")
-          
-          if [ "$RUNNING_BUILDS" -le 1 ]; then
-            echo "No other workflows running, retriggering..."
-            curl -X POST \
-              -H "Authorization: Bearer ${CIRRUS_API_TOKEN}" \
-              -H "Content-Type: application/json" \
-              -d '{"query":"mutation { trigger(input: {repositoryId: \"'$REPO_ID'\", branch: \"main\"}) { build { id } } }"}' \
-              https://api.cirrus-ci.com/graphql
-            echo "✔ Workflow retriggered"
-          else
-            echo "Other workflows are running, skipping retrigger"
-          fi
+            -d '{"query":"mutation { trigger(input: {repositoryId: \"'$REPO_ID'\", branch: \"main\"}) { build { id } } }"}' \
+            https://api.cirrus-ci.com/graphql
         fi
