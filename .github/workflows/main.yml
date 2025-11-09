@@ -58,7 +58,7 @@ jobs:
           echo "=== Starting Minecraft Server ==="
           
           java -DPaper.IgnoreJavaVersion=true \
-            -Xmx16G -Xms12G \
+            -Xmx15G -Xms12G \
             -XX:+UseG1GC \
             -XX:+ParallelRefProcEnabled \
             -XX:MaxGCPauseMillis=200 \
@@ -112,19 +112,27 @@ jobs:
             fi
           done
           
+          echo ""
+          echo "=== Cleanup Phase ==="
+          
           if kill -0 $SERVER_PID 2>/dev/null; then
-            echo ""
-            echo "=== Time Limit Reached - Stopping Server ==="
+            echo "Time limit reached - stopping server gracefully..."
             kill -TERM $SERVER_PID 2>/dev/null || true
             sleep 5
             kill -9 $SERVER_PID 2>/dev/null || true
+          else
+            echo "Server already stopped"
           fi
           
+          echo "Stopping playit..."
           pkill -TERM playit-linux-amd64 2>/dev/null || true
           sleep 2
           pkill -9 playit-linux-amd64 2>/dev/null || true
           
-          echo "✔ Server stopped"
+          echo "✔ All processes stopped successfully"
+          echo "✔ Step completed - moving to save phase"
+          
+          exit 0
           
       - name: Save world and config
         if: always()
@@ -133,29 +141,45 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
+          echo "Adding files..."
           git add -A
           
           if ! git diff --cached --quiet 2>/dev/null; then
+            echo "Changes detected, committing..."
             git commit -m "Auto-save: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+            
+            echo "Pulling latest changes..."
             git pull --rebase --autostash origin main
+            
+            echo "Pushing to repository..."
             git push origin main
+            
             echo "✔ Changes saved to repository"
           else
             echo "ℹ️ No changes to save"
           fi
+          
+          echo "✔ Save step completed"
+          exit 0
           
       - name: Auto-retrigger workflow
         if: always()
         env:
           GH_TOKEN: ${{ secrets.PAT }}
         run: |
+          echo "Checking running workflows..."
+          
           runs=$(gh run list -w main.yml --json status -q \
                '[.[] | select(.status=="queued" or .status=="in_progress")] | length')
+          
+          echo "Found $runs running workflow(s)"
           
           if [ "$runs" -le 1 ]; then
             echo "No other workflows running, retriggering..."
             gh workflow run main.yml
-            echo "✔ Workflow retriggered"
+            echo "✔ Workflow retriggered successfully"
           else
-            echo "Other workflows are running, skipping retrigger"
+            echo "Other workflows are running ($runs), skipping retrigger"
           fi
+          
+          exit 0
