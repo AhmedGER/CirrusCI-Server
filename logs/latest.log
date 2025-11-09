@@ -1,8 +1,8 @@
-[10:49:14] [main/INFO]: Loading Minecraft 1.20.1 with Fabric Loader 0.16.10
-[10:49:14] [main/WARN]: Warnings were found!
+[16:35:57] [main/INFO]: Loading Minecraft 1.20.1 with Fabric Loader 0.16.10
+[16:35:58] [main/WARN]: Warnings were found!
  - Mod 'TAB' (tab) 4.1.2 recommends any version of fabric-permissions-api-v0, which is missing!
 	 - You should install any version of fabric-permissions-api-v0 for the optimal experience.
-[10:49:14] [main/INFO]: Loading 51 mods:
+[16:35:58] [main/INFO]: Loading 51 mods:
 	- craftcontrolrcon 1.20-1.0.1
 	- fabric-api 0.92.6+1.20.1
 	   |-- fabric-api-base 0.4.32+1802ada577
@@ -68,436 +68,201 @@
 	   \-- viafabric-mc1201 0.4.18+104-main
 	- viarewind 4.0.10
 	- viaversion 5.5.1
-[10:49:14] [main/INFO]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/home/runner/work/CirrusCI-Server/CirrusCI-Server/libraries/net/fabricmc/sponge-mixin/0.15.4+mixin.0.8.7/sponge-mixin-0.15.4+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
-[10:49:14] [main/INFO]: Compatibility level set to JAVA_17
-[10:49:15] [main/INFO]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.1).
-[10:49:22] [Via-Mappingloader-0/INFO]: Loading block connection mappings ...
-[10:49:22] [Via-Mappingloader-0/INFO]: Using FastUtil Long2ObjectOpenHashMap for block connections
-[10:49:22] [main/INFO]: Loading translations...
-[10:49:22] [main/INFO]: Registering protocols...
-[10:49:22] [main/INFO]: Registering protocols...
-[10:49:22] [main/INFO]: ViaVersion detected server version: 1.20-1.20.1 (763)
-[10:49:22] [ViaFabric-2/INFO]: Finished mapping loading, shutting down loader executor.
-[10:49:23] [main/INFO]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
-[10:49:24] [main/INFO]: Loaded 7 recipes
-[10:49:24] [main/INFO]: Loaded 1271 advancements
-[10:49:25] [main/INFO]: Applied 0 biome modifications to 0 of 64 new biomes in 1.538 ms
-[10:49:25] [Server thread/INFO]: Enabled in 142ms
-[10:49:25] [Server thread/INFO]: Starting minecraft server version 1.20.1
-[10:49:25] [Server thread/INFO]: Loading properties
-[10:49:25] [Server thread/INFO]: Default game type: SURVIVAL
-[10:49:25] [Server thread/INFO]: Generating keypair
-[10:49:25] [Server thread/INFO]: Starting Minecraft server on *:25565
-[10:49:25] [Server thread/INFO]: Using epoll channel type
-[10:49:25] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
-[10:49:25] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
-[10:49:25] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
-[10:49:25] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
-[10:49:25] [Server thread/INFO]: Preparing level "world"
-[10:49:29] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
-[10:49:31] [Worker-Main-2/INFO]: Preparing spawn area: 0%
-[10:49:31] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[10:49:31] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[10:49:31] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[10:49:31] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[10:49:32] [Worker-Main-3/INFO]: Preparing spawn area: 30%
-[10:49:32] [Server thread/INFO]: Time elapsed: 2932 ms
-[10:49:32] [Server thread/INFO]: Done (6.760s)! For help, type "help"
-[10:49:32] [Server thread/INFO]: Starting remote control listener
-[10:49:32] [Server thread/INFO]: Thread RCON Listener started
-[10:49:32] [Server thread/INFO]: RCON running on 0.0.0.0:25575
-[10:50:15] [Server thread/INFO]: SIGMAxox[/127.138.79.206:59647] logged in with entity id 204 at (-21.983664183901126, 70.22149363870948, 25.46877240386329)
-[10:50:15] [Netty Epoll Server IO #3/WARN]: (1.17->1.16.4) Increased world height is NOT SUPPORTED for 1.16 players and below. They will see a void below y 0 and above 256. You can enable the `bedrock-at-y-0` config option to replace the air with a bedrock layer.
-[10:50:15] [Server thread/INFO]: SIGMAxox joined the game
-[10:50:29] [Server thread/INFO]: SIGMAxox was slain by Zombie
-[10:50:39] [RCON Listener #1/INFO]: Thread RCON Client /127.146.114.135 started
-[10:50:39] [RCON Client /127.146.114.135 #2/INFO]: Thread RCON Client /127.146.114.135 shutting down
-[10:51:12] [Server thread/INFO]: SIGMAxox was slain by Zombie
-[10:51:43] [Server thread/INFO]: SIGMAxox was slain by Zombie
-[10:51:46] [Server thread/INFO]: SIGMAxox lost connection: Disconnected
-[10:51:46] [Server thread/INFO]: SIGMAxox left the game
-[10:52:13] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[10:52:13] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[10:52:13] [RCON Client /127.28.183.93 #3/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[10:52:13] [RCON Client /127.28.183.93 #4/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[10:52:14] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[10:52:15] [RCON Client /127.28.183.93 #5/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[10:52:15] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[10:52:15] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[10:52:15] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[10:52:15] [RCON Client /127.28.183.93 #6/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[10:52:16] [RCON Client /127.28.183.93 #7/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[10:52:16] [RCON Client /127.28.183.93 #8/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[11:00:08] [Server thread/INFO]: SIGMAxox[/127.138.79.206:51511] logged in with entity id 458 at (-81.96661710967759, 70.0, -11.550713875495948)
-[11:00:08] [Server thread/INFO]: SIGMAxox joined the game
-[11:03:19] [RCON Listener #1/INFO]: Thread RCON Client /127.200.240.168 started
-[11:03:20] [RCON Client /127.200.240.168 #9/INFO]: Thread RCON Client /127.200.240.168 shutting down
-[11:03:31] [Server thread/INFO]: [SIGMAxox: Set own game mode to Creative Mode]
-[11:03:34] [RCON Listener #1/INFO]: Thread RCON Client /127.23.183.74 started
-[11:03:34] [RCON Listener #1/INFO]: Thread RCON Client /127.23.183.74 started
-[11:03:34] [RCON Client /127.23.183.74 #11/INFO]: Thread RCON Client /127.23.183.74 shutting down
-[11:03:34] [RCON Client /127.23.183.74 #10/INFO]: Thread RCON Client /127.23.183.74 shutting down
-[11:03:35] [RCON Listener #1/INFO]: Thread RCON Client /127.23.183.74 started
-[11:03:35] [RCON Client /127.23.183.74 #12/INFO]: Thread RCON Client /127.23.183.74 shutting down
-[11:03:35] [RCON Listener #1/INFO]: Thread RCON Client /127.23.183.74 started
-[11:03:35] [RCON Listener #1/INFO]: Thread RCON Client /127.23.183.74 started
-[11:03:36] [RCON Listener #1/INFO]: Thread RCON Client /127.23.183.74 started
-[11:03:36] [RCON Client /127.23.183.74 #13/INFO]: Thread RCON Client /127.23.183.74 shutting down
-[11:03:36] [RCON Client /127.23.183.74 #14/INFO]: Thread RCON Client /127.23.183.74 shutting down
-[11:03:36] [RCON Client /127.23.183.74 #15/INFO]: Thread RCON Client /127.23.183.74 shutting down
-[11:04:59] [Server thread/INFO]: [SIGMAxox: Set own game mode to Survival Mode]
-[11:05:36] [Server thread/INFO]: [SIGMAxox: Set own game mode to Creative Mode]
-[11:06:20] [Server thread/INFO]: [SIGMAxox: Set the time to 1000]
-[11:06:30] [Server thread/INFO]: [SIGMAxox: Set own game mode to Survival Mode]
-[11:07:43] [Server thread/INFO]: SIGMAxox fell from a high place
-[11:08:06] [Server thread/INFO]: SIGMAxox lost connection: Disconnected
-[11:08:06] [Server thread/INFO]: SIGMAxox left the game
-[11:31:34] [RCON Listener #1/INFO]: Thread RCON Client /127.225.11.198 started
-[11:31:34] [RCON Listener #1/INFO]: Thread RCON Client /127.225.11.198 started
-[11:31:34] [RCON Client /127.225.11.198 #17/INFO]: Thread RCON Client /127.225.11.198 shutting down
-[11:31:34] [RCON Client /127.225.11.198 #16/INFO]: Thread RCON Client /127.225.11.198 shutting down
-[11:31:35] [RCON Listener #1/INFO]: Thread RCON Client /127.225.11.198 started
-[11:31:35] [RCON Client /127.225.11.198 #18/INFO]: Thread RCON Client /127.225.11.198 shutting down
-[11:31:35] [RCON Listener #1/INFO]: Thread RCON Client /127.225.11.198 started
-[11:31:35] [RCON Listener #1/INFO]: Thread RCON Client /127.225.11.198 started
-[11:31:35] [RCON Listener #1/INFO]: Thread RCON Client /127.225.11.198 started
-[11:31:36] [RCON Client /127.225.11.198 #19/INFO]: Thread RCON Client /127.225.11.198 shutting down
-[11:31:36] [RCON Client /127.225.11.198 #20/INFO]: Thread RCON Client /127.225.11.198 shutting down
-[11:31:36] [RCON Client /127.225.11.198 #21/INFO]: Thread RCON Client /127.225.11.198 shutting down
-[11:32:54] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[11:32:54] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[11:32:54] [RCON Client /127.59.56.116 #22/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[11:32:55] [RCON Client /127.59.56.116 #23/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[11:32:55] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[11:32:55] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[11:32:55] [RCON Client /127.59.56.116 #24/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[11:32:55] [RCON Client /127.59.56.116 #25/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[11:32:56] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[11:32:56] [RCON Client /127.59.56.116 #26/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[11:32:56] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[11:32:56] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[11:32:56] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[11:32:56] [RCON Client /127.59.56.116 #27/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[11:32:57] [RCON Client /127.59.56.116 #28/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[11:32:57] [RCON Client /127.59.56.116 #29/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[11:32:57] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[11:32:57] [RCON Client /127.59.56.116 #30/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[11:39:00] [RCON Listener #1/INFO]: Thread RCON Client /127.97.139.127 started
-[11:39:01] [RCON Client /127.97.139.127 #31/INFO]: Thread RCON Client /127.97.139.127 shutting down
-[11:39:07] [RCON Listener #1/INFO]: Thread RCON Client /127.97.139.127 started
-[11:39:08] [RCON Client /127.97.139.127 #32/INFO]: Thread RCON Client /127.97.139.127 shutting down
-[11:39:08] [RCON Listener #1/INFO]: Thread RCON Client /127.97.139.127 started
-[11:39:09] [RCON Client /127.97.139.127 #33/INFO]: Thread RCON Client /127.97.139.127 shutting down
-[11:51:11] [Server thread/INFO]: SIGMAxox[/127.138.79.206:44315] logged in with entity id 2230 at (-25.921527174385005, 63.0, -14.358701472038653)
-[11:51:11] [Server thread/INFO]: SIGMAxox joined the game
-[11:52:13] [Server thread/INFO]: SIGMAxox lost connection: Disconnected
-[11:52:13] [Server thread/INFO]: SIGMAxox left the game
-[12:01:33] [RCON Listener #1/INFO]: Thread RCON Client /127.69.253.235 started
-[12:01:33] [RCON Client /127.69.253.235 #34/INFO]: Thread RCON Client /127.69.253.235 shutting down
-[12:05:24] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[12:05:24] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[12:05:24] [RCON Client /127.44.127.145 #35/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[12:05:24] [RCON Client /127.44.127.145 #36/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[12:05:25] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[12:05:25] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[12:05:26] [RCON Client /127.44.127.145 #37/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[12:05:26] [RCON Client /127.44.127.145 #38/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[12:05:26] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[12:05:26] [RCON Client /127.44.127.145 #39/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[12:05:27] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[12:05:27] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[12:05:27] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[12:05:28] [RCON Client /127.44.127.145 #41/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[12:05:28] [RCON Client /127.44.127.145 #40/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[12:05:28] [RCON Client /127.44.127.145 #42/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[12:05:28] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[12:05:28] [RCON Client /127.44.127.145 #43/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[12:05:35] [RCON Listener #1/INFO]: Thread RCON Client /127.205.217.186 started
-[12:05:36] [RCON Client /127.205.217.186 #44/INFO]: Thread RCON Client /127.205.217.186 shutting down
-[12:09:38] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
-[12:09:38] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
-[12:09:39] [RCON Client /127.98.140.75 #45/INFO]: Thread RCON Client /127.98.140.75 shutting down
-[12:09:39] [RCON Client /127.98.140.75 #46/INFO]: Thread RCON Client /127.98.140.75 shutting down
-[12:09:39] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
-[12:09:40] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
-[12:09:40] [RCON Client /127.98.140.75 #47/INFO]: Thread RCON Client /127.98.140.75 shutting down
-[12:09:41] [RCON Client /127.98.140.75 #48/INFO]: Thread RCON Client /127.98.140.75 shutting down
-[12:09:41] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
-[12:09:41] [RCON Client /127.98.140.75 #49/INFO]: Thread RCON Client /127.98.140.75 shutting down
-[12:09:42] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
-[12:09:42] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
-[12:09:42] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
-[12:09:42] [RCON Client /127.98.140.75 #50/INFO]: Thread RCON Client /127.98.140.75 shutting down
-[12:09:42] [RCON Client /127.98.140.75 #52/INFO]: Thread RCON Client /127.98.140.75 shutting down
-[12:09:42] [RCON Client /127.98.140.75 #51/INFO]: Thread RCON Client /127.98.140.75 shutting down
-[12:09:42] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
-[12:09:43] [RCON Client /127.98.140.75 #53/INFO]: Thread RCON Client /127.98.140.75 shutting down
-[12:22:26] [RCON Listener #1/INFO]: Thread RCON Client /127.128.70.68 started
-[12:22:27] [RCON Client /127.128.70.68 #54/INFO]: Thread RCON Client /127.128.70.68 shutting down
-[12:25:11] [RCON Listener #1/INFO]: Thread RCON Client /127.185.220.209 started
-[12:25:12] [RCON Client /127.185.220.209 #55/INFO]: Thread RCON Client /127.185.220.209 shutting down
-[12:27:33] [RCON Listener #1/INFO]: Thread RCON Client /127.23.130.128 started
-[12:27:34] [RCON Client /127.23.130.128 #56/INFO]: Thread RCON Client /127.23.130.128 shutting down
-[12:36:56] [RCON Listener #1/INFO]: Thread RCON Client /127.71.156.61 started
-[12:36:56] [RCON Client /127.71.156.61 #57/INFO]: Thread RCON Client /127.71.156.61 shutting down
-[12:37:11] [RCON Listener #1/INFO]: Thread RCON Client /127.71.156.61 started
-[12:37:11] [RCON Client /127.71.156.61 #58/INFO]: Thread RCON Client /127.71.156.61 shutting down
-[12:53:57] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[12:53:58] [RCON Client /127.28.183.93 #59/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[12:53:58] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[12:53:58] [RCON Client /127.28.183.93 #60/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[12:53:58] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[12:53:59] [RCON Client /127.28.183.93 #61/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[12:53:59] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[12:53:59] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[12:53:59] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[12:53:59] [RCON Client /127.28.183.93 #63/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[12:53:59] [RCON Client /127.28.183.93 #62/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[12:53:59] [RCON Client /127.28.183.93 #64/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[13:13:35] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
-[13:13:35] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
-[13:13:36] [RCON Client /127.185.91.45 #65/INFO]: Thread RCON Client /127.185.91.45 shutting down
-[13:13:36] [RCON Client /127.185.91.45 #66/INFO]: Thread RCON Client /127.185.91.45 shutting down
-[13:13:36] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
-[13:13:36] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
-[13:13:37] [RCON Client /127.185.91.45 #68/INFO]: Thread RCON Client /127.185.91.45 shutting down
-[13:13:37] [RCON Client /127.185.91.45 #67/INFO]: Thread RCON Client /127.185.91.45 shutting down
-[13:13:37] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
-[13:13:37] [RCON Client /127.185.91.45 #69/INFO]: Thread RCON Client /127.185.91.45 shutting down
-[13:13:37] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
-[13:13:37] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
-[13:13:37] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
-[13:13:38] [RCON Client /127.185.91.45 #70/INFO]: Thread RCON Client /127.185.91.45 shutting down
-[13:13:38] [RCON Client /127.185.91.45 #72/INFO]: Thread RCON Client /127.185.91.45 shutting down
-[13:13:38] [RCON Client /127.185.91.45 #71/INFO]: Thread RCON Client /127.185.91.45 shutting down
-[13:13:38] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
-[13:13:38] [RCON Client /127.185.91.45 #73/INFO]: Thread RCON Client /127.185.91.45 shutting down
-[13:17:48] [RCON Listener #1/INFO]: Thread RCON Client /127.118.166.80 started
-[13:17:49] [RCON Client /127.118.166.80 #74/INFO]: Thread RCON Client /127.118.166.80 shutting down
-[13:23:48] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[13:23:48] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[13:23:48] [RCON Client /127.170.224.180 #76/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[13:23:48] [RCON Client /127.170.224.180 #75/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[13:23:48] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[13:23:48] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[13:23:49] [RCON Client /127.170.224.180 #77/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[13:23:49] [RCON Client /127.170.224.180 #78/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[13:23:49] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[13:23:49] [RCON Client /127.170.224.180 #79/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[13:23:49] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[13:23:49] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[13:23:49] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[13:23:50] [RCON Client /127.170.224.180 #80/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[13:23:50] [RCON Client /127.170.224.180 #82/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[13:23:50] [RCON Client /127.170.224.180 #81/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[13:23:50] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[13:23:50] [RCON Client /127.170.224.180 #83/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[13:27:40] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
-[13:27:41] [RCON Client /127.98.140.75 #84/INFO]: Thread RCON Client /127.98.140.75 shutting down
-[14:15:15] [RCON Listener #1/INFO]: Thread RCON Client /127.146.114.135 started
-[14:15:15] [RCON Listener #1/INFO]: Thread RCON Client /127.146.114.135 started
-[14:15:15] [RCON Client /127.146.114.135 #85/INFO]: Thread RCON Client /127.146.114.135 shutting down
-[14:15:15] [RCON Client /127.146.114.135 #86/INFO]: Thread RCON Client /127.146.114.135 shutting down
-[14:15:33] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[14:15:33] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[14:15:34] [RCON Client /127.44.127.145 #87/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[14:15:34] [RCON Client /127.44.127.145 #88/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[14:15:34] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[14:15:35] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[14:15:35] [RCON Client /127.44.127.145 #90/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[14:15:35] [RCON Client /127.44.127.145 #89/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[14:15:36] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[14:15:36] [RCON Client /127.44.127.145 #91/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[14:15:36] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[14:15:37] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[14:15:37] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[14:15:37] [RCON Client /127.44.127.145 #93/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[14:15:37] [RCON Client /127.44.127.145 #94/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[14:15:38] [RCON Client /127.44.127.145 #92/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[14:15:38] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
-[14:15:38] [RCON Client /127.44.127.145 #95/INFO]: Thread RCON Client /127.44.127.145 shutting down
-[14:15:40] [RCON Listener #1/INFO]: Thread RCON Client /127.146.114.135 started
-[14:15:40] [RCON Client /127.146.114.135 #96/INFO]: Thread RCON Client /127.146.114.135 shutting down
-[14:15:50] [RCON Listener #1/INFO]: Thread RCON Client /127.146.114.135 started
-[14:15:51] [RCON Client /127.146.114.135 #97/INFO]: Thread RCON Client /127.146.114.135 shutting down
-[14:20:15] [RCON Listener #1/INFO]: Thread RCON Client /127.66.140.104 started
-[14:20:15] [RCON Client /127.66.140.104 #98/INFO]: Thread RCON Client /127.66.140.104 shutting down
-[14:22:51] [RCON Listener #1/INFO]: Thread RCON Client /127.66.140.104 started
-[14:22:51] [RCON Client /127.66.140.104 #99/INFO]: Thread RCON Client /127.66.140.104 shutting down
-[14:24:59] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[14:24:59] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[14:24:59] [RCON Client /127.170.224.180 #101/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[14:24:59] [RCON Client /127.170.224.180 #100/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[14:24:59] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[14:24:59] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[14:25:00] [RCON Client /127.170.224.180 #102/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[14:25:00] [RCON Client /127.170.224.180 #103/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[14:25:00] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[14:25:00] [RCON Client /127.170.224.180 #104/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[14:25:00] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[14:25:00] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[14:25:01] [RCON Client /127.170.224.180 #105/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[14:25:01] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[14:25:01] [RCON Client /127.170.224.180 #106/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[14:25:01] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[14:25:01] [RCON Client /127.170.224.180 #108/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[14:26:02] [RCON Client /127.170.224.180 #107/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[14:30:01] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[14:30:01] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[14:30:01] [RCON Client /127.28.183.93 #110/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[14:30:01] [RCON Client /127.28.183.93 #109/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[14:30:02] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[14:30:02] [RCON Client /127.28.183.93 #111/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[14:30:02] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[14:30:02] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[14:30:02] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[14:30:03] [RCON Client /127.28.183.93 #112/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[14:30:03] [RCON Client /127.28.183.93 #113/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[14:30:03] [RCON Client /127.28.183.93 #114/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[14:33:23] [Server thread/INFO]: /127.18.174.238:44421 lost connection: Timed out
-[14:33:27] [Server thread/INFO]: SIGMAxox[/127.18.174.238:43027] logged in with entity id 2602 at (-59.432054198313296, 71.0, -8.692278332425563)
-[14:33:27] [Server thread/INFO]: SIGMAxox joined the game
-[14:33:33] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[14:33:33] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[14:33:34] [RCON Client /127.59.56.116 #115/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[14:33:34] [RCON Client /127.59.56.116 #116/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[14:33:35] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[14:33:35] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[14:33:36] [RCON Client /127.59.56.116 #117/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[14:33:36] [RCON Client /127.59.56.116 #118/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[14:33:36] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[14:33:37] [RCON Client /127.59.56.116 #119/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[14:33:37] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[14:33:37] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[14:33:40] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[14:33:41] [RCON Listener #1/INFO]: Thread RCON Client /127.59.56.116 started
-[14:33:41] [RCON Client /127.59.56.116 #123/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[14:34:47] [RCON Client /127.59.56.116 #122/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[14:34:47] [RCON Client /127.59.56.116 #121/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[14:34:47] [RCON Client /127.59.56.116 #120/INFO]: Thread RCON Client /127.59.56.116 shutting down
-[14:35:25] [Server thread/INFO]: SIGMAxox was killed
-[14:35:25] [Server thread/INFO]: [SIGMAxox: Killed SIGMAxox]
-[14:36:23] [Server thread/INFO]: SIGMAxox lost connection: Disconnected
-[14:36:23] [Server thread/INFO]: SIGMAxox left the game
-[14:36:41] [Server thread/INFO]: SIGMAxox[/127.18.174.238:44691] logged in with entity id 3653 at (4.577644425068187, 71.0, 45.62977806906322)
-[14:36:41] [Server thread/INFO]: SIGMAxox joined the game
-[14:37:23] [Server thread/INFO]: SIGMAxox was slain by Zombie
-[14:38:02] [Server thread/INFO]: SIGMAxox lost connection: Disconnected
-[14:38:02] [Server thread/INFO]: SIGMAxox left the game
-[14:42:03] [Server thread/INFO]: SIGMAxox[/127.18.174.238:49879] logged in with entity id 3967 at (-99.08358696154112, 71.0, 25.09904269400331)
-[14:42:03] [Server thread/INFO]: SIGMAxox joined the game
-[14:42:03] [Server thread/INFO]: SIGMAxox lost connection: Disconnected
-[14:42:03] [Server thread/INFO]: SIGMAxox left the game
-[14:44:52] [Server thread/INFO]: SIGMAxox[/127.18.174.238:43809] logged in with entity id 3983 at (-99.08358696154112, 71.0, 25.09904269400331)
-[14:44:52] [Server thread/INFO]: SIGMAxox joined the game
-[14:45:12] [Server thread/INFO]: [SIGMAxox: Set the time to 1000]
-[14:45:22] [Server thread/INFO]: SIGMAxox lost connection: Timed out
-[14:45:22] [Server thread/INFO]: SIGMAxox left the game
-[14:45:46] [Server thread/INFO]: SIGMAxox[/127.18.174.238:35483] logged in with entity id 4106 at (-117.08514254719508, 73.16610926093821, 23.868396617603665)
-[14:45:46] [Server thread/INFO]: SIGMAxox joined the game
-[14:46:14] [Server thread/INFO]: SIGMAxox fell from a high place
-[14:46:36] [Server thread/INFO]: [SIGMAxox: Set the time to 1000]
-[14:47:07] [Server thread/INFO]: SIGMAxox was doomed to fall by Skeleton
-[14:47:27] [Server thread/WARN]: SIGMAxox moved too quickly! -0.020093937926143113,2.176759275064242,9.814886483515892
-[14:49:29] [RCON Listener #1/INFO]: Thread RCON Client /127.111.237.92 started
-[14:49:29] [RCON Client /127.111.237.92 #124/INFO]: Thread RCON Client /127.111.237.92 shutting down
-[14:49:32] [Server thread/INFO]: SIGMAxox was slain by Cave Spider
-[14:53:13] [Server thread/INFO]: SIGMAxox has made the advancement [Ol' Betsy]
-[14:53:13] [Server thread/INFO]: SIGMAxox has made the advancement [Take Aim]
-[14:53:27] [Server thread/INFO]: SIGMAxox has made the advancement [Who's the Pillager Now?]
-[14:53:50] [Server thread/INFO]: SIGMAxox was shot by Pillager
-[14:56:06] [Server thread/INFO]: [SIGMAxox: Gave 128 [Acacia Planks] to SIGMAxox]
-[14:59:12] [Server thread/INFO]: SIGMAxox was slain by Zombie
-[14:59:26] [Server thread/INFO]: [SIGMAxox: Gave 128 [Acacia Planks] to SIGMAxox]
-[15:02:04] [Server thread/INFO]: SIGMAxox was blown up by Creeper
-[15:02:12] [Server thread/INFO]: [SIGMAxox: Gave 128 [Acacia Planks] to SIGMAxox]
-[15:03:08] [Server thread/INFO]: SIGMAxox lost connection: Disconnected
-[15:03:08] [Server thread/INFO]: SIGMAxox left the game
-[15:09:33] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[15:09:33] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[15:09:33] [RCON Client /127.170.224.180 #126/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[15:09:33] [RCON Client /127.170.224.180 #125/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[15:09:33] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[15:09:34] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[15:09:34] [RCON Client /127.170.224.180 #127/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[15:09:34] [RCON Client /127.170.224.180 #128/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[15:09:34] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[15:09:34] [RCON Client /127.170.224.180 #129/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[15:09:34] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[15:09:35] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[15:09:35] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[15:09:35] [RCON Client /127.170.224.180 #130/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[15:09:35] [RCON Client /127.170.224.180 #131/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[15:09:35] [RCON Client /127.170.224.180 #132/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[15:09:35] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[15:09:35] [RCON Client /127.170.224.180 #133/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[15:18:48] [RCON Listener #1/INFO]: Thread RCON Client /127.100.248.215 started
-[15:18:48] [RCON Listener #1/INFO]: Thread RCON Client /127.100.248.215 started
-[15:18:49] [RCON Client /127.100.248.215 #134/INFO]: Thread RCON Client /127.100.248.215 shutting down
-[15:18:49] [RCON Client /127.100.248.215 #135/INFO]: Thread RCON Client /127.100.248.215 shutting down
-[15:18:50] [RCON Listener #1/INFO]: Thread RCON Client /127.100.248.215 started
-[15:18:50] [RCON Listener #1/INFO]: Thread RCON Client /127.100.248.215 started
-[15:18:50] [RCON Client /127.100.248.215 #136/INFO]: Thread RCON Client /127.100.248.215 shutting down
-[15:18:50] [RCON Client /127.100.248.215 #137/INFO]: Thread RCON Client /127.100.248.215 shutting down
-[15:18:51] [RCON Listener #1/INFO]: Thread RCON Client /127.100.248.215 started
-[15:18:51] [RCON Client /127.100.248.215 #138/INFO]: Thread RCON Client /127.100.248.215 shutting down
-[15:18:51] [RCON Listener #1/INFO]: Thread RCON Client /127.100.248.215 started
-[15:18:52] [RCON Listener #1/INFO]: Thread RCON Client /127.100.248.215 started
-[15:18:52] [RCON Listener #1/INFO]: Thread RCON Client /127.100.248.215 started
-[15:18:52] [RCON Client /127.100.248.215 #141/INFO]: Thread RCON Client /127.100.248.215 shutting down
-[15:18:52] [RCON Client /127.100.248.215 #140/INFO]: Thread RCON Client /127.100.248.215 shutting down
-[15:18:52] [RCON Client /127.100.248.215 #139/INFO]: Thread RCON Client /127.100.248.215 shutting down
-[15:18:52] [RCON Listener #1/INFO]: Thread RCON Client /127.100.248.215 started
-[15:18:53] [RCON Client /127.100.248.215 #142/INFO]: Thread RCON Client /127.100.248.215 shutting down
-[15:21:22] [RCON Listener #1/INFO]: Thread RCON Client /127.53.48.8 started
-[15:21:22] [RCON Client /127.53.48.8 #143/INFO]: Thread RCON Client /127.53.48.8 shutting down
-[15:32:00] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[15:32:00] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[15:32:00] [RCON Client /127.28.183.93 #144/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[15:32:00] [RCON Client /127.28.183.93 #145/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[15:32:01] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[15:32:01] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[15:32:01] [RCON Client /127.28.183.93 #146/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[15:32:01] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[15:32:01] [RCON Client /127.28.183.93 #148/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[15:32:02] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[15:32:02] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[15:32:02] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[15:32:02] [RCON Client /127.28.183.93 #149/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[15:32:02] [RCON Client /127.28.183.93 #151/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[15:32:02] [RCON Client /127.28.183.93 #150/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[15:32:02] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[15:32:03] [RCON Client /127.28.183.93 #152/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[15:33:02] [RCON Client /127.28.183.93 #147/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[15:52:38] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[15:52:38] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[15:52:38] [RCON Client /127.28.183.93 #153/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[15:52:38] [RCON Client /127.28.183.93 #154/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[15:52:39] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[15:52:39] [RCON Client /127.28.183.93 #155/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[15:52:39] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[15:52:39] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[15:52:40] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
-[15:52:40] [RCON Client /127.28.183.93 #156/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[15:52:40] [RCON Client /127.28.183.93 #157/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[15:52:41] [RCON Client /127.28.183.93 #158/INFO]: Thread RCON Client /127.28.183.93 shutting down
-[15:58:15] [RCON Listener #1/INFO]: Thread RCON Client /127.94.122.211 started
-[15:58:15] [RCON Client /127.94.122.211 #159/INFO]: Thread RCON Client /127.94.122.211 shutting down
-[16:20:20] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[16:20:20] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[16:20:20] [RCON Client /127.170.224.180 #161/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[16:20:20] [RCON Client /127.170.224.180 #160/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[16:20:20] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[16:20:20] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[16:20:21] [RCON Client /127.170.224.180 #162/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[16:20:21] [RCON Client /127.170.224.180 #163/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[16:20:21] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[16:20:21] [RCON Client /127.170.224.180 #164/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[16:20:21] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[16:20:21] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[16:20:21] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[16:20:22] [RCON Client /127.170.224.180 #165/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[16:20:22] [RCON Client /127.170.224.180 #167/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[16:20:22] [RCON Client /127.170.224.180 #166/INFO]: Thread RCON Client /127.170.224.180 shutting down
-[16:20:22] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
-[16:20:22] [RCON Client /127.170.224.180 #168/INFO]: Thread RCON Client /127.170.224.180 shutting down
+[16:35:58] [main/INFO]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/home/runner/work/CirrusCI-Server/CirrusCI-Server/libraries/net/fabricmc/sponge-mixin/0.15.4+mixin.0.8.7/sponge-mixin-0.15.4+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
+[16:35:58] [main/INFO]: Compatibility level set to JAVA_17
+[16:35:58] [main/INFO]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.1).
+[16:36:05] [Via-Mappingloader-0/INFO]: Loading block connection mappings ...
+[16:36:05] [Via-Mappingloader-0/INFO]: Using FastUtil Long2ObjectOpenHashMap for block connections
+[16:36:05] [main/INFO]: Loading translations...
+[16:36:05] [main/INFO]: Registering protocols...
+[16:36:05] [main/INFO]: Registering protocols...
+[16:36:05] [main/INFO]: ViaVersion detected server version: 1.20-1.20.1 (763)
+[16:36:06] [ViaFabric-2/INFO]: Finished mapping loading, shutting down loader executor.
+[16:36:06] [main/INFO]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[16:36:07] [main/INFO]: Loaded 7 recipes
+[16:36:07] [main/INFO]: Loaded 1271 advancements
+[16:36:08] [main/INFO]: Applied 0 biome modifications to 0 of 64 new biomes in 1.726 ms
+[16:36:08] [Server thread/INFO]: Enabled in 145ms
+[16:36:08] [Server thread/INFO]: Starting minecraft server version 1.20.1
+[16:36:08] [Server thread/INFO]: Loading properties
+[16:36:08] [Server thread/INFO]: Default game type: SURVIVAL
+[16:36:08] [Server thread/INFO]: Generating keypair
+[16:36:08] [Server thread/INFO]: Starting Minecraft server on *:25565
+[16:36:08] [Server thread/INFO]: Using epoll channel type
+[16:36:08] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[16:36:08] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
+[16:36:08] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[16:36:08] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[16:36:08] [Server thread/INFO]: Preparing level "world"
+[16:36:11] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[16:36:14] [Worker-Main-2/INFO]: Preparing spawn area: 0%
+[16:36:14] [Worker-Main-1/INFO]: Preparing spawn area: 0%
+[16:36:14] [Worker-Main-2/INFO]: Preparing spawn area: 0%
+[16:36:14] [Worker-Main-3/INFO]: Preparing spawn area: 0%
+[16:36:14] [Worker-Main-2/INFO]: Preparing spawn area: 0%
+[16:36:14] [Worker-Main-3/INFO]: Preparing spawn area: 0%
+[16:36:14] [Worker-Main-2/INFO]: Preparing spawn area: 1%
+[16:36:15] [Worker-Main-2/INFO]: Preparing spawn area: 70%
+[16:36:15] [Server thread/INFO]: Time elapsed: 3825 ms
+[16:36:15] [Server thread/INFO]: Done (6.572s)! For help, type "help"
+[16:36:15] [Server thread/INFO]: Starting remote control listener
+[16:36:15] [Server thread/INFO]: Thread RCON Listener started
+[16:36:15] [Server thread/INFO]: RCON running on 0.0.0.0:25575
+[16:57:13] [RCON Listener #1/INFO]: Thread RCON Client /127.117.93.80 started
+[16:57:13] [RCON Client /127.117.93.80 #2/INFO]: Thread RCON Client /127.117.93.80 shutting down
+[16:59:17] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
+[16:59:17] [RCON Client /127.28.183.93 #3/INFO]: Thread RCON Client /127.28.183.93 shutting down
+[16:59:17] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
+[16:59:18] [RCON Client /127.28.183.93 #4/INFO]: Thread RCON Client /127.28.183.93 shutting down
+[16:59:19] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
+[16:59:19] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
+[16:59:20] [RCON Client /127.28.183.93 #5/INFO]: Thread RCON Client /127.28.183.93 shutting down
+[16:59:20] [RCON Client /127.28.183.93 #6/INFO]: Thread RCON Client /127.28.183.93 shutting down
+[16:59:21] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
+[16:59:21] [RCON Client /127.28.183.93 #7/INFO]: Thread RCON Client /127.28.183.93 shutting down
+[16:59:21] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
+[16:59:21] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
+[16:59:21] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
+[16:59:22] [RCON Client /127.28.183.93 #8/INFO]: Thread RCON Client /127.28.183.93 shutting down
+[16:59:22] [RCON Client /127.28.183.93 #10/INFO]: Thread RCON Client /127.28.183.93 shutting down
+[16:59:22] [RCON Client /127.28.183.93 #9/INFO]: Thread RCON Client /127.28.183.93 shutting down
+[16:59:22] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
+[16:59:22] [RCON Client /127.28.183.93 #11/INFO]: Thread RCON Client /127.28.183.93 shutting down
+[17:29:05] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
+[17:29:05] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
+[17:29:05] [RCON Client /127.28.183.93 #12/INFO]: Thread RCON Client /127.28.183.93 shutting down
+[17:29:05] [RCON Client /127.28.183.93 #13/INFO]: Thread RCON Client /127.28.183.93 shutting down
+[17:29:06] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
+[17:29:06] [RCON Client /127.28.183.93 #14/INFO]: Thread RCON Client /127.28.183.93 shutting down
+[17:29:07] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
+[17:29:09] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
+[17:29:09] [RCON Listener #1/INFO]: Thread RCON Client /127.28.183.93 started
+[17:29:09] [RCON Client /127.28.183.93 #15/INFO]: Thread RCON Client /127.28.183.93 shutting down
+[17:29:09] [RCON Client /127.28.183.93 #17/INFO]: Thread RCON Client /127.28.183.93 shutting down
+[17:29:09] [RCON Client /127.28.183.93 #16/INFO]: Thread RCON Client /127.28.183.93 shutting down
+[17:34:58] [Server thread/INFO]: SIGMAxox[/127.18.174.238:47311] logged in with entity id 216 at (-74.74571646726372, 71.0, -12.699999988079071)
+[17:34:58] [Netty Epoll Server IO #2/WARN]: (1.17->1.16.4) Increased world height is NOT SUPPORTED for 1.16 players and below. They will see a void below y 0 and above 256. You can enable the `bedrock-at-y-0` config option to replace the air with a bedrock layer.
+[17:34:58] [Server thread/INFO]: SIGMAxox joined the game
+[17:35:51] [Server thread/INFO]: [SIGMAxox: Set the time to 1000]
+[17:36:00] [Server thread/INFO]: SIGMAxox was shot by Skeleton
+[17:40:05] [Server thread/INFO]: [SIGMAxox: Set own game mode to Creative Mode]
+[17:40:12] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
+[17:40:12] [RCON Client /127.170.224.180 #18/INFO]: Thread RCON Client /127.170.224.180 shutting down
+[17:40:12] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
+[17:40:12] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
+[17:40:12] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
+[17:40:12] [RCON Client /127.170.224.180 #19/INFO]: Thread RCON Client /127.170.224.180 shutting down
+[17:40:13] [RCON Client /127.170.224.180 #20/INFO]: Thread RCON Client /127.170.224.180 shutting down
+[17:40:13] [RCON Client /127.170.224.180 #21/INFO]: Thread RCON Client /127.170.224.180 shutting down
+[17:40:13] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
+[17:40:13] [RCON Client /127.170.224.180 #22/INFO]: Thread RCON Client /127.170.224.180 shutting down
+[17:40:13] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
+[17:40:13] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
+[17:40:13] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
+[17:40:13] [RCON Client /127.170.224.180 #23/INFO]: Thread RCON Client /127.170.224.180 shutting down
+[17:40:14] [RCON Client /127.170.224.180 #24/INFO]: Thread RCON Client /127.170.224.180 shutting down
+[17:40:14] [RCON Client /127.170.224.180 #25/INFO]: Thread RCON Client /127.170.224.180 shutting down
+[17:40:14] [RCON Listener #1/INFO]: Thread RCON Client /127.170.224.180 started
+[17:40:14] [RCON Client /127.170.224.180 #26/INFO]: Thread RCON Client /127.170.224.180 shutting down
+[17:41:50] [Server thread/INFO]: [SIGMAxox: Set own game mode to Survival Mode]
+[17:42:57] [Server thread/INFO]: SIGMAxox lost connection: Disconnected
+[17:42:57] [Server thread/INFO]: SIGMAxox left the game
+[17:44:28] [Server thread/INFO]: SIGMAxox[/127.18.174.238:38201] logged in with entity id 1929 at (19.489931201752718, 63.09375, 114.53654714590861)
+[17:44:28] [Server thread/INFO]: SIGMAxox joined the game
+[17:46:06] [Server thread/INFO]: [SIGMAxox: Gave 64 [Lily of the Valley] to SIGMAxox]
+[17:46:26] [Server thread/INFO]: [SIGMAxox: Gave 128 [Lily Pad] to SIGMAxox]
+[17:48:29] [Server thread/INFO]: SIGMAxox lost connection: Disconnected
+[17:48:29] [Server thread/INFO]: SIGMAxox left the game
+[17:48:29] [Server thread/WARN]: handleDisconnection() called twice
+[17:48:34] [RCON Listener #1/INFO]: Thread RCON Client /127.108.97.23 started
+[17:48:35] [RCON Client /127.108.97.23 #27/INFO]: Thread RCON Client /127.108.97.23 shutting down
+[17:52:29] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
+[17:52:29] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
+[17:52:30] [RCON Client /127.185.91.45 #28/INFO]: Thread RCON Client /127.185.91.45 shutting down
+[17:52:30] [RCON Client /127.185.91.45 #29/INFO]: Thread RCON Client /127.185.91.45 shutting down
+[17:52:31] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
+[17:52:31] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
+[17:52:31] [RCON Client /127.185.91.45 #30/INFO]: Thread RCON Client /127.185.91.45 shutting down
+[17:52:31] [RCON Client /127.185.91.45 #31/INFO]: Thread RCON Client /127.185.91.45 shutting down
+[17:52:31] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
+[17:52:32] [RCON Client /127.185.91.45 #32/INFO]: Thread RCON Client /127.185.91.45 shutting down
+[17:52:32] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
+[17:52:32] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
+[17:52:32] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
+[17:52:33] [RCON Client /127.185.91.45 #33/INFO]: Thread RCON Client /127.185.91.45 shutting down
+[17:52:33] [RCON Client /127.185.91.45 #35/INFO]: Thread RCON Client /127.185.91.45 shutting down
+[17:52:33] [RCON Client /127.185.91.45 #34/INFO]: Thread RCON Client /127.185.91.45 shutting down
+[17:52:33] [RCON Listener #1/INFO]: Thread RCON Client /127.185.91.45 started
+[17:52:33] [RCON Client /127.185.91.45 #36/INFO]: Thread RCON Client /127.185.91.45 shutting down
+[17:53:25] [RCON Listener #1/INFO]: Thread RCON Client /127.108.97.23 started
+[17:53:25] [RCON Client /127.108.97.23 #37/INFO]: Thread RCON Client /127.108.97.23 shutting down
+[17:53:25] [RCON Listener #1/INFO]: Thread RCON Client /127.108.97.23 started
+[17:53:26] [RCON Client /127.108.97.23 #38/INFO]: Thread RCON Client /127.108.97.23 shutting down
+[17:57:18] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[17:57:18] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[17:57:19] [RCON Client /127.98.140.75 #39/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[17:57:19] [RCON Client /127.98.140.75 #40/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[17:57:19] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[17:57:19] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[17:57:20] [RCON Client /127.98.140.75 #41/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[17:57:20] [RCON Client /127.98.140.75 #42/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[17:57:20] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[17:57:21] [RCON Client /127.98.140.75 #43/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[17:57:21] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[17:57:21] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[17:57:21] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[17:57:21] [RCON Client /127.98.140.75 #45/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[17:57:21] [RCON Client /127.98.140.75 #46/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[17:57:21] [RCON Client /127.98.140.75 #44/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[17:57:22] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[17:57:22] [RCON Client /127.98.140.75 #47/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[18:55:53] [RCON Listener #1/INFO]: Thread RCON Client /127.66.140.104 started
+[18:55:54] [RCON Client /127.66.140.104 #48/INFO]: Thread RCON Client /127.66.140.104 shutting down
+[19:35:42] [RCON Listener #1/INFO]: Thread RCON Client /127.252.73.131 started
+[19:35:43] [RCON Client /127.252.73.131 #49/INFO]: Thread RCON Client /127.252.73.131 shutting down
+[19:35:43] [RCON Listener #1/INFO]: Thread RCON Client /127.252.73.131 started
+[19:35:57] [RCON Client /127.252.73.131 #50/INFO]: Thread RCON Client /127.252.73.131 shutting down
+[19:36:11] [RCON Listener #1/INFO]: Thread RCON Client /127.252.73.131 started
+[19:36:16] [RCON Client /127.252.73.131 #51/INFO]: Thread RCON Client /127.252.73.131 shutting down
+[19:37:50] [RCON Listener #1/INFO]: Thread RCON Client /127.187.148.205 started
+[19:37:51] [RCON Client /127.187.148.205 #52/INFO]: Thread RCON Client /127.187.148.205 shutting down
+[19:39:04] [RCON Listener #1/INFO]: Thread RCON Client /127.95.186.36 started
+[19:39:04] [RCON Client /127.95.186.36 #53/INFO]: Thread RCON Client /127.95.186.36 shutting down
+[19:42:51] [RCON Listener #1/INFO]: Thread RCON Client /127.152.137.89 started
+[19:42:51] [RCON Client /127.152.137.89 #54/INFO]: Thread RCON Client /127.152.137.89 shutting down
+[19:57:17] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
+[19:57:18] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
+[19:57:18] [RCON Client /127.44.127.145 #55/INFO]: Thread RCON Client /127.44.127.145 shutting down
+[19:57:18] [RCON Client /127.44.127.145 #56/INFO]: Thread RCON Client /127.44.127.145 shutting down
+[19:57:20] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
+[19:57:20] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
+[19:57:21] [RCON Client /127.44.127.145 #57/INFO]: Thread RCON Client /127.44.127.145 shutting down
+[19:57:21] [RCON Client /127.44.127.145 #58/INFO]: Thread RCON Client /127.44.127.145 shutting down
+[19:57:21] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
+[19:57:22] [RCON Client /127.44.127.145 #59/INFO]: Thread RCON Client /127.44.127.145 shutting down
+[19:57:22] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
+[19:57:23] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
+[19:57:24] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
+[19:57:25] [RCON Client /127.44.127.145 #60/INFO]: Thread RCON Client /127.44.127.145 shutting down
+[19:57:25] [RCON Client /127.44.127.145 #61/INFO]: Thread RCON Client /127.44.127.145 shutting down
+[19:57:25] [RCON Client /127.44.127.145 #62/INFO]: Thread RCON Client /127.44.127.145 shutting down
+[19:57:26] [RCON Listener #1/INFO]: Thread RCON Client /127.44.127.145 started
+[19:57:26] [RCON Client /127.44.127.145 #63/INFO]: Thread RCON Client /127.44.127.145 shutting down
+[21:38:27] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[21:38:27] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[21:38:28] [RCON Client /127.98.140.75 #64/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[21:38:28] [RCON Client /127.98.140.75 #65/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[21:38:28] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[21:38:29] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[21:38:29] [RCON Client /127.98.140.75 #66/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[21:38:29] [RCON Client /127.98.140.75 #67/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[21:38:30] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[21:38:30] [RCON Client /127.98.140.75 #68/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[21:38:31] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[21:38:31] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[21:38:31] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[21:38:31] [RCON Client /127.98.140.75 #70/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[21:38:31] [RCON Client /127.98.140.75 #71/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[21:38:31] [RCON Client /127.98.140.75 #69/INFO]: Thread RCON Client /127.98.140.75 shutting down
+[21:38:32] [RCON Listener #1/INFO]: Thread RCON Client /127.98.140.75 started
+[21:38:32] [RCON Client /127.98.140.75 #72/INFO]: Thread RCON Client /127.98.140.75 shutting down
