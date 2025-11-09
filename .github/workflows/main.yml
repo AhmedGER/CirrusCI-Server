@@ -86,6 +86,7 @@ jobs:
             
             if [ $((ELAPSED % 1800)) -eq 0 ]; then
               echo "⏰ Servers running... $((ELAPSED / 60)) minutes elapsed"
+            fi 
           done
 
           if kill -0 $SERVER_PID 2>/dev/null; then
