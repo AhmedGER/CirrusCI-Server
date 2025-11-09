@@ -1,4 +1,4 @@
-name: server
+name: fabric server
 on:
   workflow_dispatch:
 
@@ -58,7 +58,7 @@ jobs:
           echo "=== Starting Minecraft Server ==="
           
           java -DPaper.IgnoreJavaVersion=true \
-            -Xmx15G -Xms12G \
+            -Xmx16G -Xms12G \
             -XX:+UseG1GC \
             -XX:+ParallelRefProcEnabled \
             -XX:MaxGCPauseMillis=200 \
@@ -149,12 +149,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PAT }}
         run: |
-          runs=$(gh run list -w server.yml --json status -q \
+          runs=$(gh run list -w main.yml --json status -q \
                '[.[] | select(.status=="queued" or .status=="in_progress")] | length')
           
           if [ "$runs" -le 1 ]; then
             echo "No other workflows running, retriggering..."
-            gh workflow run server.yml
+            gh workflow run main.yml
             echo "✔ Workflow retriggered"
           else
             echo "Other workflows are running, skipping retrigger"
