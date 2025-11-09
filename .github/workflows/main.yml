@@ -1,4 +1,5 @@
 name: server
+
 on:
   workflow_dispatch:
 
@@ -6,6 +7,7 @@ jobs:
   minecraft:
     runs-on: ubuntu-latest
     timeout-minutes: 360
+
     steps:
       - uses: actions/checkout@v4
 
@@ -18,9 +20,8 @@ jobs:
       - name: Setup Playit Tunnel with Auto-Restart
         run: |
           echo "=== Setting up Playit Tunnel with monitoring ==="
-          
           chmod +x playit-linux-amd64
-          
+
           if [ -n "${{ secrets.PLAYIT_SECRET }}" ]; then
             echo "${{ secrets.PLAYIT_SECRET }}" > playit.toml
             echo "✔ Playit configured from secrets"
@@ -29,19 +30,18 @@ jobs:
           else
             echo "⚠️ No playit config found"
           fi
-          
+
+          # تشغيل playit في الخلفية مع إعادة التشغيل التلقائي
           while true; do
             ./playit-linux-amd64 >/dev/null 2>&1 || sleep 5
           done &
-          
           echo "✔ Playit tunnel started with auto-restart"
-          echo "ℹ️ Fabric port (25565) "
           sleep 10
-          
+
       - name: Run Fabric Server
         run: |
           echo "=== Starting Fabric Server on port 25565 ==="
-          
+
           java -DPaper.IgnoreJavaVersion=true \
             -Xmx21G -Xms18G \
             -XX:+UseG1GC \
@@ -64,54 +64,56 @@ jobs:
             -XX:MaxTenuringThreshold=1 \
             -Dusing.aikars.flags=https://mcflags.emc.gs \
             -Daikars.new.flags=true \
-            -jar fabric-server.jar --nogui &
+            -jar fabric-server.jar --nogui > server.log 2>&1 &
           SERVER_PID=$!
-          
+
           echo "✔ Fabric Server started (PID: $SERVER_PID)"
           echo "⏳ Waiting 60 seconds for Fabric to start..."
           sleep 60
-          
+
           MAX_TIME=20700
           ELAPSED=0
           CHECK_INTERVAL=10
-          
-          while [ $ELAPSED -lt $MAX_TIME ]; do
-            # Check if Fabric stopped
-            if ! kill -0 $SERVER_PID 2>/dev/null; then
-              echo ""
-              echo "=== Fabric Server Stopped - Shutting down everything ==="
-            break
-          fi
-            
-            sleep $CHECK_INTERVAL
-            ELAPSED=$((ELAPSED + CHECK_INTERVAL))
-            
-            if [ $((ELAPSED % 1800)) -eq 0 ]; then
-              echo "⏰ Servers running... $((ELAPSED / 60)) minutes elapsed"
-            fi 
-          done
+
+          # حلقة مراقبة زمنية فقط (في الخلفية)
+          (
+            while [ $ELAPSED -lt $MAX_TIME ]; do
+              if ! ps -p $SERVER_PID > /dev/null 2>&1; then
+                break
+              fi
+              sleep $CHECK_INTERVAL
+              ELAPSED=$((ELAPSED + CHECK_INTERVAL))
+              if [ $((ELAPSED % 1800)) -eq 0 ]; then
+                echo "⏰ Servers running... $((ELAPSED / 60)) minutes elapsed"
+              fi
+            done
           ) &
+
+          # انتظار فعلي لتوقف السيرفر (stop)
           wait $SERVER_PID
-          
-          if kill -0 $SERVER_PID 2>/dev/null; then
-          echo "⏹️ Stopping all processes..."
-          kill -TERM $SERVER_PID 2>/dev/null || true
-          sleep 5
-          kill -9 $SERVER_PID 2>/dev/null || true
-          fi  
+
+          echo ""
+          echo "=== Fabric Server Stopped - Running post-shutdown tasks ==="
+
+          if ps -p $SERVER_PID > /dev/null 2>&1; then
+            echo "⏹️ Stopping all processes..."
+            kill -TERM $SERVER_PID 2>/dev/null || true
+            sleep 5
+            kill -9 $SERVER_PID 2>/dev/null || true
+          fi
+
           pkill -TERM playit-linux-amd64 2>/dev/null || true
           sleep 2
           pkill -9 playit-linux-amd64 2>/dev/null || true
-          
+
           echo "✔ All servers and tunnels stopped"
-          
+
       - name: Save world and config
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           git add -A
-          
           if ! git diff --cached --quiet 2>/dev/null; then
             git commit -m "Auto-save: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
             git pull --rebase --autostash \
@@ -121,19 +123,20 @@ jobs:
           else
             echo "ℹ️ No changes to save"
           fi
-          
+
       - name: Auto-retrigger workflow
         if: github.run_attempt < 3
         env:
           GH_TOKEN: ${{ secrets.PAT }}
         run: |
-          runs=$(gh run list -w main.yml --json status -q \
+          runs=$(gh run list -w server.yml --json status -q \
                '[.[] | select(.status=="queued" or .status=="in_progress")] | length')
-          
+
           if [ "$runs" -le 1 ]; then
             echo "No other workflows running, retriggering..."
-            gh workflow run main.yml
+            gh workflow run server.yml
             echo "✔ Workflow retriggered"
           else
             echo "Other workflows are running, skipping retrigger"
           fi
+          
