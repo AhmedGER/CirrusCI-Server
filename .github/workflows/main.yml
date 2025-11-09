@@ -87,8 +87,9 @@ jobs:
             if [ $((ELAPSED % 1800)) -eq 0 ]; then
               echo "⏰ Servers running... $((ELAPSED / 60)) minutes elapsed"
             fi
-          done &
-          
+          done
+
+          if kill -0 $SERVER_PID 2>/dev/null; then
           echo "⏹️ Stopping all processes..."
           kill -TERM $SERVER_PID 2>/dev/null || true
           sleep 5
