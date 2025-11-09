@@ -90,6 +90,8 @@ jobs:
               echo "⏰ Servers running... $((ELAPSED / 60)) minutes elapsed"
             fi 
           done
+          ) &
+          wait $SERVER_PID
           
           if kill -0 $SERVER_PID 2>/dev/null; then
           echo "⏹️ Stopping all processes..."
