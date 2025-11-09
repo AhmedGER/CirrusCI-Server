@@ -58,7 +58,7 @@ jobs:
           echo "=== Starting Minecraft Server ==="
           
           java -DPaper.IgnoreJavaVersion=true \
-            -Xmx15G -Xms12G \
+            -Xmx16G -Xms12G \
             -XX:+UseG1GC \
             -XX:+ParallelRefProcEnabled \
             -XX:MaxGCPauseMillis=200 \
