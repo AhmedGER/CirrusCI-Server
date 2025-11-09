@@ -53,7 +53,7 @@ jobs:
           echo "=== Starting Minecraft Server ==="
           
           java -DPaper.IgnoreJavaVersion=true \
-            -Xmx21G -Xms18G \
+            -Xmx15G -Xms12G \
             -XX:+UseG1GC \
             -XX:+ParallelRefProcEnabled \
             -XX:MaxGCPauseMillis=200 \
@@ -115,20 +115,16 @@ jobs:
             kill -9 $SERVER_PID 2>/dev/null || true
           fi
           
-          pkill -f "monitor_playit.sh" 2>/dev/null || true
           pkill -TERM playit-linux-amd64 2>/dev/null || true
           sleep 2
           pkill -9 playit-linux-amd64 2>/dev/null || true
           
           echo "✔ Server stopped"
           
-          if [ -f playit_monitor.log ]; then
-            echo "=== PlayIt Monitor Log ==="
-            tail -n 10 playit_monitor.log
-          fi
-          
       - name: Save world and config
+        if: always()
         run: |
+          echo "=== Starting save process ==="
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
@@ -145,7 +141,7 @@ jobs:
           fi
           
       - name: Auto-retrigger workflow
-        if: github.run_attempt < 3
+        if: always()
         env:
           GH_TOKEN: ${{ secrets.PAT }}
         run: |
