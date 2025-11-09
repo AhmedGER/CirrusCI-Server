@@ -43,7 +43,7 @@ jobs:
           echo "=== Starting Fabric Server on port 25565 ==="
           
           java -DPaper.IgnoreJavaVersion=true \
-            -Xmx20G -Xms18G \
+            -Xmx21G -Xms18G \
             -XX:+UseG1GC \
             -XX:+ParallelRefProcEnabled \
             -XX:MaxGCPauseMillis=200 \
