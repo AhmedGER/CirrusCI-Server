@@ -1,8 +1,8 @@
-[00:18:28] [main/INFO]: Loading Minecraft 1.20.1 with Fabric Loader 0.16.10
-[00:18:28] [main/WARN]: Warnings were found!
+[00:29:08] [main/INFO]: Loading Minecraft 1.20.1 with Fabric Loader 0.16.10
+[00:29:09] [main/WARN]: Warnings were found!
  - Mod 'TAB' (tab) 4.1.2 recommends any version of fabric-permissions-api-v0, which is missing!
 	 - You should install any version of fabric-permissions-api-v0 for the optimal experience.
-[00:18:28] [main/INFO]: Loading 54 mods:
+[00:29:09] [main/INFO]: Loading 54 mods:
 	- fabric-api 0.92.6+1.20.1
 	   |-- fabric-api-base 0.4.32+1802ada577
 	   |-- fabric-api-lookup-api-v1 1.6.37+1802ada577
@@ -71,163 +71,58 @@
 	   \-- viafabric-mc1201 0.4.18+104-main
 	- viarewind 4.0.10
 	- viaversion 5.5.1
-[00:18:28] [main/INFO]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/tmp/cirrus-ci-build/libraries/net/fabricmc/sponge-mixin/0.15.4+mixin.0.8.7/sponge-mixin-0.15.4+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
-[00:18:28] [main/INFO]: Compatibility level set to JAVA_16
-[00:18:28] [main/INFO]: Compatibility level set to JAVA_17
-[00:18:28] [main/INFO]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.1).
-[00:18:33] [Via-Mappingloader-0/INFO]: Loading block connection mappings ...
-[00:18:33] [Via-Mappingloader-0/INFO]: Using FastUtil Long2ObjectOpenHashMap for block connections
-[00:18:33] [main/INFO]: Loading translations...
-[00:18:33] [main/INFO]: Registering protocols...
-[00:18:34] [main/INFO]: Registering protocols...
-[00:18:34] [main/INFO]: ViaVersion detected server version: 1.20-1.20.1 (763)
-[00:18:34] [ViaFabric-2/INFO]: Finished mapping loading, shutting down loader executor.
-[00:18:34] [main/INFO]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
-[00:18:35] [main/INFO]: registered playit command
-[00:18:35] [main/INFO]: Loaded 7 recipes
-[00:18:35] [main/INFO]: Loaded 1271 advancements
-[00:18:36] [main/INFO]: Applied 0 biome modifications to 0 of 64 new biomes in 1.350 ms
-[00:18:36] [Server thread/INFO]: Enabled in 123ms
-[00:18:36] [Server thread/INFO]: Starting minecraft server version 1.20.1
-[00:18:36] [Server thread/INFO]: Loading properties
-[00:18:36] [Server thread/INFO]: Default game type: SURVIVAL
-[00:18:36] [Server thread/INFO]: Generating keypair
-[00:18:36] [Server thread/INFO]: Starting Minecraft server on *:25565
-[00:18:36] [Server thread/INFO]: Using epoll channel type
-[00:18:36] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
-[00:18:36] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
-[00:18:36] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
-[00:18:36] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
-[00:18:36] [Server thread/INFO]: Preparing level "world"
-[00:18:37] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
-[00:18:38] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[00:18:38] [Worker-Main-6/INFO]: Preparing spawn area: 0%
-[00:18:38] [Worker-Main-3/INFO]: Preparing spawn area: 0%
-[00:18:39] [Worker-Main-7/INFO]: Preparing spawn area: 3%
-[00:18:39] [Worker-Main-6/INFO]: Preparing spawn area: 24%
-[00:18:39] [Worker-Main-4/INFO]: Preparing spawn area: 56%
-[00:18:40] [Worker-Main-4/INFO]: Preparing spawn area: 68%
-[00:18:40] [Worker-Main-3/INFO]: Preparing spawn area: 72%
-[00:18:41] [Worker-Main-4/INFO]: Preparing spawn area: 79%
-[00:18:41] [Worker-Main-3/INFO]: Preparing spawn area: 83%
-[00:18:42] [Worker-Main-5/INFO]: Preparing spawn area: 86%
-[00:18:42] [Worker-Main-3/INFO]: Preparing spawn area: 89%
-[00:18:43] [Worker-Main-1/INFO]: Preparing spawn area: 94%
-[00:18:43] [Worker-Main-3/INFO]: Preparing spawn area: 98%
-[00:18:44] [Server thread/INFO]: Time elapsed: 6629 ms
-[00:18:44] [Server thread/INFO]: Done (7.668s)! For help, type "help"
-[00:18:44] [Server thread/INFO]: Starting remote control listener
-[00:18:44] [Server thread/INFO]: Thread RCON Listener started
-[00:18:44] [Server thread/INFO]: RCON running on 0.0.0.0:25575
-[00:18:44] [Thread-8/INFO]: secret key found, checking
-[00:18:44] [Thread-8/INFO]: check secret
-[00:18:44] [Thread-8/INFO]: found minecraft java tunnel: password-version.gl.joinmc.link
-[00:18:44] [Thread-8/INFO]: keys and tunnel setup
-[00:19:12] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:3019, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 11, -53, -18, -65, -39, -95, -85, 8, 105, 15, -34, 0, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, -64, 124, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, -77, -98, -105, -99, 11, -111, -72, 109, 14, 81, 85, 41, -84, 93, 86, 72], tunnelServerId=1, dataCenterId=36}
-[00:19:12] [Thread-8/INFO]: starting tcp tunnel for client
-[00:19:12] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:19:16] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:3028, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 11, -44, 36, 74, 60, 106, -85, 8, 105, 15, -34, 4, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 104, 69, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, -81, 33, 73, -64, 127, -89, -19, 64, -82, -39, 121, 39, -98, 100, -51, 62], tunnelServerId=1, dataCenterId=36}
-[00:19:16] [Thread-8/INFO]: starting tcp tunnel for client
-[00:19:16] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:19:19] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:3037, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 11, -35, 54, 14, -127, 106, -85, 8, 105, 15, -34, 7, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 42, 69, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, -88, 7, 113, 72, 69, -127, 0, -14, -17, -23, -32, 29, 74, 90, -120, 58], tunnelServerId=1, dataCenterId=36}
-[00:19:19] [Thread-8/INFO]: starting tcp tunnel for client
-[00:19:19] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:19:28] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:3048, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 11, -24, 43, -124, 70, -125, -85, 8, 105, 15, -34, 16, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, -90, 94, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, -113, -49, -44, 68, 81, -54, -60, -53, -122, -54, 112, 93, 20, -66, -47, -88], tunnelServerId=1, dataCenterId=36}
-[00:19:28] [Thread-8/INFO]: starting tcp tunnel for client
-[00:19:28] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:19:36] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:3052, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 11, -20, 21, -68, 6, -75, -85, 8, 105, 15, -34, 24, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, -74, -112, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 2, 44, -29, 25, 30, -53, 39, 22, 12, 30, -61, -83, 114, 36, 4, 34, 69], tunnelServerId=1, dataCenterId=36}
-[00:19:36] [Thread-8/INFO]: starting tcp tunnel for client
-[00:19:36] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:19:42] [nioEventLoopGroup-2-1/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:19:46] [nioEventLoopGroup-2-2/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:19:49] [nioEventLoopGroup-2-3/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:19:50] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:3063, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 11, -9, -22, 84, -105, -96, -85, 8, 105, 15, -34, 38, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 117, 123, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, -37, -66, 34, -79, 114, 110, -59, 90, 82, -13, 108, 57, -101, -15, 80, 82], tunnelServerId=1, dataCenterId=36}
-[00:19:50] [Thread-8/INFO]: starting tcp tunnel for client
-[00:19:50] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:19:52] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:3070, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 11, -2, -84, 26, -9, -88, -85, 8, 105, 15, -34, 40, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 117, -125, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, 20, -97, 87, -96, 3, 23, 61, -71, -63, 108, -67, -76, 103, -22, 30, 126], tunnelServerId=1, dataCenterId=36}
-[00:19:52] [Thread-8/INFO]: starting tcp tunnel for client
-[00:19:52] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:19:58] [nioEventLoopGroup-2-4/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:20:06] [nioEventLoopGroup-2-5/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:20:10] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2067, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, 19, -5, -13, -77, 12, -85, 8, 105, 15, -34, 58, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 4, -25, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, -63, 118, -36, -96, -48, -124, 104, 125, -51, 112, 63, -116, 101, -24, -87, 10], tunnelServerId=1, dataCenterId=36}
-[00:20:10] [Thread-8/INFO]: starting tcp tunnel for client
-[00:20:10] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:20:12] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2077, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, 29, -81, -100, 2, 68, -85, 8, 105, 15, -34, 60, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 52, 31, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, -77, -126, -11, -122, 76, -40, 112, -63, -77, -59, -28, 68, -77, 21, -82, -85], tunnelServerId=1, dataCenterId=36}
-[00:20:12] [Thread-8/INFO]: starting tcp tunnel for client
-[00:20:12] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:20:13] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2084, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, 36, 90, 82, 24, 3, -85, 8, 105, 15, -34, 61, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 108, -34, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, -102, 23, -93, 51, 27, 84, -2, 57, -47, -110, 113, 40, -32, -99, -126, 59], tunnelServerId=1, dataCenterId=36}
-[00:20:13] [Thread-8/INFO]: starting tcp tunnel for client
-[00:20:13] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:20:16] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2093, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, 45, -75, 60, 109, -81, -85, 8, 105, 15, -34, 63, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, -39, -118, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, 0, -37, 52, -27, -27, -80, 82, 1, 63, -30, -107, -55, -79, -99, 25, -109], tunnelServerId=1, dataCenterId=36}
-[00:20:16] [Thread-8/INFO]: starting tcp tunnel for client
-[00:20:16] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:20:20] [nioEventLoopGroup-2-6/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:20:22] [nioEventLoopGroup-2-7/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:20:27] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2099, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, 51, -81, 41, 39, -126, -85, 8, 105, 15, -34, 75, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, -93, 93, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 2, 52, -117, -95, -119, -43, -33, 105, 31, 64, 62, -125, 41, 86, 29, 103, 102], tunnelServerId=1, dataCenterId=36}
-[00:20:27] [Thread-8/INFO]: starting tcp tunnel for client
-[00:20:27] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:20:40] [nioEventLoopGroup-2-8/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:20:41] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2104, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, 56, -2, -80, -95, -92, -85, 8, 105, 15, -34, 89, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 60, 127, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, 99, -96, -119, -105, 79, -48, 35, 87, -25, -9, 15, 17, -107, -32, 117, -35], tunnelServerId=1, dataCenterId=36}
-[00:20:41] [Thread-8/INFO]: starting tcp tunnel for client
-[00:20:41] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:20:42] [nioEventLoopGroup-2-9/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:20:44] [nioEventLoopGroup-2-10/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:20:46] [nioEventLoopGroup-2-11/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:20:57] [nioEventLoopGroup-2-12/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:21:11] [nioEventLoopGroup-2-13/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:21:18] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2159, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, 111, -49, 13, 16, 90, -85, 8, 105, 15, -34, 126, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 7, 53, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, -84, -39, -54, 46, 106, 104, 57, 122, 104, -113, 33, -52, 97, 96, 57, 75], tunnelServerId=1, dataCenterId=36}
-[00:21:18] [Thread-8/INFO]: starting tcp tunnel for client
-[00:21:18] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:21:21] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2166, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, 118, 16, 82, -30, 46, -85, 8, 105, 15, -34, -128, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, -30, 9, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, 69, -127, 24, -91, -3, -8, -56, 88, -75, -95, 82, 38, 23, 70, -35, -30], tunnelServerId=1, dataCenterId=36}
-[00:21:21] [Thread-8/INFO]: starting tcp tunnel for client
-[00:21:21] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:21:23] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2177, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, -127, 20, -67, 43, -78, -85, 8, 105, 15, -34, -126, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 99, -115, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, -42, 63, 101, -59, 4, 55, -35, -117, -70, -63, -2, 78, -44, 58, 28, 103], tunnelServerId=1, dataCenterId=36}
-[00:21:23] [Thread-8/INFO]: starting tcp tunnel for client
-[00:21:23] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:21:24] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2185, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, -119, 85, -118, -97, 43, -85, 8, 105, 15, -34, -124, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 83, 6, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, -39, 95, -39, 110, -76, -14, 96, 89, 79, 5, -16, 85, 121, -3, 118, -91], tunnelServerId=1, dataCenterId=36}
-[00:21:24] [Thread-8/INFO]: starting tcp tunnel for client
-[00:21:24] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:21:26] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2192, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, -112, 46, 105, 53, 32, -85, 8, 105, 15, -34, -122, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, -9, -5, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, 121, 94, -124, -83, -89, -49, -73, 36, -47, -51, 67, 32, 62, -67, -26, 80], tunnelServerId=1, dataCenterId=36}
-[00:21:26] [Thread-8/INFO]: starting tcp tunnel for client
-[00:21:26] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:21:28] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2199, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, -105, 51, -61, 77, -109, -85, 8, 105, 15, -34, -121, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, -81, 110, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, -42, -20, -25, -50, 53, 112, -29, -49, 68, -20, -119, 83, -75, 7, -112, -57], tunnelServerId=1, dataCenterId=36}
-[00:21:28] [Thread-8/INFO]: starting tcp tunnel for client
-[00:21:28] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:21:29] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2209, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, -95, 111, 10, 60, 118, -85, 8, 105, 15, -34, -119, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, -84, 81, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, -106, 65, 86, -110, 62, -61, 96, 100, -79, -126, 97, 76, 69, -14, 64, 43], tunnelServerId=1, dataCenterId=36}
-[00:21:29] [Thread-8/INFO]: starting tcp tunnel for client
-[00:21:29] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:21:31] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2217, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, -87, -11, 31, 124, 8, -85, 8, 105, 15, -34, -117, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 116, -29, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, 97, -40, -112, -84, -7, -33, 74, 97, 8, -101, 39, -74, -22, 48, -33, 83], tunnelServerId=1, dataCenterId=36}
-[00:21:31] [Thread-8/INFO]: starting tcp tunnel for client
-[00:21:31] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:21:48] [nioEventLoopGroup-2-14/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:21:51] [nioEventLoopGroup-2-15/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:21:53] [nioEventLoopGroup-2-16/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:21:54] [nioEventLoopGroup-2-1/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:21:56] [nioEventLoopGroup-2-2/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:21:58] [nioEventLoopGroup-2-3/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:21:59] [nioEventLoopGroup-2-4/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:22:01] [nioEventLoopGroup-2-5/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:22:53] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2285, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, -19, 71, -45, -45, -114, -85, 8, 105, 15, -34, -35, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, -33, 105, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, 49, 101, -84, 78, 99, 51, 60, -60, 35, 48, 125, -60, -100, -66, 98, -5], tunnelServerId=1, dataCenterId=36}
-[00:22:53] [Thread-8/INFO]: starting tcp tunnel for client
-[00:22:53] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:22:56] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2294, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, -10, -110, 40, 21, 87, -85, 8, 105, 15, -34, -32, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, -57, 50, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, -28, -36, -39, -50, -102, -69, -119, -122, -80, 31, 15, -29, -96, 127, 63, 8], tunnelServerId=1, dataCenterId=36}
-[00:22:56] [Thread-8/INFO]: starting tcp tunnel for client
-[00:22:56] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:23:23] [nioEventLoopGroup-2-6/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:23:25] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2300, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 8, -4, -38, 124, 122, 76, -85, 8, 105, 15, -34, -3, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 44, 39, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, -66, -120, 78, 119, -69, 42, 38, 73, 9, 70, -115, -76, 49, -50, -94, -68], tunnelServerId=1, dataCenterId=36}
-[00:23:25] [Thread-8/INFO]: starting tcp tunnel for client
-[00:23:25] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:23:26] [nioEventLoopGroup-2-7/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:23:55] [nioEventLoopGroup-2-8/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:24:35] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2345, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 9, 41, 108, -25, -63, 14, -85, 8, 105, 15, -33, 67, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 76, -23, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, 26, 56, 14, -94, -84, 63, -120, 126, 113, -21, -114, 65, 123, -52, -10, 43], tunnelServerId=1, dataCenterId=36}
-[00:24:35] [Thread-8/INFO]: starting tcp tunnel for client
-[00:24:35] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:24:48] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2366, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 9, 62, -88, -17, -76, -100, -85, 8, 105, 15, -33, 80, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 7, 119, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, 110, -14, -61, 90, -20, -28, 61, -10, -49, 30, 60, 120, 58, -3, 37, -82], tunnelServerId=1, dataCenterId=36}
-[00:24:48] [Thread-8/INFO]: starting tcp tunnel for client
-[00:24:48] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:25:05] [nioEventLoopGroup-2-9/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:25:18] [nioEventLoopGroup-2-10/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
-[00:25:26] [Thread-8/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2372, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 9, 68, -111, -87, 17, 4, -85, 8, 105, 15, -33, 118, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, -61, -33, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 2, -82, 6, -34, 72, 96, -4, 42, 83, 53, -29, -43, -108, 69, 28, 91, -80], tunnelServerId=1, dataCenterId=36}
-[00:25:26] [Thread-8/INFO]: starting tcp tunnel for client
-[00:25:26] [Thread-8/INFO]: start connection to /69.9.184.2:43784 to claim client
-[00:25:56] [nioEventLoopGroup-2-11/WARN]: failed to establish connection to tunnel claim/69.9.184.2:43784
+[00:29:09] [main/INFO]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/tmp/cirrus-ci-build/libraries/net/fabricmc/sponge-mixin/0.15.4+mixin.0.8.7/sponge-mixin-0.15.4+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
+[00:29:09] [main/INFO]: Compatibility level set to JAVA_16
+[00:29:09] [main/INFO]: Compatibility level set to JAVA_17
+[00:29:09] [main/INFO]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.1).
+[00:29:14] [Via-Mappingloader-0/INFO]: Loading block connection mappings ...
+[00:29:14] [Via-Mappingloader-0/INFO]: Using FastUtil Long2ObjectOpenHashMap for block connections
+[00:29:14] [main/INFO]: Loading translations...
+[00:29:14] [main/INFO]: Registering protocols...
+[00:29:14] [main/INFO]: Registering protocols...
+[00:29:14] [main/INFO]: ViaVersion detected server version: 1.20-1.20.1 (763)
+[00:29:14] [ViaFabric-2/INFO]: Finished mapping loading, shutting down loader executor.
+[00:29:14] [main/INFO]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[00:29:15] [main/INFO]: registered playit command
+[00:29:15] [main/INFO]: Loaded 7 recipes
+[00:29:16] [main/INFO]: Loaded 1271 advancements
+[00:29:16] [main/INFO]: Applied 0 biome modifications to 0 of 64 new biomes in 1.184 ms
+[00:29:16] [Server thread/INFO]: Enabled in 107ms
+[00:29:16] [Server thread/INFO]: Starting minecraft server version 1.20.1
+[00:29:16] [Server thread/INFO]: Loading properties
+[00:29:16] [Server thread/INFO]: Default game type: SURVIVAL
+[00:29:16] [Server thread/INFO]: Generating keypair
+[00:29:16] [Server thread/INFO]: Starting Minecraft server on *:25565
+[00:29:16] [Server thread/INFO]: Using epoll channel type
+[00:29:16] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[00:29:16] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
+[00:29:16] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[00:29:16] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[00:29:16] [Server thread/INFO]: Preparing level "world"
+[00:29:17] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[00:29:18] [Worker-Main-3/INFO]: Preparing spawn area: 0%
+[00:29:18] [Worker-Main-3/INFO]: Preparing spawn area: 0%
+[00:29:18] [Worker-Main-7/INFO]: Preparing spawn area: 0%
+[00:29:19] [Worker-Main-2/INFO]: Preparing spawn area: 5%
+[00:29:19] [Worker-Main-7/INFO]: Preparing spawn area: 38%
+[00:29:20] [Worker-Main-2/INFO]: Preparing spawn area: 68%
+[00:29:20] [Worker-Main-7/INFO]: Preparing spawn area: 69%
+[00:29:21] [Worker-Main-3/INFO]: Preparing spawn area: 75%
+[00:29:21] [Worker-Main-5/INFO]: Preparing spawn area: 83%
+[00:29:22] [Worker-Main-3/INFO]: Preparing spawn area: 84%
+[00:29:22] [Worker-Main-6/INFO]: Preparing spawn area: 85%
+[00:29:23] [Worker-Main-2/INFO]: Preparing spawn area: 91%
+[00:29:23] [Worker-Main-6/INFO]: Preparing spawn area: 97%
+[00:29:23] [Server thread/INFO]: Time elapsed: 6264 ms
+[00:29:23] [Server thread/INFO]: Done (7.268s)! For help, type "help"
+[00:29:23] [Server thread/INFO]: Starting remote control listener
+[00:29:23] [Server thread/INFO]: Thread RCON Listener started
+[00:29:23] [Server thread/INFO]: RCON running on 0.0.0.0:25575
+[00:29:24] [Thread-6/INFO]: secret key found, checking
+[00:29:24] [Thread-6/INFO]: check secret
+[00:29:24] [Thread-6/INFO]: found minecraft java tunnel: password-version.gl.joinmc.link
+[00:29:24] [Thread-6/INFO]: keys and tunnel setup
+[00:29:33] [Thread-6/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2534, claimAddress=69.9.178.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 9, -26, 0, -96, 108, -54, -85, 8, 105, 15, -32, 109, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 93, -91, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, 67, -69, -40, 87, -103, 26, 65, 37, 27, -67, -18, -70, -62, 82, -117, -78], tunnelServerId=1, dataCenterId=36}
+[00:29:33] [Thread-6/INFO]: starting tcp tunnel for client
+[00:29:33] [Thread-6/INFO]: start connection to /69.9.178.2:43784 to claim client
+[00:30:03] [nioEventLoopGroup-2-1/WARN]: failed to establish connection to tunnel claim/69.9.178.2:43784
