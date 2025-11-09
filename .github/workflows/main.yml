@@ -1,4 +1,4 @@
-name: server proxy
+name: server
 on:
   workflow_dispatch:
 
@@ -15,17 +15,6 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Download Paper 1.16.5
-        run: |
-          
-          if [ -f world.zip ]; then
-            echo "=== Extracting world.zip ==="
-            unzip -q world.zip
-            echo "✔ World extracted successfully"
-          else
-            echo "ℹ️ No world.zip found, using existing world"
-          fi
-          
       - name: Setup Playit Tunnel with Auto-Restart
         run: |
           echo "=== Setting up Playit Tunnel with monitoring ==="
@@ -46,15 +35,15 @@ jobs:
           done &
           
           echo "✔ Playit tunnel started with auto-restart"
-          echo "ℹ️ Paper port (25565) and Velocity port (25577) will be tunneled"
+          echo "ℹ️ Fabric port (25565) "
           sleep 10
           
-      - name: Run Both Servers
+      - name: Run Fabric Server
         run: |
-          echo "=== Starting Paper Server on port 25565 ==="
+          echo "=== Starting Fabric Server on port 25565 ==="
           
           java -DPaper.IgnoreJavaVersion=true \
-            -Xmx14848M -Xms10240M \
+            -Xmx24G -Xms20G \
             -XX:+UseG1GC \
             -XX:+ParallelRefProcEnabled \
             -XX:MaxGCPauseMillis=200 \
@@ -76,50 +65,21 @@ jobs:
             -Dusing.aikars.flags=https://mcflags.emc.gs \
             -Daikars.new.flags=true \
             -jar fabric-server.jar --nogui &
-          PAPER_PID=$!
+          SERVER_PID=$!
           
-          echo "✔ Paper Server started (PID: $PAPER_PID)"
-          echo "⏳ Waiting 60 seconds for Paper to start..."
+          echo "✔ Fabric Server started (PID: $SERVER_PID)"
+          echo "⏳ Waiting 60 seconds for Fabric to start..."
           sleep 60
-          
-          echo "=== Starting Velocity Proxy on port 25577 ==="
-          
-          cd velocity
-          java -Xmx512M -Xms512M \
-            -XX:+UseG1GC \
-            -XX:G1HeapRegionSize=4M \
-            -XX:+UnlockExperimentalVMOptions \
-            -XX:+ParallelRefProcEnabled \
-            -XX:+DisableExplicitGC \
-            -XX:+AlwaysPreTouch \
-            -jar velocity.jar &
-          VELOCITY_PID=$!
-          cd ..
-          
-          echo "✔ Velocity Proxy started (PID: $VELOCITY_PID)"
-          echo ""
-          echo "=== Both Servers are now ONLINE ==="
-          echo "📍 Paper (Java players): port 25565"
-          echo "📍 Velocity (Eaglercraft): port 25577"
-          echo "ℹ️ Type 'stop' in Paper to shutdown everything"
           
           MAX_TIME=20700
           ELAPSED=0
           CHECK_INTERVAL=10
           
           while [ $ELAPSED -lt $MAX_TIME ]; do
-            # Check if Paper stopped
-            if ! kill -0 $PAPER_PID 2>/dev/null; then
+            # Check if Fabric stopped
+            if ! kill -0 $SERVER_PID 2>/dev/null; then
               echo ""
-              echo "=== Paper Server Stopped - Shutting down everything ==="
-              break
-            fi
-            
-            # Check if Velocity stopped unexpectedly
-            if ! kill -0 $VELOCITY_PID 2>/dev/null; then
-              echo ""
-              echo "⚠️ Velocity stopped unexpectedly - Continuing Paper server"
-            fi
+              echo "=== Fabric Server Stopped - Shutting down everything ==="
             
             sleep $CHECK_INTERVAL
             ELAPSED=$((ELAPSED + CHECK_INTERVAL))
@@ -130,11 +90,9 @@ jobs:
           done
           
           echo "⏹️ Stopping all processes..."
-          kill -TERM $PAPER_PID 2>/dev/null || true
-          kill -TERM $VELOCITY_PID 2>/dev/null || true
+          kill -TERM $SERVER_PID 2>/dev/null || true
           sleep 5
-          kill -9 $PAPER_PID 2>/dev/null || true
-          kill -9 $VELOCITY_PID 2>/dev/null || true
+          kill -9 $SERVER_PID 2>/dev/null || true
           
           pkill -TERM playit-linux-amd64 2>/dev/null || true
           sleep 2
