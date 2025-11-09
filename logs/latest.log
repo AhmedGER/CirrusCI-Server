@@ -1,8 +1,8 @@
-[10:41:38] [main/INFO]: Loading Minecraft 1.20.1 with Fabric Loader 0.16.10
-[10:41:39] [main/WARN]: Warnings were found!
+[10:46:47] [main/INFO]: Loading Minecraft 1.20.1 with Fabric Loader 0.16.10
+[10:46:47] [main/WARN]: Warnings were found!
  - Mod 'TAB' (tab) 4.1.2 recommends any version of fabric-permissions-api-v0, which is missing!
 	 - You should install any version of fabric-permissions-api-v0 for the optimal experience.
-[10:41:39] [main/INFO]: Loading 55 mods:
+[10:46:47] [main/INFO]: Loading 51 mods:
 	- craftcontrolrcon 1.20-1.0.1
 	- fabric-api 0.92.6+1.20.1
 	   |-- fabric-api-base 0.4.32+1802ada577
@@ -61,10 +61,6 @@
 	   \-- mixinextras 0.4.1
 	- java 21
 	- minecraft 1.20.1
-	- playit_fabric 1.3.2
-	   |-- com_fasterxml_jackson_core_jackson-annotations 2.14.2
-	   |-- com_fasterxml_jackson_core_jackson-core 2.14.2
-	   \-- com_fasterxml_jackson_core_jackson-databind 2.14.2
 	- tab 4.1.2
 	- viabackwards 5.5.0
 	- viafabric 0.4.18+104-main
@@ -72,82 +68,64 @@
 	   \-- viafabric-mc1201 0.4.18+104-main
 	- viarewind 4.0.10
 	- viaversion 5.5.1
-[10:41:39] [main/INFO]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/home/runner/work/CirrusCI-Server/CirrusCI-Server/libraries/net/fabricmc/sponge-mixin/0.15.4+mixin.0.8.7/sponge-mixin-0.15.4+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
-[10:41:39] [main/INFO]: Compatibility level set to JAVA_17
-[10:41:39] [main/INFO]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.1).
-[10:41:46] [Via-Mappingloader-0/INFO]: Loading block connection mappings ...
-[10:41:47] [Via-Mappingloader-0/INFO]: Using FastUtil Long2ObjectOpenHashMap for block connections
-[10:41:47] [main/INFO]: Loading translations...
-[10:41:47] [main/INFO]: Registering protocols...
-[10:41:47] [main/INFO]: Registering protocols...
-[10:41:47] [main/INFO]: ViaVersion detected server version: 1.20-1.20.1 (763)
-[10:41:47] [ViaFabric-2/INFO]: Finished mapping loading, shutting down loader executor.
-[10:41:47] [main/INFO]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
-[10:41:49] [main/INFO]: registered playit command
-[10:41:49] [main/INFO]: Loaded 7 recipes
-[10:41:49] [main/INFO]: Loaded 1271 advancements
-[10:41:50] [main/INFO]: Applied 0 biome modifications to 0 of 64 new biomes in 1.296 ms
-[10:41:50] [Server thread/INFO]: Enabled in 113ms
-[10:41:50] [Server thread/INFO]: Starting minecraft server version 1.20.1
-[10:41:50] [Server thread/INFO]: Loading properties
-[10:41:50] [Server thread/INFO]: Default game type: SURVIVAL
-[10:41:50] [Server thread/INFO]: Generating keypair
-[10:41:50] [Server thread/INFO]: Starting Minecraft server on *:25565
-[10:41:50] [Server thread/INFO]: Using epoll channel type
-[10:41:50] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
-[10:41:50] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
-[10:41:50] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
-[10:41:50] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
-[10:41:50] [Server thread/INFO]: Preparing level "world"
-[10:41:52] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
-[10:41:55] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[10:41:55] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[10:41:55] [Worker-Main-3/INFO]: Preparing spawn area: 0%
-[10:41:55] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[10:41:55] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[10:41:55] [Worker-Main-2/INFO]: Preparing spawn area: 0%
-[10:41:56] [Worker-Main-2/INFO]: Preparing spawn area: 54%
-[10:41:56] [Server thread/INFO]: Time elapsed: 3315 ms
-[10:41:56] [Server thread/INFO]: Done (5.709s)! For help, type "help"
-[10:41:56] [Server thread/INFO]: Starting remote control listener
-[10:41:56] [Server thread/INFO]: Thread RCON Listener started
-[10:41:56] [Server thread/INFO]: RCON running on 0.0.0.0:25575
-[10:41:56] [Thread-10/INFO]: secret key found, checking
-[10:41:56] [Thread-10/INFO]: check secret
-[10:41:57] [Thread-10/INFO]: found minecraft java tunnel: password-version.gl.joinmc.link
-[10:41:57] [Thread-10/INFO]: keys and tunnel setup
-[10:43:46] [RCON Listener #1/INFO]: Thread RCON Client /127.155.3.48 started
-[10:43:53] [RCON Client /127.155.3.48 #2/INFO]: Thread RCON Client /127.155.3.48 shutting down
-[10:43:54] [RCON Listener #1/INFO]: Thread RCON Client /127.155.3.48 started
-[10:44:03] [RCON Client /127.155.3.48 #3/INFO]: Thread RCON Client /127.155.3.48 shutting down
-[10:44:09] [Thread-10/INFO]: got new client: NewClient{connectAddr=147.185.221.23:42248, peerAddr=105.192.74.69:2797, claimAddress=69.9.184.2:43784, claimToken=[44, 0, 108, -109, -71, -35, 23, -91, 8, 105, -64, 74, 69, 10, -19, 9, 33, 118, -96, -85, 8, 105, 16, 112, 121, 0, 0, 0, 0, 0, 25, -11, -107, 0, 0, 0, 0, 0, 79, -99, 23, 0, 0, 0, 0, 0, 39, -113, -92, 100, 123, -85, 8, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 38, 37, 0, -14, 5, 30, 112, 97, 115, 115, 119, 111, 114, 100, 45, 118, 101, 114, 115, 105, 111, 110, 46, 103, 108, 46, 97, 116, 46, 112, 108, 121, 46, 103, 103, 46, -91, 8, 1, -88, -73, 124, -122, 39, 69, -120, -28, 67, -102, -8, -80, 80, 93, 66, 0], tunnelServerId=1, dataCenterId=36}
-[10:44:09] [Thread-10/INFO]: starting tcp tunnel for client
-[10:44:09] [Thread-10/INFO]: start connection to /69.9.184.2:43784 to claim client
-[10:44:09] [nioEventLoopGroup-2-1/INFO]: connected to tunnel server, sending claim token
-[10:44:09] [nioEventLoopGroup-2-1/INFO]: claim token sent
-[10:44:09] [nioEventLoopGroup-2-1/INFO]: connection to tunnel server has been established
-[10:44:09] [nioEventLoopGroup-2-1/INFO]: Reflect: ReflectionHelper{ServerConnection=null, LegacyPingHandler=null, MinecraftServer=class net.minecraft.server.MinecraftServer, PacketSplitter=null, PacketDecoder=null, EnumProtocolDirection=null, PacketPrepender=null, PacketEncoder=null, NetworkManagerServer=null, NetworkManager=null, HandshakeListener=null, PacketListener=null}
-[10:44:09] [nioEventLoopGroup-2-1/INFO]: failed to get ServerConnection from Minecraft Server
-[10:44:09] [nioEventLoopGroup-2-1/INFO]: connecting to minecraft server at localhost/127.0.0.1:25565
-[10:44:09] [nioEventLoopGroup-2-2/INFO]: connected to local minecraft server
-[10:44:21] [RCON Listener #1/INFO]: Thread RCON Client /127.146.114.135 started
-[10:44:22] [RCON Client /127.146.114.135 #4/INFO]: Thread RCON Client /127.146.114.135 shutting down
-[10:44:27] [RCON Listener #1/INFO]: Thread RCON Client /127.155.3.48 started
-[10:44:32] [Server thread/INFO]: [Rcon: Stopping the server]
-[10:44:32] [Server thread/INFO]: ViaVersion has been disabled; uninjected the platform and shut down the scheduler.
-[10:44:32] [Server thread/INFO]: Disabled in 0ms
-[10:44:32] [Server thread/INFO]: Stopping server
-[10:44:32] [Server thread/INFO]: Saving players
-[10:44:32] [Server thread/INFO]: Saving worlds
-[10:44:33] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
-[10:44:34] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
-[10:44:34] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
-[10:44:34] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
-[10:44:34] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
-[10:44:34] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
-[10:44:34] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved
-[10:44:34] [Server thread/INFO]: stopping playit
-[10:44:34] [Server thread/INFO]: Thread RCON Listener stopped
-[10:44:34] [RCON Client /127.155.3.48 #5/INFO]: Thread RCON Client /127.155.3.48 shutting down
-[10:44:34] [Server thread/INFO]: Thread RCON Client /127.155.3.48 stopped
-[10:44:34] [Thread-10/INFO]: control channel shutdown
+[10:46:47] [main/INFO]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/home/runner/work/CirrusCI-Server/CirrusCI-Server/libraries/net/fabricmc/sponge-mixin/0.15.4+mixin.0.8.7/sponge-mixin-0.15.4+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
+[10:46:47] [main/INFO]: Compatibility level set to JAVA_17
+[10:46:48] [main/INFO]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.1).
+[10:46:55] [Via-Mappingloader-0/INFO]: Loading block connection mappings ...
+[10:46:55] [Via-Mappingloader-0/INFO]: Using FastUtil Long2ObjectOpenHashMap for block connections
+[10:46:55] [main/INFO]: Loading translations...
+[10:46:55] [main/INFO]: Registering protocols...
+[10:46:55] [main/INFO]: Registering protocols...
+[10:46:55] [main/INFO]: ViaVersion detected server version: 1.20-1.20.1 (763)
+[10:46:55] [ViaFabric-2/INFO]: Finished mapping loading, shutting down loader executor.
+[10:46:56] [main/INFO]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[10:46:57] [main/INFO]: Loaded 7 recipes
+[10:46:57] [main/INFO]: Loaded 1271 advancements
+[10:46:58] [main/INFO]: Applied 0 biome modifications to 0 of 64 new biomes in 1.350 ms
+[10:46:58] [Server thread/INFO]: Enabled in 115ms
+[10:46:58] [Server thread/INFO]: Starting minecraft server version 1.20.1
+[10:46:58] [Server thread/INFO]: Loading properties
+[10:46:58] [Server thread/INFO]: Default game type: SURVIVAL
+[10:46:58] [Server thread/INFO]: Generating keypair
+[10:46:58] [Server thread/INFO]: Starting Minecraft server on *:25565
+[10:46:58] [Server thread/INFO]: Using epoll channel type
+[10:46:58] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[10:46:58] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
+[10:46:58] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[10:46:58] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[10:46:58] [Server thread/INFO]: Preparing level "world"
+[10:47:00] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[10:47:03] [Worker-Main-1/INFO]: Preparing spawn area: 0%
+[10:47:03] [Worker-Main-1/INFO]: Preparing spawn area: 0%
+[10:47:03] [Worker-Main-1/INFO]: Preparing spawn area: 0%
+[10:47:03] [Worker-Main-2/INFO]: Preparing spawn area: 0%
+[10:47:03] [Worker-Main-3/INFO]: Preparing spawn area: 0%
+[10:47:03] [Worker-Main-1/INFO]: Preparing spawn area: 4%
+[10:47:03] [Worker-Main-3/INFO]: Preparing spawn area: 90%
+[10:47:03] [Server thread/INFO]: Time elapsed: 3045 ms
+[10:47:03] [Server thread/INFO]: Done (5.481s)! For help, type "help"
+[10:47:03] [Server thread/INFO]: Starting remote control listener
+[10:47:03] [Server thread/INFO]: Thread RCON Listener started
+[10:47:03] [Server thread/INFO]: RCON running on 0.0.0.0:25575
+[10:47:19] [Server thread/INFO]: SIGMAxox[/127.155.3.48:41119] logged in with entity id 207 at (-42.28680023795431, 70.0, 31.593500122903)
+[10:47:19] [Server thread/INFO]: SIGMAxox joined the game
+[10:47:19] [Netty Epoll Server IO #2/WARN]: (1.17->1.16.4) Increased world height is NOT SUPPORTED for 1.16 players and below. They will see a void below y 0 and above 256. You can enable the `bedrock-at-y-0` config option to replace the air with a bedrock layer.
+[10:48:00] [RCON Listener #1/INFO]: Thread RCON Client /127.155.3.48 started
+[10:48:08] [RCON Client /127.155.3.48 #2/INFO]: Thread RCON Client /127.155.3.48 shutting down
+[10:48:26] [Server thread/INFO]: [SIGMAxox: Stopping the server]
+[10:48:26] [Server thread/INFO]: ViaVersion has been disabled; uninjected the platform and shut down the scheduler.
+[10:48:26] [Server thread/INFO]: Disabled in 1ms
+[10:48:26] [Server thread/INFO]: Stopping server
+[10:48:26] [Server thread/INFO]: Saving players
+[10:48:26] [Server thread/INFO]: SIGMAxox lost connection: Server closed
+[10:48:26] [Server thread/INFO]: SIGMAxox left the game
+[10:48:26] [Server thread/INFO]: Saving worlds
+[10:48:27] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[10:48:27] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[10:48:27] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[10:48:27] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[10:48:27] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[10:48:27] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[10:48:27] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved
+[10:48:27] [Server thread/INFO]: Thread RCON Listener stopped
+[10:48:27] [Server Shutdown Thread/INFO]: ViaVersion has been disabled; uninjected the platform and shut down the scheduler.
