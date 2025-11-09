@@ -1,6 +1,6 @@
 # .cirrus.yml
 container:
-  image: ubuntu:22.04
+  image: ubuntu:22.04  # نفس Ubuntu بتاع GitHub
   cpu: 8
   memory: 24G
 
@@ -10,17 +10,58 @@ env:
   DEBIAN_FRONTEND: noninteractive
 
 task:
-  name: Minecraft Fabric + Velocity
-  timeout_in: 180m
+  name: server proxy
+  timeout_in: 360m  # نفس 360 دقيقة زي GitHub
 
-  install_java_script:
+  # Checkout (زي actions/checkout@v4)
+  clone_script:
+    - git config --global user.name "Cirrus Bot"
+    - git config --global user.email "bot@cirrus-ci.com"
+
+  # Setup Java 21 (زي actions/setup-java@v3)
+  setup_java_script:
     - apt-get update -qq
     - apt-get install -y openjdk-21-jre-headless git curl jq > /dev/null 2>&1
-    
-  run_server_script:
+
+  # Download Paper 1.16.5 (نفس الخطوة)
+  download_paper_script:
     - |
-      echo "Starting Fabric Server on port 25565..."
-      java -Xmx21G -Xms17G \
+      if [ -f world.zip ]; then
+        echo "=== Extracting world.zip ==="
+        unzip -q world.zip
+        echo "✔ World extracted successfully"
+      else
+        echo "ℹ️ No world.zip found, using existing world"
+      fi
+
+  # Setup Playit Tunnel (نفس الخطوة بالظبط)
+  setup_playit_script:
+    - |
+      echo "=== Setting up Playit Tunnel with monitoring ==="
+      
+      chmod +x playit-linux-amd64
+      
+      if [ -f playit.toml ]; then
+        echo "✔ Using existing playit.toml"
+      else
+        echo "⚠️ No playit config found"
+      fi
+      
+      while true; do
+        ./playit-linux-amd64 >/dev/null 2>&1 || sleep 5
+      done &
+      
+      echo "✔ Playit tunnel started with auto-restart"
+      echo "ℹ️ Paper port (25565) and Velocity port (25577) will be tunneled"
+      sleep 10
+
+  # Run Both Servers (نفس الخطوة بالظبط)
+  run_servers_script:
+    - |
+      echo "=== Starting Paper Server on port 25565 ==="
+      
+      java -DPaper.IgnoreJavaVersion=true \
+        -Xmx14848M -Xms10240M \
         -XX:+UseG1GC \
         -XX:+ParallelRefProcEnabled \
         -XX:MaxGCPauseMillis=200 \
@@ -39,89 +80,99 @@ task:
         -XX:SurvivorRatio=32 \
         -XX:+PerfDisableSharedMem \
         -XX:MaxTenuringThreshold=1 \
-        -jar fabric-server.jar nogui 2>&1 | tee server.log &
-      SERVER_PID=$!
+        -Dusing.aikars.flags=https://mcflags.emc.gs \
+        -Daikars.new.flags=true \
+        -jar fabric-server.jar --nogui &
+      PAPER_PID=$!
       
-      echo "Fabric Server started (PID: $SERVER_PID)"
-      sleep 10
+      echo "✔ Paper Server started (PID: $PAPER_PID)"
+      echo "⏳ Waiting 60 seconds for Paper to start..."
+      sleep 60
       
-      echo "Starting Velocity Proxy on port 25577..."
+      echo "=== Starting Velocity Proxy on port 25577 ==="
+      
       cd velocity
-      java -Xmx1G -Xms512M \
+      java -Xmx512M -Xms512M \
         -XX:+UseG1GC \
         -XX:G1HeapRegionSize=4M \
         -XX:+UnlockExperimentalVMOptions \
         -XX:+ParallelRefProcEnabled \
         -XX:+DisableExplicitGC \
         -XX:+AlwaysPreTouch \
-        -jar velocity.jar 2>&1 | tee velocity.log &
+        -jar velocity.jar &
       VELOCITY_PID=$!
       cd ..
       
-      echo "Velocity started (PID: $VELOCITY_PID)"
-      sleep 5
-      
-      echo "Starting Playit tunnel..."
-      chmod +x playit-linux-amd64
-      
-      (while true; do
-        ./playit-linux-amd64 2>&1 | tee -a playit.log
-        sleep 5
-      done) &
-      
+      echo "✔ Velocity Proxy started (PID: $VELOCITY_PID)"
       echo ""
-      echo "=== ALL SERVICES RUNNING ==="
-      echo "Fabric: 21GB RAM on port 25565"
-      echo "Velocity: 1GB RAM on port 25577"
-      echo "Playit: Check logs for connection address"
-      echo ""
+      echo "=== Both Servers are now ONLINE ==="
+      echo "📍 Paper (Java players): port 25565"
+      echo "📍 Velocity (Eaglercraft): port 25577"
+      echo "ℹ️ Type 'stop' in Paper to shutdown everything"
       
-      MAX_TIME=6600
+      MAX_TIME=20700
       ELAPSED=0
+      CHECK_INTERVAL=10
       
       while [ $ELAPSED -lt $MAX_TIME ]; do
-        if ! kill -0 $SERVER_PID 2>/dev/null; then
-          echo "Fabric server stopped"
+        # Check if Paper stopped
+        if ! kill -0 $PAPER_PID 2>/dev/null; then
+          echo ""
+          echo "=== Paper Server Stopped - Shutting down everything ==="
           break
         fi
-        if ! kill -0 $VELOCITY_PID 2>/dev/null; then
-          echo "Velocity stopped, restarting..."
-          cd velocity
-          java -Xmx1G -Xms512M -XX:+UseG1GC -jar velocity.jar 2>&1 | tee -a velocity.log &
-          VELOCITY_PID=$!
-          cd ..
-        fi
-        sleep 10
-        ELAPSED=$((ELAPSED + 10))
         
-        if [ $((ELAPSED % 600)) -eq 0 ]; then
-          echo "=== Running for $((ELAPSED / 60)) minutes ==="
+        # Check if Velocity stopped unexpectedly
+        if ! kill -0 $VELOCITY_PID 2>/dev/null; then
+          echo ""
+          echo "⚠️ Velocity stopped unexpectedly - Continuing Paper server"
+        fi
+        
+        sleep $CHECK_INTERVAL
+        ELAPSED=$((ELAPSED + CHECK_INTERVAL))
+        
+        if [ $((ELAPSED % 1800)) -eq 0 ]; then
+          echo "⏰ Servers running... $((ELAPSED / 60)) minutes elapsed"
         fi
       done
       
-      echo "Shutting down all services..."
-      kill -TERM $SERVER_PID $VELOCITY_PID 2>/dev/null || true
-      pkill -TERM playit-linux-amd64 2>/dev/null || true
-      sleep 10
+      echo "⏹️ Stopping all processes..."
+      kill -TERM $PAPER_PID 2>/dev/null || true
+      kill -TERM $VELOCITY_PID 2>/dev/null || true
+      sleep 5
+      kill -9 $PAPER_PID 2>/dev/null || true
+      kill -9 $VELOCITY_PID 2>/dev/null || true
       
-      echo "=== Final Logs ==="
-      echo "Fabric (last 30 lines):"
-      tail -30 server.log
-      echo ""
-      echo "Velocity (last 20 lines):"
-      tail -20 velocity/velocity.log
+      pkill -TERM playit-linux-amd64 2>/dev/null || true
+      sleep 2
+      pkill -9 playit-linux-amd64 2>/dev/null || true
+      
+      echo "✔ All servers and tunnels stopped"
 
+  # Save world and config (always block زي GitHub)
   always:
     save_world_script:
-      - git config user.email "bot@cirrus-ci.com"
-      - git config user.name "Cirrus Bot"
-      - git add -A
-      - git diff --cached --quiet || git commit -m "Auto-save $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
-      - git push https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git HEAD:main || true
-    
-    retrigger_script:
-      - sleep 60
       - |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        
+        git add -A
+        
+        if ! git diff --cached --quiet 2>/dev/null; then
+          git commit -m "Auto-save: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          git pull --rebase --autostash \
+            https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git HEAD:main || true
+          echo "✔ Changes saved to repository"
+        else
+          echo "ℹ️ No changes to save"
+        fi
+    
+    # Auto-retrigger workflow (زي GitHub)
+    retrigger_script:
+      - |
+        sleep 30
+        
         REPO_ID=$(curl -s \
           -H "Authorization: Bearer ${CIRRUS_API_TOKEN}" \
           -H "Content-Type: application/json" \
@@ -129,9 +180,21 @@ task:
           https://api.cirrus-ci.com/graphql | jq -r '.data.githubRepository.id')
         
         if [ -n "$REPO_ID" ] && [ "$REPO_ID" != "null" ]; then
-          curl -X POST \
+          RUNNING_BUILDS=$(curl -s \
             -H "Authorization: Bearer ${CIRRUS_API_TOKEN}" \
             -H "Content-Type: application/json" \
-            -d '{"query":"mutation { trigger(input: {repositoryId: \"'$REPO_ID'\", branch: \"main\"}) { build { id } } }"}' \
-            https://api.cirrus-ci.com/graphql
+            -d '{"query":"query { githubRepository(owner: \"'$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f1)'\", name: \"'$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f2)'\") { builds(last: 5) { edges { node { status } } } } }"}' \
+            https://api.cirrus-ci.com/graphql | jq -r '.data.githubRepository.builds.edges[].node.status' | grep -c "EXECUTING" || echo "0")
+          
+          if [ "$RUNNING_BUILDS" -le 1 ]; then
+            echo "No other workflows running, retriggering..."
+            curl -X POST \
+              -H "Authorization: Bearer ${CIRRUS_API_TOKEN}" \
+              -H "Content-Type: application/json" \
+              -d '{"query":"mutation { trigger(input: {repositoryId: \"'$REPO_ID'\", branch: \"main\"}) { build { id } } }"}' \
+              https://api.cirrus-ci.com/graphql
+            echo "✔ Workflow retriggered"
+          else
+            echo "Other workflows are running, skipping retrigger"
+          fi
         fi
