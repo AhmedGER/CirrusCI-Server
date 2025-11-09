@@ -90,12 +90,13 @@ jobs:
               echo "⏰ Servers running... $((ELAPSED / 60)) minutes elapsed"
             fi 
           done
-
+          
+          if kill -0 $SERVER_PID 2>/dev/null; then
           echo "⏹️ Stopping all processes..."
           kill -TERM $SERVER_PID 2>/dev/null || true
           sleep 5
           kill -9 $SERVER_PID 2>/dev/null || true
-          
+          fi  
           pkill -TERM playit-linux-amd64 2>/dev/null || true
           sleep 2
           pkill -9 playit-linux-amd64 2>/dev/null || true
