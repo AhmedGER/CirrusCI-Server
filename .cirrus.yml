@@ -1,4 +1,4 @@
-# .cirrus.yml - باستخدام Pinggy (مجاني بدون تسجيل أو كريدت كارد)
+# .cirrus.yml - باستخدام localhost.run (مجاني 100% بدون تسجيل)
 container:
   image: ubuntu:22.04
   cpu: 8
@@ -10,13 +10,13 @@ env:
   DEBIAN_FRONTEND: noninteractive
 
 task:
-  name: Minecraft Fabric Server with Pinggy
+  name: Minecraft Fabric Server with localhost.run
   timeout_in: 120m
   
   # تثبيت المتطلبات الأساسية
   setup_script:
     - apt-get update -qq
-    - apt-get install -y openjdk-21-jre-headless git curl jq wget screen sshpass -qq
+    - apt-get install -y openjdk-21-jre-headless git curl jq wget screen openssh-client -qq
     - echo "eula=true" > eula.txt
   
   # تحميل Fabric server (إذا لم يكن موجود)
@@ -28,47 +28,83 @@ task:
         wget -q -O fabric-server.jar https://meta.fabricmc.net/v2/versions/loader/1.21.1/0.16.9/1.0.1/server/jar
       fi
   
-  # بدء Pinggy tunnel في الـ background
-  start_pinggy_tunnel_script:
+  # بدء localhost.run tunnel في الـ background
+  start_tunnel_script:
     - |
-      echo "Starting Pinggy TCP tunnel on port 25565..."
+      echo "🚀 Starting localhost.run TCP tunnel for port 25565..."
       
-      # Pinggy بيشتغل عن طريق SSH tunneling - ما بيحتاجش privileged mode!
-      # شغله في الـ background وخزن الـ output
+      # localhost.run بيشتغل بالـ SSH بدون أي تسجيل!
+      # شغله في الـ background
       (
-        ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 \
-          -R0:localhost:25565 a.pinggy.io 2>&1 | tee pinggy.log
+        ssh -o StrictHostKeyChecking=no \
+            -o ServerAliveInterval=30 \
+            -o ServerAliveCountMax=3 \
+            -o ExitOnForwardFailure=yes \
+            -R 80:localhost:25565 \
+            nokey@localhost.run 2>&1 | tee tunnel.log
       ) &
       
-      PINGGY_PID=$!
-      echo "Pinggy started with PID: $PINGGY_PID"
+      TUNNEL_PID=$!
+      echo "✅ Tunnel process started with PID: $TUNNEL_PID"
       
-      # انتظر شوية عشان الـ tunnel يتأسس
-      echo "Waiting for tunnel to establish..."
-      sleep 15
+      # انتظر عشان الـ tunnel يتأسس
+      echo "⏳ Waiting for tunnel to establish (20 seconds)..."
+      sleep 20
       
       # استخرج الـ tunnel URL من اللوج
-      echo "=== Pinggy Tunnel Information ==="
-      if [ -f "pinggy.log" ]; then
-        # Pinggy بيطبع الـ URL في الـ output
-        grep -A 5 "tcp://" pinggy.log || echo "Waiting for tunnel URL..."
+      echo ""
+      echo "======================================"
+      echo "📡 Tunnel Information:"
+      echo "======================================"
+      
+      if [ -f "tunnel.log" ]; then
+        # اطبع كل اللوج للـ debugging
+        cat tunnel.log
+        echo ""
         
-        # حاول تستخرج الـ URL
-        TUNNEL_URL=$(grep -oP 'tcp://[^:]+:\d+' pinggy.log | head -1)
+        # localhost.run بيطبع URL في الشكل ده: https://xxxxx.lhr.rocks
+        TUNNEL_URL=$(grep -oP 'https://[a-z0-9-]+\.lhr\.rocks' tunnel.log | head -1 || \
+                     grep -oP 'http://[a-z0-9-]+\.localhost\.run' tunnel.log | head -1)
+        
         if [ -n "$TUNNEL_URL" ]; then
-          echo "🎮 Connect to Minecraft Server at: $TUNNEL_URL"
-          echo "$TUNNEL_URL" > tunnel_url.txt
+          echo "🌐 Web URL: $TUNNEL_URL"
+          
+          # للـ Minecraft، استخدم الدومين بدون http://
+          MC_HOST=$(echo $TUNNEL_URL | sed 's|https\?://||')
+          echo "🎮 Minecraft Server Address: $MC_HOST"
+          echo "$MC_HOST" > server_address.txt
+          
+          echo ""
+          echo "✨ Copy this address and paste it in Minecraft!"
+          echo "✨ Server: $MC_HOST"
+        else
+          echo "⚠️  Tunnel URL not found in logs yet..."
+          echo "⏳ Waiting 10 more seconds..."
+          sleep 10
+          
+          # حاول تاني
+          TUNNEL_URL=$(grep -oP 'https://[a-z0-9-]+\.lhr\.rocks' tunnel.log | head -1 || \
+                       grep -oP 'http://[a-z0-9-]+\.localhost\.run' tunnel.log | head -1)
+          
+          if [ -n "$TUNNEL_URL" ]; then
+            MC_HOST=$(echo $TUNNEL_URL | sed 's|https\?://||')
+            echo "🎮 Minecraft Server Address: $MC_HOST"
+            echo "$MC_HOST" > server_address.txt
+          else
+            echo "❌ Could not extract tunnel URL. Check logs above."
+          fi
         fi
+      else
+        echo "❌ tunnel.log file not found!"
       fi
-      echo "=================================="
+      
+      echo "======================================"
+      echo ""
   
   # بدء Minecraft Server
   run_server_script:
     - |
-      echo "Starting Minecraft Fabric Server..."
-      
-      # انتظر شوية إضافية للتأكد من الـ tunnel
-      sleep 5
+      echo "🎮 Starting Minecraft Fabric Server..."
       
       # شغل السيرفر مع JVM flags محسّنة
       java -Xmx22G -Xms18G \
@@ -95,17 +131,18 @@ task:
       SERVER_PID=$!
       echo "✅ Server started with PID: $SERVER_PID"
       
-      # اطبع الـ tunnel URL مرة تانية
-      if [ -f "tunnel_url.txt" ]; then
+      # اطبع عنوان السيرفر مرة تانية
+      if [ -f "server_address.txt" ]; then
         echo ""
         echo "=========================================="
-        echo "🎮 Minecraft Server is LIVE!"
-        echo "Connect using: $(cat tunnel_url.txt)"
+        echo "🎮 MINECRAFT SERVER IS LIVE!"
+        echo "=========================================="
+        echo "Server Address: $(cat server_address.txt)"
         echo "=========================================="
         echo ""
       fi
       
-      # مدة التشغيل: 110 دقيقة
+      # مدة التشغيل: 110 دقيقة (6600 ثانية)
       MAX_TIME=6600
       ELAPSED=0
       
@@ -114,6 +151,7 @@ task:
         # تحقق إذا السيرفر لسه شغال
         if ! kill -0 $SERVER_PID 2>/dev/null; then
           echo "❌ ERROR: Server stopped unexpectedly!"
+          echo "Last 50 lines of server log:"
           tail -n 50 logs/latest.log 2>/dev/null || echo "No server logs available"
           break
         fi
@@ -126,29 +164,34 @@ task:
           MINUTES=$((ELAPSED / 60))
           echo "⏱️  Server running for $MINUTES minutes..."
           
-          # اطبع آخر سطر من الـ log
-          tail -n 1 logs/latest.log 2>/dev/null || true
+          # اطبع آخر سطر من الـ server log
+          if [ -f "logs/latest.log" ]; then
+            LAST_LINE=$(tail -n 1 logs/latest.log 2>/dev/null)
+            echo "   Last log: $LAST_LINE"
+          fi
         fi
       done
       
       # إيقاف السيرفر بأمان
-      echo "Shutting down server gracefully..."
+      echo ""
+      echo "🛑 Shutting down server gracefully..."
       if kill -0 $SERVER_PID 2>/dev/null; then
-        # حاول ترسل stop command
-        echo "Sending stop command to server..."
-        echo "stop" | nc localhost 25565 2>/dev/null || true
+        # أرسل stop command للسيرفر
+        echo "stop" > server_input.txt 2>/dev/null || true
         sleep 10
         
         # لو لسه شغال، استخدم SIGTERM
-        kill -TERM $SERVER_PID 2>/dev/null || true
-        sleep 5
+        if kill -0 $SERVER_PID 2>/dev/null; then
+          kill -TERM $SERVER_PID 2>/dev/null || true
+          sleep 5
+        fi
         
         # آخر محاولة بـ SIGKILL
         kill -9 $SERVER_PID 2>/dev/null || true
       fi
       
-      # أوقف Pinggy
-      echo "Stopping Pinggy tunnel..."
+      # أوقف الـ tunnel
+      echo "🛑 Stopping localhost.run tunnel..."
       pkill -TERM ssh 2>/dev/null || true
       sleep 3
       
@@ -158,7 +201,8 @@ task:
   always:
     save_world_script:
       - |
-        echo "💾 Saving world data..."
+        echo ""
+        echo "💾 Saving world data to GitHub..."
         git config user.email "bot@cirrus-ci.com"
         git config user.name "Cirrus CI Bot"
         
@@ -170,24 +214,33 @@ task:
           TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
           git commit -m "Auto-save world: $TIMESTAMP"
           
-          # push مع retry
-          echo "Pushing changes to GitHub..."
+          # push مع retry (3 محاولات)
+          echo "📤 Pushing changes to GitHub..."
+          SUCCESS=0
           for i in 1 2 3; do
             if git push https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git HEAD:main; then
               echo "✅ World saved successfully!"
+              SUCCESS=1
               break
             else
-              echo "⚠️  Push failed, attempt $i/3..."
+              echo "⚠️  Push attempt $i/3 failed, retrying..."
               sleep 5
             fi
           done
+          
+          if [ $SUCCESS -eq 0 ]; then
+            echo "❌ Failed to push after 3 attempts!"
+          fi
         else
           echo "ℹ️  No changes to save."
         fi
     
-    # أعد تشغيل الـ workflow
+    # أعد تشغيل الـ workflow تلقائياً
     retrigger_script:
       - |
+        echo ""
+        echo "⏳ Waiting 60 seconds before retriggering...
+        
         OWNER=$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f1)
         REPO=$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f2)
         
@@ -211,7 +264,7 @@ task:
           BUILD_ID=$(echo $RESPONSE | jq -r '.data.trigger.build.id')
           
           if [ -n "$BUILD_ID" ] && [ "$BUILD_ID" != "null" ]; then
-            echo "✅ New build triggered! Build ID: $BUILD_ID"
+            echo "✅ New build triggered successfully! Build ID: $BUILD_ID"
           else
             echo "❌ Failed to trigger build."
             echo "Response: $RESPONSE"
