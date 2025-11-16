@@ -1,4 +1,4 @@
-# .cirrus.yml - باستخدام localhost.run (مجاني 100% بدون تسجيل)
+# .cirrus.yml - باستخدام Serveo (مجاني 100% - يدعم TCP للـ Minecraft)
 container:
   image: ubuntu:22.04
   cpu: 8
@@ -10,103 +10,100 @@ env:
   DEBIAN_FRONTEND: noninteractive
 
 task:
-  name: Minecraft Fabric Server with localhost.run
+  name: Minecraft Fabric Server with Serveo
   timeout_in: 120m
   
   # تثبيت المتطلبات الأساسية
   setup_script:
     - apt-get update -qq
-    - apt-get install -y openjdk-21-jre-headless git curl jq wget screen openssh-client -qq
+    - apt-get install -y openjdk-21-jre-headless git curl jq wget openssh-client -qq
     - echo "eula=true" > eula.txt
   
   # تحميل Fabric server (إذا لم يكن موجود)
   download_server_script:
     - |
       if [ ! -f "fabric-server.jar" ]; then
-        echo "Downloading Fabric Server..."
+        echo "⬇️  Downloading Fabric Server..."
         # غير الرابط ده بالإصدار اللي أنت عايزه
         wget -q -O fabric-server.jar https://meta.fabricmc.net/v2/versions/loader/1.21.1/0.16.9/1.0.1/server/jar
+        echo "✅ Fabric server downloaded!"
+      else
+        echo "✅ Fabric server already exists!"
       fi
   
-  # بدء localhost.run tunnel في الـ background
-  start_tunnel_script:
+  # بدء Serveo TCP tunnel
+  start_serveo_tunnel_script:
     - |
-      echo "🚀 Starting localhost.run TCP tunnel for port 25565..."
+      echo "🚀 Starting Serveo TCP tunnel for Minecraft..."
+      echo ""
       
-      # localhost.run بيشتغل بالـ SSH بدون أي تسجيل!
-      # شغله في الـ background
+      # Serveo يدعم TCP tunneling بدون تسجيل!
+      # لو طلبت port غير 80/443، هيعمل raw TCP forwarding
       (
         ssh -o StrictHostKeyChecking=no \
             -o ServerAliveInterval=30 \
             -o ServerAliveCountMax=3 \
             -o ExitOnForwardFailure=yes \
-            -R 80:localhost:25565 \
-            nokey@localhost.run 2>&1 | tee tunnel.log
+            -R 25565:localhost:25565 \
+            serveo.net 2>&1 | tee serveo.log
       ) &
       
       TUNNEL_PID=$!
-      echo "✅ Tunnel process started with PID: $TUNNEL_PID"
+      echo "✅ Serveo tunnel started with PID: $TUNNEL_PID"
       
-      # انتظر عشان الـ tunnel يتأسس
-      echo "⏳ Waiting for tunnel to establish (20 seconds)..."
+      # انتظر للـ tunnel يتأسس
+      echo "⏳ Waiting 20 seconds for tunnel to establish..."
       sleep 20
       
-      # استخرج الـ tunnel URL من اللوج
+      # استخرج معلومات الـ tunnel
       echo ""
-      echo "======================================"
-      echo "📡 Tunnel Information:"
-      echo "======================================"
+      echo "=========================================="
+      echo "📡 Serveo Tunnel Information"
+      echo "=========================================="
       
-      if [ -f "tunnel.log" ]; then
-        # اطبع كل اللوج للـ debugging
-        cat tunnel.log
+      if [ -f "serveo.log" ]; then
+        # اطبع اللوج للـ debugging
+        cat serveo.log
         echo ""
         
-        # localhost.run بيطبع URL في الشكل ده: https://xxxxx.lhr.rocks
-        TUNNEL_URL=$(grep -oP 'https://[a-z0-9-]+\.lhr\.rocks' tunnel.log | head -1 || \
-                     grep -oP 'http://[a-z0-9-]+\.localhost\.run' tunnel.log | head -1)
+        # Serveo بيطبع الـ URL في شكل: Forwarding TCP traffic from serveo.net:XXXXX
+        SERVEO_URL=$(grep -oP 'serveo\.net:\d+' serveo.log | head -1)
         
-        if [ -n "$TUNNEL_URL" ]; then
-          echo "🌐 Web URL: $TUNNEL_URL"
-          
-          # للـ Minecraft، استخدم الدومين بدون http://
-          MC_HOST=$(echo $TUNNEL_URL | sed 's|https\?://||')
-          echo "🎮 Minecraft Server Address: $MC_HOST"
-          echo "$MC_HOST" > server_address.txt
-          
+        if [ -n "$SERVEO_URL" ]; then
+          echo "=========================================="
+          echo "🎮 MINECRAFT SERVER ADDRESS:"
+          echo "   $SERVEO_URL"
+          echo "=========================================="
+          echo "$SERVEO_URL" > minecraft_address.txt
           echo ""
-          echo "✨ Copy this address and paste it in Minecraft!"
-          echo "✨ Server: $MC_HOST"
+          echo "✨ Copy the address above and use it in Minecraft!"
         else
-          echo "⚠️  Tunnel URL not found in logs yet..."
-          echo "⏳ Waiting 10 more seconds..."
+          echo "⚠️  Tunnel URL not detected yet, waiting 10 more seconds..."
           sleep 10
           
-          # حاول تاني
-          TUNNEL_URL=$(grep -oP 'https://[a-z0-9-]+\.lhr\.rocks' tunnel.log | head -1 || \
-                       grep -oP 'http://[a-z0-9-]+\.localhost\.run' tunnel.log | head -1)
-          
-          if [ -n "$TUNNEL_URL" ]; then
-            MC_HOST=$(echo $TUNNEL_URL | sed 's|https\?://||')
-            echo "🎮 Minecraft Server Address: $MC_HOST"
-            echo "$MC_HOST" > server_address.txt
+          SERVEO_URL=$(grep -oP 'serveo\.net:\d+' serveo.log | head -1)
+          if [ -n "$SERVEO_URL" ]; then
+            echo "🎮 Minecraft Server: $SERVEO_URL"
+            echo "$SERVEO_URL" > minecraft_address.txt
           else
-            echo "❌ Could not extract tunnel URL. Check logs above."
+            echo "❌ Could not detect tunnel URL"
+            echo "📋 Check the log above for the address"
           fi
         fi
       else
-        echo "❌ tunnel.log file not found!"
+        echo "❌ serveo.log not found!"
       fi
       
-      echo "======================================"
+      echo "=========================================="
       echo ""
   
   # بدء Minecraft Server
-  run_server_script:
+  run_minecraft_server_script:
     - |
       echo "🎮 Starting Minecraft Fabric Server..."
+      echo ""
       
-      # شغل السيرفر مع JVM flags محسّنة
+      # شغل السيرفر مع JVM flags محسّنة للأداء
       java -Xmx22G -Xms18G \
         -XX:+UseG1GC \
         -XX:+ParallelRefProcEnabled \
@@ -129,128 +126,154 @@ task:
         -jar fabric-server.jar nogui &
       
       SERVER_PID=$!
-      echo "✅ Server started with PID: $SERVER_PID"
+      echo "✅ Minecraft server started with PID: $SERVER_PID"
       
-      # اطبع عنوان السيرفر مرة تانية
-      if [ -f "server_address.txt" ]; then
+      # اطبع العنوان مرة تانية
+      if [ -f "minecraft_address.txt" ]; then
         echo ""
-        echo "=========================================="
-        echo "🎮 MINECRAFT SERVER IS LIVE!"
-        echo "=========================================="
-        echo "Server Address: $(cat server_address.txt)"
-        echo "=========================================="
+        echo "╔════════════════════════════════════════╗"
+        echo "║   🎮 MINECRAFT SERVER IS ONLINE! 🎮   ║"
+        echo "╠════════════════════════════════════════╣"
+        echo "║  Server: $(cat minecraft_address.txt | tr -d '\n')                    ║"
+        echo "╚════════════════════════════════════════╝"
         echo ""
       fi
       
-      # مدة التشغيل: 110 دقيقة (6600 ثانية)
+      # مدة التشغيل: 110 دقيقة
       MAX_TIME=6600
       ELAPSED=0
       
-      # راقب السيرفر
+      # monitor السيرفر
       while [ $ELAPSED -lt $MAX_TIME ]; do
         # تحقق إذا السيرفر لسه شغال
         if ! kill -0 $SERVER_PID 2>/dev/null; then
-          echo "❌ ERROR: Server stopped unexpectedly!"
-          echo "Last 50 lines of server log:"
-          tail -n 50 logs/latest.log 2>/dev/null || echo "No server logs available"
+          echo ""
+          echo "❌ ERROR: Minecraft server stopped unexpectedly!"
+          if [ -f "logs/latest.log" ]; then
+            echo "📋 Last 50 lines of server log:"
+            tail -n 50 logs/latest.log
+          fi
           break
         fi
         
         sleep 30
         ELAPSED=$((ELAPSED + 30))
         
-        # تحديث كل 10 دقائق
+        # تحديثات دورية
         if [ $((ELAPSED % 600)) -eq 0 ]; then
           MINUTES=$((ELAPSED / 60))
-          echo "⏱️  Server running for $MINUTES minutes..."
+          echo "⏱️  [$(date +%H:%M:%S)] Server running for $MINUTES minutes"
           
-          # اطبع آخر سطر من الـ server log
+          # اطبع آخر log line
           if [ -f "logs/latest.log" ]; then
-            LAST_LINE=$(tail -n 1 logs/latest.log 2>/dev/null)
-            echo "   Last log: $LAST_LINE"
+            LAST_LOG=$(tail -n 1 logs/latest.log 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g')
+            if [ -n "$LAST_LOG" ]; then
+              echo "   📝 $LAST_LOG"
+            fi
           fi
         fi
       done
       
-      # إيقاف السيرفر بأمان
+      # إيقاف آمن للسيرفر
       echo ""
-      echo "🛑 Shutting down server gracefully..."
+      echo "🛑 Initiating graceful server shutdown..."
+      
       if kill -0 $SERVER_PID 2>/dev/null; then
-        # أرسل stop command للسيرفر
-        echo "stop" > server_input.txt 2>/dev/null || true
+        # حاول ترسل stop command
+        echo "Sending 'stop' command to server..."
+        sleep 5
+        
+        # SIGTERM
+        kill -TERM $SERVER_PID 2>/dev/null || true
+        echo "Waiting for server to stop..."
         sleep 10
         
-        # لو لسه شغال، استخدم SIGTERM
+        # SIGKILL لو لسه شغال
         if kill -0 $SERVER_PID 2>/dev/null; then
-          kill -TERM $SERVER_PID 2>/dev/null || true
-          sleep 5
+          echo "Force killing server..."
+          kill -9 $SERVER_PID 2>/dev/null || true
         fi
-        
-        # آخر محاولة بـ SIGKILL
-        kill -9 $SERVER_PID 2>/dev/null || true
       fi
       
-      # أوقف الـ tunnel
-      echo "🛑 Stopping localhost.run tunnel..."
+      # أوقف Serveo tunnel
+      echo "🛑 Stopping Serveo tunnel..."
       pkill -TERM ssh 2>/dev/null || true
       sleep 3
       
-      echo "✅ Server shutdown complete."
+      echo "✅ Server shutdown complete!"
   
-  # احفظ الـ world دايماً
+  # احفظ الـ world دايماً (حتى لو في errors)
   always:
-    save_world_script:
+    save_world_to_github_script:
       - |
         echo ""
+        echo "💾 =========================================="
         echo "💾 Saving world data to GitHub..."
+        echo "💾 =========================================="
+        
         git config user.email "bot@cirrus-ci.com"
         git config user.name "Cirrus CI Bot"
         
-        # أضف كل الملفات
+        # أضف كل التغييرات
         git add -A
         
-        # commit لو فيه تغييرات
+        # تحقق إذا في تغييرات
         if ! git diff --cached --quiet; then
           TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          FILES_CHANGED=$(git diff --cached --numstat | wc -l)
+          
+          echo "📝 Changes detected: $FILES_CHANGED file(s) modified"
           git commit -m "Auto-save world: $TIMESTAMP"
           
-          # push مع retry (3 محاولات)
-          echo "📤 Pushing changes to GitHub..."
+          # push مع 3 محاولات
+          echo "📤 Pushing to GitHub..."
           SUCCESS=0
-          for i in 1 2 3; do
+          
+          for ATTEMPT in 1 2 3; do
+            echo "   Attempt $ATTEMPT/3..."
             if git push https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git HEAD:main; then
-              echo "✅ World saved successfully!"
+              echo "✅ World saved successfully to GitHub!"
               SUCCESS=1
               break
             else
-              echo "⚠️  Push attempt $i/3 failed, retrying..."
+              echo "⚠️  Push failed, retrying in 5 seconds..."
               sleep 5
             fi
           done
           
           if [ $SUCCESS -eq 0 ]; then
             echo "❌ Failed to push after 3 attempts!"
+            echo "⚠️  World data may not be saved!"
           fi
         else
-          echo "ℹ️  No changes to save."
+          echo "ℹ️  No changes detected - nothing to save"
         fi
+        
+        echo "💾 =========================================="
     
-    # أعد تشغيل الـ workflow تلقائياً
-    retrigger_script:
+    # أعد تشغيل الـ build تلقائياً
+    auto_retrigger_build_script:
       - |
         echo ""
-        echo "⏳ Waiting 60 seconds before retriggering...
+        echo "🔄 =========================================="
+        echo "🔄 Auto-retriggering next build session..."
+        echo "🔄 =========================================="
+        
+        # انتظر دقيق
         
         OWNER=$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f1)
         REPO=$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f2)
         
-        echo "🔄 Getting repository ID for ${OWNER}/${REPO}..."
+        echo "📡 Fetching repository ID for ${OWNER}/${REPO}..."
         
+        # احصل على repository ID من Cirrus API
         REPO_ID=$(curl -s \
           -H "Authorization: Bearer ${CIRRUS_API_TOKEN}" \
           -H "Content-Type: application/json" \
           -d "{\"query\":\"query { githubRepository(owner: \\\"${OWNER}\\\", name: \\\"${REPO}\\\") { id } }\"}" \
           https://api.cirrus-ci.com/graphql | jq -r '.data.githubRepository.id')
+        
+        echo "📋 Repository ID: $REPO_ID"
         
         if [ -n "$REPO_ID" ] && [ "$REPO_ID" != "null" ]; then
           echo "🚀 Triggering new build..."
@@ -264,11 +287,16 @@ task:
           BUILD_ID=$(echo $RESPONSE | jq -r '.data.trigger.build.id')
           
           if [ -n "$BUILD_ID" ] && [ "$BUILD_ID" != "null" ]; then
-            echo "✅ New build triggered successfully! Build ID: $BUILD_ID"
+            echo "✅ New build triggered successfully!"
+            echo "🆔 Build ID: $BUILD_ID"
+            echo "🔗 https://cirrus-ci.com/build/$BUILD_ID"
           else
-            echo "❌ Failed to trigger build."
-            echo "Response: $RESPONSE"
+            echo "❌ Failed to trigger new build"
+            echo "📋 API Response: $RESPONSE"
           fi
         else
           echo "❌ Failed to get repository ID!"
+          echo "📋 Check your CIRRUS_API_TOKEN"
         fi
+        
+        echo "🔄 =========================================="
