@@ -1,4 +1,4 @@
-# .cirrus.yml
+# .cirrus.yml - باستخدام Pinggy (مجاني بدون تسجيل أو كريدت كارد)
 container:
   image: ubuntu:22.04
   cpu: 8
@@ -10,26 +10,67 @@ env:
   DEBIAN_FRONTEND: noninteractive
 
 task:
-  name: Minecraft Fabric Server
+  name: Minecraft Fabric Server with Pinggy
   timeout_in: 120m
-
-  install_java_script:
+  
+  # تثبيت المتطلبات الأساسية
+  setup_script:
     - apt-get update -qq
-    - apt-get install -y openjdk-21-jre-headless git curl jq > /dev/null 2>&1
-    
+    - apt-get install -y openjdk-21-jre-headless git curl jq wget screen sshpass -qq
+    - echo "eula=true" > eula.txt
+  
+  # تحميل Fabric server (إذا لم يكن موجود)
+  download_server_script:
+    - |
+      if [ ! -f "fabric-server.jar" ]; then
+        echo "Downloading Fabric Server..."
+        # غير الرابط ده بالإصدار اللي أنت عايزه
+        wget -q -O fabric-server.jar https://meta.fabricmc.net/v2/versions/loader/1.21.1/0.16.9/1.0.1/server/jar
+      fi
+  
+  # بدء Pinggy tunnel في الـ background
+  start_pinggy_tunnel_script:
+    - |
+      echo "Starting Pinggy TCP tunnel on port 25565..."
+      
+      # Pinggy بيشتغل عن طريق SSH tunneling - ما بيحتاجش privileged mode!
+      # شغله في الـ background وخزن الـ output
+      (
+        ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 \
+          -R0:localhost:25565 a.pinggy.io 2>&1 | tee pinggy.log
+      ) &
+      
+      PINGGY_PID=$!
+      echo "Pinggy started with PID: $PINGGY_PID"
+      
+      # انتظر شوية عشان الـ tunnel يتأسس
+      echo "Waiting for tunnel to establish..."
+      sleep 15
+      
+      # استخرج الـ tunnel URL من اللوج
+      echo "=== Pinggy Tunnel Information ==="
+      if [ -f "pinggy.log" ]; then
+        # Pinggy بيطبع الـ URL في الـ output
+        grep -A 5 "tcp://" pinggy.log || echo "Waiting for tunnel URL..."
+        
+        # حاول تستخرج الـ URL
+        TUNNEL_URL=$(grep -oP 'tcp://[^:]+:\d+' pinggy.log | head -1)
+        if [ -n "$TUNNEL_URL" ]; then
+          echo "🎮 Connect to Minecraft Server at: $TUNNEL_URL"
+          echo "$TUNNEL_URL" > tunnel_url.txt
+        fi
+      fi
+      echo "=================================="
+  
+  # بدء Minecraft Server
   run_server_script:
     - |
-      echo "Starting Playit tunnel..."
-      chmod +x playit-linux-amd64
+      echo "Starting Minecraft Fabric Server..."
       
-      while true; do
-        ./playit-linux-amd64 >/dev/null 2>&1 || sleep 5
-      done &
+      # انتظر شوية إضافية للتأكد من الـ tunnel
+      sleep 5
       
-      echo "Playit started, waiting 10 seconds..."
-      sleep 10
-      
-      echo "Starting Fabric Server..."
+      # شغل السيرفر مع JVM flags محسّنة
       java -Xmx22G -Xms18G \
         -XX:+UseG1GC \
         -XX:+ParallelRefProcEnabled \
@@ -49,53 +90,132 @@ task:
         -XX:SurvivorRatio=32 \
         -XX:+PerfDisableSharedMem \
         -XX:MaxTenuringThreshold=1 \
-        -jar fabric-server.jar --nogui &
+        -jar fabric-server.jar nogui &
+      
       SERVER_PID=$!
+      echo "✅ Server started with PID: $SERVER_PID"
       
-      echo "Server started (PID: $SERVER_PID)"
+      # اطبع الـ tunnel URL مرة تانية
+      if [ -f "tunnel_url.txt" ]; then
+        echo ""
+        echo "=========================================="
+        echo "🎮 Minecraft Server is LIVE!"
+        echo "Connect using: $(cat tunnel_url.txt)"
+        echo "=========================================="
+        echo ""
+      fi
       
+      # مدة التشغيل: 110 دقيقة
       MAX_TIME=6600
       ELAPSED=0
       
+      # راقب السيرفر
       while [ $ELAPSED -lt $MAX_TIME ]; do
+        # تحقق إذا السيرفر لسه شغال
         if ! kill -0 $SERVER_PID 2>/dev/null; then
-          echo "Server stopped"
+          echo "❌ ERROR: Server stopped unexpectedly!"
+          tail -n 50 logs/latest.log 2>/dev/null || echo "No server logs available"
           break
         fi
-        sleep 10
-        ELAPSED=$((ELAPSED + 10))
         
+        sleep 30
+        ELAPSED=$((ELAPSED + 30))
+        
+        # تحديث كل 10 دقائق
         if [ $((ELAPSED % 600)) -eq 0 ]; then
-          echo "Running for $((ELAPSED / 60)) minutes..."
+          MINUTES=$((ELAPSED / 60))
+          echo "⏱️  Server running for $MINUTES minutes..."
+          
+          # اطبع آخر سطر من الـ log
+          tail -n 1 logs/latest.log 2>/dev/null || true
         fi
       done
       
-      echo "Shutting down..."
-      kill -TERM $SERVER_PID 2>/dev/null || true
-      pkill -TERM playit-linux-amd64 2>/dev/null || true
-      sleep 10
-
+      # إيقاف السيرفر بأمان
+      echo "Shutting down server gracefully..."
+      if kill -0 $SERVER_PID 2>/dev/null; then
+        # حاول ترسل stop command
+        echo "Sending stop command to server..."
+        echo "stop" | nc localhost 25565 2>/dev/null || true
+        sleep 10
+        
+        # لو لسه شغال، استخدم SIGTERM
+        kill -TERM $SERVER_PID 2>/dev/null || true
+        sleep 5
+        
+        # آخر محاولة بـ SIGKILL
+        kill -9 $SERVER_PID 2>/dev/null || true
+      fi
+      
+      # أوقف Pinggy
+      echo "Stopping Pinggy tunnel..."
+      pkill -TERM ssh 2>/dev/null || true
+      sleep 3
+      
+      echo "✅ Server shutdown complete."
+  
+  # احفظ الـ world دايماً
   always:
     save_world_script:
-      - git config user.email "bot@cirrus-ci.com"
-      - git config user.name "Cirrus Bot"
-      - git add -A
-      - git diff --cached --quiet || git commit -m "Auto-save $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
-      - git push https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git HEAD:main || true
-    
-    retrigger_script:
-      - sleep 60
       - |
+        echo "💾 Saving world data..."
+        git config user.email "bot@cirrus-ci.com"
+        git config user.name "Cirrus CI Bot"
+        
+        # أضف كل الملفات
+        git add -A
+        
+        # commit لو فيه تغييرات
+        if ! git diff --cached --quiet; then
+          TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          git commit -m "Auto-save world: $TIMESTAMP"
+          
+          # push مع retry
+          echo "Pushing changes to GitHub..."
+          for i in 1 2 3; do
+            if git push https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git HEAD:main; then
+              echo "✅ World saved successfully!"
+              break
+            else
+              echo "⚠️  Push failed, attempt $i/3..."
+              sleep 5
+            fi
+          done
+        else
+          echo "ℹ️  No changes to save."
+        fi
+    
+    # أعد تشغيل الـ workflow
+    retrigger_script:
+      - |
+        OWNER=$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f1)
+        REPO=$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f2)
+        
+        echo "🔄 Getting repository ID for ${OWNER}/${REPO}..."
+        
         REPO_ID=$(curl -s \
           -H "Authorization: Bearer ${CIRRUS_API_TOKEN}" \
           -H "Content-Type: application/json" \
-          -d '{"query":"query { githubRepository(owner: \"'$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f1)'\", name: \"'$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f2)'\") { id } }"}' \
+          -d "{\"query\":\"query { githubRepository(owner: \\\"${OWNER}\\\", name: \\\"${REPO}\\\") { id } }\"}" \
           https://api.cirrus-ci.com/graphql | jq -r '.data.githubRepository.id')
         
         if [ -n "$REPO_ID" ] && [ "$REPO_ID" != "null" ]; then
-          curl -X POST \
+          echo "🚀 Triggering new build..."
+          
+          RESPONSE=$(curl -s -X POST \
             -H "Authorization: Bearer ${CIRRUS_API_TOKEN}" \
             -H "Content-Type: application/json" \
-            -d '{"query":"mutation { trigger(input: {repositoryId: \"'$REPO_ID'\", branch: \"main\"}) { build { id } } }"}' \
-            https://api.cirrus-ci.com/graphql
+            -d "{\"query\":\"mutation { trigger(input: {repositoryId: \\\"${REPO_ID}\\\", branch: \\\"main\\\"}) { build { id } } }\"}" \
+            https://api.cirrus-ci.com/graphql)
+          
+          BUILD_ID=$(echo $RESPONSE | jq -r '.data.trigger.build.id')
+          
+          if [ -n "$BUILD_ID" ] && [ "$BUILD_ID" != "null" ]; then
+            echo "✅ New build triggered! Build ID: $BUILD_ID"
+          else
+            echo "❌ Failed to trigger build."
+            echo "Response: $RESPONSE"
+          fi
+        else
+          echo "❌ Failed to get repository ID!"
         fi
