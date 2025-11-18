@@ -1,0 +1,313 @@
+# .cirrus.yml - الحل النهائي مع Playit (المشكلة الأصلية كانت محتاج setup)
+container:
+  image: ubuntu:22.04
+  cpu: 8
+  memory: 24G
+
+env:
+  GITHUB_TOKEN: ENCRYPTED[!4b0eae3c2c6c631068eeedfaa0d2c0aa44b3c52d2e3d50dc4f5fb71f958d334548e3f4d70eeb23292bfb454df755b503!]
+  CIRRUS_API_TOKEN: ENCRYPTED[!4336ebf698c76189e6057b84bf85a3809af77f5e5db08cf99abeea89c96a5ef9b34480dad12847b35388578fef3ba6ed!]
+  DEBIAN_FRONTEND: noninteractive
+  # 🔑 هتحتاج تضيف الـ Playit secret key هنا بعد ما تعمل setup أول مرة
+  # شوف الخطوات تحت
+  # PLAYIT_SECRET: ENCRYPTED[YOUR_PLAYIT_SECRET_HERE]
+
+task:
+  name: Minecraft Fabric Server with Playit
+  timeout_in: 120m
+  
+  # تثبيت المتطلبات
+  setup_script:
+    - apt-get update -qq
+    - apt-get install -y openjdk-21-jre-headless git curl jq wget -qq
+    - echo "eula=true" > eula.txt
+  
+  # تحميل Fabric server
+  download_server_script:
+    - |
+      if [ ! -f "fabric-server.jar" ]; then
+        echo "⬇️  Downloading Fabric Server..."
+        wget -q -O fabric-server.jar https://meta.fabricmc.net/v2/versions/loader/1.21.1/0.16.9/1.0.1/server/jar
+        echo "✅ Downloaded!"
+      fi
+  
+  # تحميل Playit
+  download_playit_script:
+    - |
+      if [ ! -f "playit-linux-amd64" ]; then
+        echo "⬇️  Downloading Playit..."
+        wget -q https://github.com/playit-cloud/playit-agent/releases/latest/download/playit-linux-amd64
+        chmod +x playit-linux-amd64
+        echo "✅ Playit downloaded!"
+      fi
+  
+  # Setup Playit (سيستخدم playit.toml من الـ repo إذا كان موجود)
+  setup_playit_script:
+    - |
+      echo "🔧 Setting up Playit tunnel..."
+      
+      # تحقق إذا playit.toml موجود في الـ repo
+      if [ ! -f "playit.toml" ]; then
+        echo "❌ ERROR: playit.toml not found!"
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "⚠️  FIRST TIME SETUP REQUIRED"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+        echo "📋 Follow these steps:"
+        echo ""
+        echo "1. على جهازك المحلي، حمل Playit:"
+        echo "   wget https://github.com/playit-cloud/playit-agent/releases/latest/download/playit-linux-amd64"
+        echo "   chmod +x playit-linux-amd64"
+        echo ""
+        echo "2. شغله أول مرة:"
+        echo "   ./playit-linux-amd64"
+        echo ""
+        echo "3. افتح الرابط اللي هيظهر في المتصفح وسجل حساب مجاني"
+        echo ""
+        echo "4. بعد التسجيل، هيتم إنشاء ملف playit.toml تلقائياً"
+        echo ""
+        echo "5. انسخ ملف playit.toml للـ repository بتاعك على GitHub"
+        echo ""
+        echo "6. أعد تشغيل الـ build على Cirrus CI"
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        
+        # حاول تشغل playit لو كان في صلاحيات
+        echo ""
+        echo "⏳ Attempting automatic setup..."
+        timeout 120 ./playit-linux-amd64 || true
+        
+        exit 1
+      fi
+      
+      echo "✅ playit.toml found! Starting tunnel..."
+      
+      # شغل Playit في الـ background
+      (
+        while true; do
+          echo "[$(date)] Starting Playit tunnel..."
+          ./playit-linux-amd64 2>&1 | tee -a playit.log
+          echo "[$(date)] Playit stopped, restarting in 5 seconds..."
+          sleep 5
+        done
+      ) &
+      
+      PLAYIT_PID=$!
+      echo "✅ Playit started with PID: $PLAYIT_PID"
+      
+      # انتظر للـ tunnel يتأسس
+      echo "⏳ Waiting for tunnel to establish (30 seconds)..."
+      sleep 30
+      
+      # استخرج معلومات الـ tunnel
+      echo ""
+      echo "╔════════════════════════════════════════════╗"
+      echo "║        PLAYIT TUNNEL INFORMATION           ║"
+      echo "╠════════════════════════════════════════════╣"
+      
+      if [ -f "playit.log" ]; then
+        # ابحث عن الـ tunnel URL
+        TUNNEL_INFO=$(grep -E "(TUNNELS|=>|tcp://)" playit.log | tail -n 20)
+        
+        if [ -n "$TUNNEL_INFO" ]; then
+          echo "$TUNNEL_INFO" | while IFS= read -r line; do
+            echo "║ $line"
+          done
+          
+          # حاول تستخرج العنوان
+          MC_ADDRESS=$(echo "$TUNNEL_INFO" | grep -oP '[a-z0-9\-]+\.gl\.(joinmc\.link|at\.ply\.gg)(:\d+)?' | head -n 1)
+          
+          if [ -n "$MC_ADDRESS" ]; then
+            echo "╠════════════════════════════════════════════╣"
+            echo "║  🎮 MINECRAFT SERVER ADDRESS:              ║"
+            echo "║     $MC_ADDRESS"
+            echo "$MC_ADDRESS" > minecraft_server_address.txt
+          fi
+        else
+          echo "║  ⚠️  No tunnel info detected yet...        ║"
+          echo "║  Check playit.log for details              ║"
+        fi
+      else
+        echo "║  ❌ playit.log not found!                   ║"
+      fi
+      
+      echo "╚════════════════════════════════════════════╝"
+      echo ""
+  
+  # بدء Minecraft Server
+  run_minecraft_server_script:
+    - |
+      echo "🎮 Starting Minecraft Fabric Server..."
+      echo ""
+      
+      # تأكد من وجود الـ server
+      if [ ! -f "fabric-server.jar" ]; then
+        echo "❌ fabric-server.jar not found!"
+        exit 1
+      fi
+      
+      # شغل السيرفر
+      java -Xmx22G -Xms18G \
+        -XX:+UseG1GC \
+        -XX:+ParallelRefProcEnabled \
+        -XX:MaxGCPauseMillis=200 \
+        -XX:+UnlockExperimentalVMOptions \
+        -XX:+DisableExplicitGC \
+        -XX:+AlwaysPreTouch \
+        -XX:G1NewSizePercent=30 \
+        -XX:G1MaxNewSizePercent=40 \
+        -XX:G1HeapRegionSize=16M \
+        -XX:G1ReservePercent=20 \
+        -XX:G1HeapWastePercent=5 \
+        -XX:G1MixedGCCountTarget=4 \
+        -XX:InitiatingHeapOccupancyPercent=15 \
+        -XX:G1MixedGCLiveThresholdPercent=90 \
+        -XX:G1RSetUpdatingPauseTimePercent=5 \
+        -XX:SurvivorRatio=32 \
+        -XX:+PerfDisableSharedMem \
+        -XX:MaxTenuringThreshold=1 \
+        -jar fabric-server.jar nogui &
+      
+      SERVER_PID=$!
+      echo "✅ Server started with PID: $SERVER_PID"
+      
+      # اطبع العنوان
+      if [ -f "minecraft_server_address.txt" ]; then
+        echo ""
+        echo "╔════════════════════════════════════════════╗"
+        echo "║   🎮 MINECRAFT SERVER IS ONLINE! 🎮        ║"
+        echo "╠════════════════════════════════════════════╣"
+        MC_ADDR=$(cat minecraft_server_address.txt)
+        printf "║  %-42s║\n" "Server: $MC_ADDR"
+        echo "╚════════════════════════════════════════════╝"
+        echo ""
+      fi
+      
+      # مدة التشغيل: 110 دقيقة (6600 ثانية)
+      MAX_TIME=6600
+      ELAPSED=0
+      
+      # monitor السيرفر
+      echo "⏱️  Server will run for 110 minutes..."
+      
+      while [ $ELAPSED -lt $MAX_TIME ]; do
+        # تحقق إذا السيرفر لسه شغال
+        if ! kill -0 $SERVER_PID 2>/dev/null; then
+          echo ""
+          echo "❌ ERROR: Server stopped unexpectedly!"
+          if [ -f "logs/latest.log" ]; then
+            echo "📋 Last 30 lines of server log:"
+            tail -n 30 logs/latest.log
+          fi
+          break
+        fi
+        
+        sleep 30
+        ELAPSED=$((ELAPSED + 30))
+        
+        # تحديث كل 10 دقائق
+        if [ $((ELAPSED % 600)) -eq 0 ]; then
+          MINUTES=$((ELAPSED / 60))
+          REMAINING=$((110 - MINUTES))
+          echo "⏱️  [$(date +%H:%M:%S)] Running: ${MINUTES}min | Remaining: ${REMAINING}min"
+          
+          # اطبع آخر سطر من اللوج
+          if [ -f "logs/latest.log" ]; then
+            LAST_LINE=$(tail -n 1 logs/latest.log 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g')
+            [ -n "$LAST_LINE" ] && echo "   📝 $LAST_LINE"
+          fi
+        fi
+      done
+      
+      # إيقاف السيرفر
+      echo ""
+      echo "🛑 Shutting down server..."
+      
+      if kill -0 $SERVER_PID 2>/dev/null; then
+        echo "Sending SIGTERM..."
+        kill -TERM $SERVER_PID 2>/dev/null || true
+        sleep 10
+        
+        if kill -0 $SERVER_PID 2>/dev/null; then
+          echo "Force killing..."
+          kill -9 $SERVER_PID 2>/dev/null || true
+        fi
+      fi
+      
+      # أوقف Playit
+      echo "🛑 Stopping Playit tunnel..."
+      pkill -TERM playit-linux-amd64 2>/dev/null || true
+      sleep 3
+      pkill -9 playit-linux-amd64 2>/dev/null || true
+      
+      echo "✅ Shutdown complete!"
+  
+  # احفظ الـ world دايماً
+  always:
+    save_world_script:
+      - |
+        echo ""
+        echo "💾 ═══════════════════════════════════════════"
+        echo "💾 Saving world to GitHub..."
+        echo "💾 ═══════════════════════════════════════════"
+        
+        git config user.email "bot@cirrus-ci.com"
+        git config user.name "Cirrus CI Bot"
+        git add -A
+        
+        if ! git diff --cached --quiet; then
+          TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          git commit -m "Auto-save: $TIMESTAMP"
+          
+          echo "📤 Pushing to GitHub..."
+          for i in 1 2 3; do
+            if git push https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git HEAD:main; then
+              echo "✅ Saved successfully!"
+              break
+            else
+              echo "⚠️  Attempt $i/3 failed, retrying..."
+              sleep 5
+            fi
+          done
+        else
+          echo "ℹ️  No changes to save"
+        fi
+        
+        echo "💾 ═══════════════════════════════════════════"
+    
+    # أعد تشغيل الـ build
+    retrigger_script:
+      - |
+        echo ""
+        echo "🔄 ═══════════════════════════════════════════"
+        echo "🔄 Retriggering next build..."
+        echo "🔄 ═══════════════════════════════════════════"
+        
+        
+        OWNER=$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f1)
+        REPO=$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f2)
+        
+        REPO_ID=$(curl -s \
+          -H "Authorization: Bearer ${CIRRUS_API_TOKEN}" \
+          -H "Content-Type: application/json" \
+          -d "{\"query\":\"query { githubRepository(owner: \\\"${OWNER}\\\", name: \\\"${REPO}\\\") { id } }\"}" \
+          https://api.cirrus-ci.com/graphql | jq -r '.data.githubRepository.id')
+        
+        if [ -n "$REPO_ID" ] && [ "$REPO_ID" != "null" ]; then
+          RESPONSE=$(curl -s -X POST \
+            -H "Authorization: Bearer ${CIRRUS_API_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d "{\"query\":\"mutation { trigger(input: {repositoryId: \\\"${REPO_ID}\\\", branch: \\\"main\\\"}) { build { id } } }\"}" \
+            https://api.cirrus-ci.com/graphql)
+          
+          BUILD_ID=$(echo $RESPONSE | jq -r '.data.trigger.build.id')
+          
+          if [ -n "$BUILD_ID" ] && [ "$BUILD_ID" != "null" ]; then
+            echo "✅ New build triggered! ID: $BUILD_ID"
+          else
+            echo "❌ Failed to trigger"
+          fi
+        fi
+        
+        echo "🔄 ═══════════════════════════════════════════"
