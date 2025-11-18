@@ -1,22 +1,21 @@
-# .cirrus.yml - الحل النهائي مع Playit (المشكلة الأصلية كانت محتاج setup)
+# .cirrus.yml - Simple terminal + tmux for Minecraft + NeoTunnel
 container:
   image: ubuntu:22.04
   cpu: 8
   memory: 24G
 
-env:
-  GITHUB_TOKEN: ENCRYPTED[!4b0eae3c2c6c631068eeedfaa0d2c0aa44b3c52d2e3d50dc4f5fb71f958d334548e3f4d70eeb23292bfb454df755b503!]
-  CIRRUS_API_TOKEN: ENCRYPTED[!4336ebf698c76189e6057b84bf85a3809af77f5e5db08cf99abeea89c96a5ef9b34480dad12847b35388578fef3ba6ed!]
-  DEBIAN_FRONTEND: noninteractive
-  # 🔑 هتحتاج تضيف الـ Playit secret key هنا بعد ما تعمل setup أول مرة
-  # شوف الخطوات تحت
-  # PLAYIT_SECRET: ENCRYPTED[YOUR_PLAYIT_SECRET_HERE]
-
 task:
-  name: Minecraft Fabric Server with Playit
+  name: Terminal for Minecraft + NeoTunnel
   timeout_in: 120m
 
-   setup_script:
+  setup_script:
     - apt-get update -qq
-    - apt-get install -y openjdk-21-jre-headless wget curl
-    
+    - apt-get install -y openjdk-21-jre-headless git curl wget tmux -qq
+    - echo "✅ Setup complete!"
+
+  run_script:
+    - |
+      echo "🎮 Starting interactive session..."
+      echo "Use 'tmux new -s mcserver' to start tmux session for Minecraft + NeoTunnel"
+      echo "Inside tmux you can run your commands and detach with Ctrl+b d"
+      bash
