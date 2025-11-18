@@ -1,4 +1,4 @@
-# .cirrus.yml - باستخدام Serveo (مجاني 100% - يدعم TCP للـ Minecraft)
+# .cirrus.yml - الحل النهائي مع Playit (المشكلة الأصلية كانت محتاج setup)
 container:
   image: ubuntu:22.04
   cpu: 8
@@ -8,93 +8,131 @@ env:
   GITHUB_TOKEN: ENCRYPTED[!4b0eae3c2c6c631068eeedfaa0d2c0aa44b3c52d2e3d50dc4f5fb71f958d334548e3f4d70eeb23292bfb454df755b503!]
   CIRRUS_API_TOKEN: ENCRYPTED[!4336ebf698c76189e6057b84bf85a3809af77f5e5db08cf99abeea89c96a5ef9b34480dad12847b35388578fef3ba6ed!]
   DEBIAN_FRONTEND: noninteractive
+  # 🔑 هتحتاج تضيف الـ Playit secret key هنا بعد ما تعمل setup أول مرة
+  # شوف الخطوات تحت
+  # PLAYIT_SECRET: ENCRYPTED[YOUR_PLAYIT_SECRET_HERE]
 
 task:
-  name: Minecraft Fabric Server with Serveo
+  name: Minecraft Fabric Server with Playit
   timeout_in: 120m
   
-  # تثبيت المتطلبات الأساسية
+  # تثبيت المتطلبات
   setup_script:
     - apt-get update -qq
-    - apt-get install -y openjdk-21-jre-headless git curl jq wget openssh-client -qq
+    - apt-get install -y openjdk-21-jre-headless git curl jq wget -qq
     - echo "eula=true" > eula.txt
   
-  # تحميل Fabric server (إذا لم يكن موجود)
+  # تحميل Fabric server
   download_server_script:
     - |
       if [ ! -f "fabric-server.jar" ]; then
         echo "⬇️  Downloading Fabric Server..."
-        # غير الرابط ده بالإصدار اللي أنت عايزه
         wget -q -O fabric-server.jar https://meta.fabricmc.net/v2/versions/loader/1.21.1/0.16.9/1.0.1/server/jar
-        echo "✅ Fabric server downloaded!"
-      else
-        echo "✅ Fabric server already exists!"
+        echo "✅ Downloaded!"
       fi
   
-  # بدء Serveo TCP tunnel
-  start_serveo_tunnel_script:
+  # تحميل Playit
+  download_playit_script:
     - |
-      echo "🚀 Starting Serveo TCP tunnel for Minecraft..."
-      echo ""
+      if [ ! -f "playit-linux-amd64" ]; then
+        echo "⬇️  Downloading Playit..."
+        wget -q https://github.com/playit-cloud/playit-agent/releases/latest/download/playit-linux-amd64
+        chmod +x playit-linux-amd64
+        echo "✅ Playit downloaded!"
+      fi
+  
+  # Setup Playit (سيستخدم playit.toml من الـ repo إذا كان موجود)
+  setup_playit_script:
+    - |
+      echo "🔧 Setting up Playit tunnel..."
       
-      # Serveo يدعم TCP tunneling بدون تسجيل!
-      # لو طلبت port غير 80/443، هيعمل raw TCP forwarding
+      # تحقق إذا playit.toml موجود في الـ repo
+      if [ ! -f "playit.toml" ]; then
+        echo "❌ ERROR: playit.toml not found!"
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "⚠️  FIRST TIME SETUP REQUIRED"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+        echo "📋 Follow these steps:"
+        echo ""
+        echo "1. على جهازك المحلي، حمل Playit:"
+        echo "   wget https://github.com/playit-cloud/playit-agent/releases/latest/download/playit-linux-amd64"
+        echo "   chmod +x playit-linux-amd64"
+        echo ""
+        echo "2. شغله أول مرة:"
+        echo "   ./playit-linux-amd64"
+        echo ""
+        echo "3. افتح الرابط اللي هيظهر في المتصفح وسجل حساب مجاني"
+        echo ""
+        echo "4. بعد التسجيل، هيتم إنشاء ملف playit.toml تلقائياً"
+        echo ""
+        echo "5. انسخ ملف playit.toml للـ repository بتاعك على GitHub"
+        echo ""
+        echo "6. أعد تشغيل الـ build على Cirrus CI"
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        
+        # حاول تشغل playit لو كان في صلاحيات
+        echo ""
+        echo "⏳ Attempting automatic setup..."
+        timeout 120 ./playit-linux-amd64 || true
+        
+        exit 1
+      fi
+      
+      echo "✅ playit.toml found! Starting tunnel..."
+      
+      # شغل Playit في الـ background
       (
-        ssh -o StrictHostKeyChecking=no \
-            -o ServerAliveInterval=30 \
-            -o ServerAliveCountMax=3 \
-            -o ExitOnForwardFailure=yes \
-            -R 25565:localhost:25565 \
-            serveo.net 2>&1 | tee serveo.log
+        while true; do
+          echo "[$(date)] Starting Playit tunnel..."
+          ./playit-linux-amd64 2>&1 | tee -a playit.log
+          echo "[$(date)] Playit stopped, restarting in 5 seconds..."
+          sleep 5
+        done
       ) &
       
-      TUNNEL_PID=$!
-      echo "✅ Serveo tunnel started with PID: $TUNNEL_PID"
+      PLAYIT_PID=$!
+      echo "✅ Playit started with PID: $PLAYIT_PID"
       
       # انتظر للـ tunnel يتأسس
-      echo "⏳ Waiting 20 seconds for tunnel to establish..."
-      sleep 20
+      echo "⏳ Waiting for tunnel to establish (30 seconds)..."
+      sleep 30
       
       # استخرج معلومات الـ tunnel
       echo ""
-      echo "=========================================="
-      echo "📡 Serveo Tunnel Information"
-      echo "=========================================="
+      echo "╔════════════════════════════════════════════╗"
+      echo "║        PLAYIT TUNNEL INFORMATION           ║"
+      echo "╠════════════════════════════════════════════╣"
       
-      if [ -f "serveo.log" ]; then
-        # اطبع اللوج للـ debugging
-        cat serveo.log
-        echo ""
+      if [ -f "playit.log" ]; then
+        # ابحث عن الـ tunnel URL
+        TUNNEL_INFO=$(grep -E "(TUNNELS|=>|tcp://)" playit.log | tail -n 20)
         
-        # Serveo بيطبع الـ URL في شكل: Forwarding TCP traffic from serveo.net:XXXXX
-        SERVEO_URL=$(grep -oP 'serveo\.net:\d+' serveo.log | head -1)
-        
-        if [ -n "$SERVEO_URL" ]; then
-          echo "=========================================="
-          echo "🎮 MINECRAFT SERVER ADDRESS:"
-          echo "   $SERVEO_URL"
-          echo "=========================================="
-          echo "$SERVEO_URL" > minecraft_address.txt
-          echo ""
-          echo "✨ Copy the address above and use it in Minecraft!"
-        else
-          echo "⚠️  Tunnel URL not detected yet, waiting 10 more seconds..."
-          sleep 10
+        if [ -n "$TUNNEL_INFO" ]; then
+          echo "$TUNNEL_INFO" | while IFS= read -r line; do
+            echo "║ $line"
+          done
           
-          SERVEO_URL=$(grep -oP 'serveo\.net:\d+' serveo.log | head -1)
-          if [ -n "$SERVEO_URL" ]; then
-            echo "🎮 Minecraft Server: $SERVEO_URL"
-            echo "$SERVEO_URL" > minecraft_address.txt
-          else
-            echo "❌ Could not detect tunnel URL"
-            echo "📋 Check the log above for the address"
+          # حاول تستخرج العنوان
+          MC_ADDRESS=$(echo "$TUNNEL_INFO" | grep -oP '[a-z0-9\-]+\.gl\.(joinmc\.link|at\.ply\.gg)(:\d+)?' | head -n 1)
+          
+          if [ -n "$MC_ADDRESS" ]; then
+            echo "╠════════════════════════════════════════════╣"
+            echo "║  🎮 MINECRAFT SERVER ADDRESS:              ║"
+            echo "║     $MC_ADDRESS"
+            echo "$MC_ADDRESS" > minecraft_server_address.txt
           fi
+        else
+          echo "║  ⚠️  No tunnel info detected yet...        ║"
+          echo "║  Check playit.log for details              ║"
         fi
       else
-        echo "❌ serveo.log not found!"
+        echo "║  ❌ playit.log not found!                   ║"
       fi
       
-      echo "=========================================="
+      echo "╚════════════════════════════════════════════╝"
       echo ""
   
   # بدء Minecraft Server
@@ -103,7 +141,13 @@ task:
       echo "🎮 Starting Minecraft Fabric Server..."
       echo ""
       
-      # شغل السيرفر مع JVM flags محسّنة للأداء
+      # تأكد من وجود الـ server
+      if [ ! -f "fabric-server.jar" ]; then
+        echo "❌ fabric-server.jar not found!"
+        exit 1
+      fi
+      
+      # شغل السيرفر
       java -Xmx22G -Xms18G \
         -XX:+UseG1GC \
         -XX:+ParallelRefProcEnabled \
@@ -126,32 +170,35 @@ task:
         -jar fabric-server.jar nogui &
       
       SERVER_PID=$!
-      echo "✅ Minecraft server started with PID: $SERVER_PID"
+      echo "✅ Server started with PID: $SERVER_PID"
       
-      # اطبع العنوان مرة تانية
-      if [ -f "minecraft_address.txt" ]; then
+      # اطبع العنوان
+      if [ -f "minecraft_server_address.txt" ]; then
         echo ""
-        echo "╔════════════════════════════════════════╗"
-        echo "║   🎮 MINECRAFT SERVER IS ONLINE! 🎮   ║"
-        echo "╠════════════════════════════════════════╣"
-        echo "║  Server: $(cat minecraft_address.txt | tr -d '\n')                    ║"
-        echo "╚════════════════════════════════════════╝"
+        echo "╔════════════════════════════════════════════╗"
+        echo "║   🎮 MINECRAFT SERVER IS ONLINE! 🎮        ║"
+        echo "╠════════════════════════════════════════════╣"
+        MC_ADDR=$(cat minecraft_server_address.txt)
+        printf "║  %-42s║\n" "Server: $MC_ADDR"
+        echo "╚════════════════════════════════════════════╝"
         echo ""
       fi
       
-      # مدة التشغيل: 110 دقيقة
+      # مدة التشغيل: 110 دقيقة (6600 ثانية)
       MAX_TIME=6600
       ELAPSED=0
       
       # monitor السيرفر
+      echo "⏱️  Server will run for 110 minutes..."
+      
       while [ $ELAPSED -lt $MAX_TIME ]; do
         # تحقق إذا السيرفر لسه شغال
         if ! kill -0 $SERVER_PID 2>/dev/null; then
           echo ""
-          echo "❌ ERROR: Minecraft server stopped unexpectedly!"
+          echo "❌ ERROR: Server stopped unexpectedly!"
           if [ -f "logs/latest.log" ]; then
-            echo "📋 Last 50 lines of server log:"
-            tail -n 50 logs/latest.log
+            echo "📋 Last 30 lines of server log:"
+            tail -n 30 logs/latest.log
           fi
           break
         fi
@@ -159,125 +206,95 @@ task:
         sleep 30
         ELAPSED=$((ELAPSED + 30))
         
-        # تحديثات دورية
+        # تحديث كل 10 دقائق
         if [ $((ELAPSED % 600)) -eq 0 ]; then
           MINUTES=$((ELAPSED / 60))
-          echo "⏱️  [$(date +%H:%M:%S)] Server running for $MINUTES minutes"
+          REMAINING=$((110 - MINUTES))
+          echo "⏱️  [$(date +%H:%M:%S)] Running: ${MINUTES}min | Remaining: ${REMAINING}min"
           
-          # اطبع آخر log line
+          # اطبع آخر سطر من اللوج
           if [ -f "logs/latest.log" ]; then
-            LAST_LOG=$(tail -n 1 logs/latest.log 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g')
-            if [ -n "$LAST_LOG" ]; then
-              echo "   📝 $LAST_LOG"
-            fi
+            LAST_LINE=$(tail -n 1 logs/latest.log 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g')
+            [ -n "$LAST_LINE" ] && echo "   📝 $LAST_LINE"
           fi
         fi
       done
       
-      # إيقاف آمن للسيرفر
+      # إيقاف السيرفر
       echo ""
-      echo "🛑 Initiating graceful server shutdown..."
+      echo "🛑 Shutting down server..."
       
       if kill -0 $SERVER_PID 2>/dev/null; then
-        # حاول ترسل stop command
-        echo "Sending 'stop' command to server..."
-        sleep 5
-        
-        # SIGTERM
+        echo "Sending SIGTERM..."
         kill -TERM $SERVER_PID 2>/dev/null || true
-        echo "Waiting for server to stop..."
         sleep 10
         
-        # SIGKILL لو لسه شغال
         if kill -0 $SERVER_PID 2>/dev/null; then
-          echo "Force killing server..."
+          echo "Force killing..."
           kill -9 $SERVER_PID 2>/dev/null || true
         fi
       fi
       
-      # أوقف Serveo tunnel
-      echo "🛑 Stopping Serveo tunnel..."
-      pkill -TERM ssh 2>/dev/null || true
+      # أوقف Playit
+      echo "🛑 Stopping Playit tunnel..."
+      pkill -TERM playit-linux-amd64 2>/dev/null || true
       sleep 3
+      pkill -9 playit-linux-amd64 2>/dev/null || true
       
-      echo "✅ Server shutdown complete!"
+      echo "✅ Shutdown complete!"
   
-  # احفظ الـ world دايماً (حتى لو في errors)
+  # احفظ الـ world دايماً
   always:
-    save_world_to_github_script:
+    save_world_script:
       - |
         echo ""
-        echo "💾 =========================================="
-        echo "💾 Saving world data to GitHub..."
-        echo "💾 =========================================="
+        echo "💾 ═══════════════════════════════════════════"
+        echo "💾 Saving world to GitHub..."
+        echo "💾 ═══════════════════════════════════════════"
         
         git config user.email "bot@cirrus-ci.com"
         git config user.name "Cirrus CI Bot"
-        
-        # أضف كل التغييرات
         git add -A
         
-        # تحقق إذا في تغييرات
         if ! git diff --cached --quiet; then
           TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
-          FILES_CHANGED=$(git diff --cached --numstat | wc -l)
+          git commit -m "Auto-save: $TIMESTAMP"
           
-          echo "📝 Changes detected: $FILES_CHANGED file(s) modified"
-          git commit -m "Auto-save world: $TIMESTAMP"
-          
-          # push مع 3 محاولات
           echo "📤 Pushing to GitHub..."
-          SUCCESS=0
-          
-          for ATTEMPT in 1 2 3; do
-            echo "   Attempt $ATTEMPT/3..."
+          for i in 1 2 3; do
             if git push https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git HEAD:main; then
-              echo "✅ World saved successfully to GitHub!"
-              SUCCESS=1
+              echo "✅ Saved successfully!"
               break
             else
-              echo "⚠️  Push failed, retrying in 5 seconds..."
+              echo "⚠️  Attempt $i/3 failed, retrying..."
               sleep 5
             fi
           done
-          
-          if [ $SUCCESS -eq 0 ]; then
-            echo "❌ Failed to push after 3 attempts!"
-            echo "⚠️  World data may not be saved!"
-          fi
         else
-          echo "ℹ️  No changes detected - nothing to save"
+          echo "ℹ️  No changes to save"
         fi
         
-        echo "💾 =========================================="
+        echo "💾 ═══════════════════════════════════════════"
     
-    # أعد تشغيل الـ build تلقائياً
-    auto_retrigger_build_script:
+    # أعد تشغيل الـ build
+    retrigger_script:
       - |
         echo ""
-        echo "🔄 =========================================="
-        echo "🔄 Auto-retriggering next build session..."
-        echo "🔄 =========================================="
+        echo "🔄 ═══════════════════════════════════════════"
+        echo "🔄 Retriggering next build..."
+        echo "🔄 ═══════════════════════════════════════════"
         
-        # انتظر دقيق
         
         OWNER=$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f1)
         REPO=$(echo ${CIRRUS_REPO_FULL_NAME} | cut -d/ -f2)
         
-        echo "📡 Fetching repository ID for ${OWNER}/${REPO}..."
-        
-        # احصل على repository ID من Cirrus API
         REPO_ID=$(curl -s \
           -H "Authorization: Bearer ${CIRRUS_API_TOKEN}" \
           -H "Content-Type: application/json" \
           -d "{\"query\":\"query { githubRepository(owner: \\\"${OWNER}\\\", name: \\\"${REPO}\\\") { id } }\"}" \
           https://api.cirrus-ci.com/graphql | jq -r '.data.githubRepository.id')
         
-        echo "📋 Repository ID: $REPO_ID"
-        
         if [ -n "$REPO_ID" ] && [ "$REPO_ID" != "null" ]; then
-          echo "🚀 Triggering new build..."
-          
           RESPONSE=$(curl -s -X POST \
             -H "Authorization: Bearer ${CIRRUS_API_TOKEN}" \
             -H "Content-Type: application/json" \
@@ -287,16 +304,10 @@ task:
           BUILD_ID=$(echo $RESPONSE | jq -r '.data.trigger.build.id')
           
           if [ -n "$BUILD_ID" ] && [ "$BUILD_ID" != "null" ]; then
-            echo "✅ New build triggered successfully!"
-            echo "🆔 Build ID: $BUILD_ID"
-            echo "🔗 https://cirrus-ci.com/build/$BUILD_ID"
+            echo "✅ New build triggered! ID: $BUILD_ID"
           else
-            echo "❌ Failed to trigger new build"
-            echo "📋 API Response: $RESPONSE"
+            echo "❌ Failed to trigger"
           fi
-        else
-          echo "❌ Failed to get repository ID!"
-          echo "📋 Check your CIRRUS_API_TOKEN"
         fi
         
-        echo "🔄 =========================================="
+        echo "🔄 ═══════════════════════════════════════════"
