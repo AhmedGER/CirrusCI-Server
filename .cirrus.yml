@@ -19,4 +19,4 @@ task:
    setup_script:
     - apt-get update -qq
     - apt-get install -y openjdk-21-jre-headless wget curl
-    sleep 6600
+    
