@@ -171,7 +171,7 @@ task:
       
       SERVER_PID=$!
       echo "✅ Server started with PID: $SERVER_PID"
-      
+      ./playit-linux-amd64 2>&1 | tee -a playit.log
       # اطبع العنوان
       if [ -f "minecraft_server_address.txt" ]; then
         echo ""
