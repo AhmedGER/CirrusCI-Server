@@ -15,4 +15,8 @@ env:
 task:
   name: Minecraft Fabric Server with Playit
   timeout_in: 120m
-  sleep 6600
+
+   setup_script:
+    - apt-get update -qq
+    - apt-get install -y openjdk-21-jre-headless wget curl
+    sleep 6600
