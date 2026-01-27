@@ -1,43 +1,31 @@
 task:
   name: fabric-1.21.4-server
   
-  # Use Docker builder with privileged mode for better networking
-  compute_engine_instance:
-    image_project: ubuntu-os-cloud
-    image: family/ubuntu-2204-lts
-    platform: linux
-    cpu: 8
-    memory: 24G
-    disk: 50
+  # Use docker_builder - full VM with Docker and privileged access
+  docker_builder:
+    # This gives us a VM with Docker pre-installed and full privileges
   
-  # Set timeout to 2 hours
+  # Set timeout
   timeout_in: 120m
   
   # Environment variables
   env:
     PLAYIT_SECRET_KEY: ENCRYPTED[!5424638fecb6b36312194793cfbb2d1ceb414881e4100045ec6fc264619c3bc5e4551c6c1ac028e7567947e042d3e188!]
   
-  # Install dependencies
-  install_script:
-    - apt-get update -qq
-    - apt-get install -y -qq wget curl openjdk-21-jre-headless docker.io git
-    - systemctl start docker
-    - docker --version
-  
-  # Setup Playit Tunnel with Docker
-  playit_background_script:
+  # Setup Playit Tunnel
+  playit_setup_script:
     - echo "=== Starting Playit Tunnel ==="
     - |
       if [ -z "$PLAYIT_SECRET_KEY" ]; then
-        echo "❌ Error: PLAYIT_SECRET_KEY not found!"
+        echo "❌ Error: PLAYIT_SECRET_KEY not set!"
         echo ""
-        echo "To encrypt your secret key:"
-        echo "1. Install Cirrus CLI: https://github.com/cirruslabs/cirrus-cli"
-        echo "2. Run: cirrus encrypt --organization YOUR_ORG --repository YOUR_REPO"
-        echo "3. Paste your playit secret key when prompted"
-        echo "4. Copy the ENCRYPTED[...] output and replace in .cirrus.yml"
+        echo "To encrypt your secret key for Cirrus CI:"
+        echo "1. Go to https://cirrus-ci.com/github/YOUR_USERNAME/YOUR_REPO"
+        echo "2. Settings → Secured Variables → Add Variable"
+        echo "3. Or use: cirrus encrypt --organization YOUR_ORG --repository YOUR_REPO"
         exit 1
       fi
+    - echo "✔ SECRET_KEY found"
     - |
       docker run -d \
         --name playit-agent \
@@ -45,7 +33,8 @@ task:
         --restart unless-stopped \
         -e SECRET_KEY="$PLAYIT_SECRET_KEY" \
         ghcr.io/playit-cloud/playit-agent:latest
-    - sleep 15
+    - echo "⏳ Waiting for playit to initialize..."
+    - sleep 20
     - echo "=== Playit Logs ==="
     - docker logs playit-agent 2>&1 | tail -30
     - echo "==================="
@@ -53,22 +42,24 @@ task:
       if docker ps | grep -q playit-agent; then
         echo "✔ Playit tunnel is ACTIVE!"
       else
-        echo "⚠️ Playit container not running, checking logs..."
+        echo "⚠️ Playit failed, checking full logs..."
         docker logs playit-agent
+        exit 1
       fi
   
   # Download Fabric server
-  download_script:
-    - echo "=== Downloading Fabric Server ==="
+  download_server_script:
+    - echo "=== Downloading Fabric 1.21.4 Server ==="
     - wget -q https://meta.fabricmc.net/v2/versions/loader/1.21.4/0.16.9/1.0.1/server/jar -O server.jar
     - echo "eula=true" > eula.txt
+    - ls -lh server.jar
     - echo "✔ Server files ready"
   
   # Run Minecraft server
-  server_script:
+  run_server_script:
     - echo "=== Starting Fabric 1.21.4 Server ==="
     - |
-      java -Xmx21G -Xms10G \
+      java -Xmx24G -Xms10G \
         -XX:+UseG1GC \
         -XX:+ParallelRefProcEnabled \
         -XX:MaxGCPauseMillis=200 \
@@ -87,7 +78,7 @@ task:
         -XX:SurvivorRatio=32 \
         -XX:+PerfDisableSharedMem \
         -XX:MaxTenuringThreshold=1 \
-        -jar fabric-server.jar nogui &
+        -jar server.jar nogui &
       SERVER_PID=$!
       
       echo "✔ Server started (PID: $SERVER_PID)"
@@ -95,34 +86,38 @@ task:
       sleep 60
       
       echo ""
-      echo "================================"
-      echo "🎮 MINECRAFT SERVER ONLINE!"
-      echo "================================"
+      echo "========================================"
+      echo "🎮 MINECRAFT SERVER IS ONLINE!"
+      echo "========================================"
       echo "Version: Fabric 1.21.4"
-      echo "RAM: 14GB"
-      echo "Playit: $(docker ps | grep playit-agent > /dev/null && echo 'Active ✔' || echo 'Inactive ✘')"
-      echo "================================"
+      echo "RAM: 14GB / 16GB available"
+      echo "Playit: $(docker ps | grep -q playit-agent && echo '✔ Active' || echo '✘ Inactive')"
+      echo "========================================"
+      echo ""
+      echo "Get your server IP from: https://playit.gg/account/tunnels"
       echo ""
       
-      # Monitor and keep running
-      MAX_TIME=7000
+      # Keep server running
+      MAX_TIME=7000  # ~2 hours
       ELAPSED=0
+      CHECK_INTERVAL=600  # Check every 10 minutes
       LAST_CHECK=0
       
       while [ $ELAPSED -lt $MAX_TIME ]; do
-        # Check if server is still running
+        # Check if server crashed
         if ! kill -0 $SERVER_PID 2>/dev/null; then
-          echo "❌ Server process died unexpectedly!"
+          echo "❌ [$(date '+%H:%M:%S')] Server process died!"
           break
         fi
         
-        # Show status every 10 minutes
-        if [ $((ELAPSED - LAST_CHECK)) -ge 600 ]; then
+        # Status update every 10 minutes
+        if [ $((ELAPSED - LAST_CHECK)) -ge $CHECK_INTERVAL ]; then
           MINUTES=$((ELAPSED / 60))
-          echo "⏰ Running for $MINUTES minutes | Playit: $(docker ps | grep playit-agent > /dev/null && echo 'OK' || echo 'Down')"
+          PLAYIT_STATUS=$(docker ps | grep -q playit-agent && echo "OK" || echo "Down")
+          echo "⏰ [$(date '+%H:%M:%S')] Running: ${MINUTES}m | Playit: ${PLAYIT_STATUS}"
           LAST_CHECK=$ELAPSED
           
-          # Check playit status and restart if needed
+          # Auto-restart playit if needed
           if ! docker ps | grep -q playit-agent; then
             echo "⚠️ Playit died, restarting..."
             docker rm -f playit-agent 2>/dev/null || true
@@ -132,6 +127,8 @@ task:
               --restart unless-stopped \
               -e SECRET_KEY="$PLAYIT_SECRET_KEY" \
               ghcr.io/playit-cloud/playit-agent:latest
+            sleep 10
+            docker logs playit-agent | tail -10
           fi
         fi
         
@@ -140,19 +137,22 @@ task:
       done
       
       echo ""
-      echo "=== Shutting down ==="
+      echo "=== Time limit reached, shutting down ==="
       
       # Graceful shutdown
       if kill -0 $SERVER_PID 2>/dev/null; then
+        echo "Stopping server gracefully..."
         kill -TERM $SERVER_PID 2>/dev/null || true
         sleep 10
         kill -9 $SERVER_PID 2>/dev/null || true
       fi
+      
+      echo "✔ Server stopped"
   
   # Always cleanup
   always:
     cleanup_script:
-      - echo "🛑 Cleaning up..."
+      - echo "🛑 Final cleanup..."
       - docker stop playit-agent 2>/dev/null || true
       - docker rm playit-agent 2>/dev/null || true
-      - echo "✔ Done"
+      - echo "✔ Cleanup complete"
