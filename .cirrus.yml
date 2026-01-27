@@ -15,7 +15,7 @@ task:
   
   # Environment variables
   env:
-    PLAYIT_SECRET_KEY: ENCRYPTED[YOUR_ENCRYPTED_SECRET_HERE]
+    PLAYIT_SECRET_KEY: ENCRYPTED[!5424638fecb6b36312194793cfbb2d1ceb414881e4100045ec6fc264619c3bc5e4551c6c1ac028e7567947e042d3e188!]
   
   # Install dependencies
   install_script:
