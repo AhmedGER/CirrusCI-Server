@@ -1,6 +1,13 @@
 task:
   name: fabric-1.21.4-server
   
+  compute_engine_instance:
+    image_project: ubuntu-os-cloud
+    image: family/ubuntu-2204-lts
+    platform: linux
+    cpu: 8
+    memory: 24G
+    disk: 50
   # Use docker_builder - full VM with Docker and privileged access
   docker_builder:
     # This gives us a VM with Docker pre-installed and full privileges
