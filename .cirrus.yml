@@ -1,21 +1,158 @@
-# .cirrus.yml - Simple terminal + tmux for Minecraft + NeoTunnel
-container:
-  image: ubuntu:22.04
-  cpu: 8
-  memory: 24G
-
 task:
-  name: Terminal for Minecraft + NeoTunnel
+  name: fabric-1.21.4-server
+  
+  # Use Docker builder with privileged mode for better networking
+  compute_engine_instance:
+    image_project: ubuntu-os-cloud
+    image: family/ubuntu-2204-lts
+    platform: linux
+    cpu: 8
+    memory: 24G
+    disk: 50
+  
+  # Set timeout to 2 hours
   timeout_in: 120m
-
-  setup_script:
+  
+  # Environment variables
+  env:
+    PLAYIT_SECRET_KEY: ENCRYPTED[YOUR_ENCRYPTED_SECRET_HERE]
+  
+  # Install dependencies
+  install_script:
     - apt-get update -qq
-    - apt-get install -y openjdk-21-jre-headless git curl wget tmux -qq
-    - echo "✅ Setup complete!"
-
-  run_script:
+    - apt-get install -y -qq wget curl openjdk-21-jre-headless docker.io git
+    - systemctl start docker
+    - docker --version
+  
+  # Setup Playit Tunnel with Docker
+  playit_background_script:
+    - echo "=== Starting Playit Tunnel ==="
     - |
-      echo "🎮 Starting interactive session..."
-      echo "Use 'tmux new -s mcserver' to start tmux session for Minecraft + NeoTunnel"
-      echo "Inside tmux you can run your commands and detach with Ctrl+b d"
-      bash
+      if [ -z "$PLAYIT_SECRET_KEY" ]; then
+        echo "❌ Error: PLAYIT_SECRET_KEY not found!"
+        echo ""
+        echo "To encrypt your secret key:"
+        echo "1. Install Cirrus CLI: https://github.com/cirruslabs/cirrus-cli"
+        echo "2. Run: cirrus encrypt --organization YOUR_ORG --repository YOUR_REPO"
+        echo "3. Paste your playit secret key when prompted"
+        echo "4. Copy the ENCRYPTED[...] output and replace in .cirrus.yml"
+        exit 1
+      fi
+    - |
+      docker run -d \
+        --name playit-agent \
+        --network host \
+        --restart unless-stopped \
+        -e SECRET_KEY="$PLAYIT_SECRET_KEY" \
+        ghcr.io/playit-cloud/playit-agent:latest
+    - sleep 15
+    - echo "=== Playit Logs ==="
+    - docker logs playit-agent 2>&1 | tail -30
+    - echo "==================="
+    - |
+      if docker ps | grep -q playit-agent; then
+        echo "✔ Playit tunnel is ACTIVE!"
+      else
+        echo "⚠️ Playit container not running, checking logs..."
+        docker logs playit-agent
+      fi
+  
+  # Download Fabric server
+  download_script:
+    - echo "=== Downloading Fabric Server ==="
+    - wget -q https://meta.fabricmc.net/v2/versions/loader/1.21.4/0.16.9/1.0.1/server/jar -O server.jar
+    - echo "eula=true" > eula.txt
+    - echo "✔ Server files ready"
+  
+  # Run Minecraft server
+  server_script:
+    - echo "=== Starting Fabric 1.21.4 Server ==="
+    - |
+      java -Xmx21G -Xms10G \
+        -XX:+UseG1GC \
+        -XX:+ParallelRefProcEnabled \
+        -XX:MaxGCPauseMillis=200 \
+        -XX:+UnlockExperimentalVMOptions \
+        -XX:+DisableExplicitGC \
+        -XX:+AlwaysPreTouch \
+        -XX:G1NewSizePercent=30 \
+        -XX:G1MaxNewSizePercent=40 \
+        -XX:G1HeapRegionSize=16M \
+        -XX:G1ReservePercent=20 \
+        -XX:G1HeapWastePercent=5 \
+        -XX:G1MixedGCCountTarget=4 \
+        -XX:InitiatingHeapOccupancyPercent=15 \
+        -XX:G1MixedGCLiveThresholdPercent=90 \
+        -XX:G1RSetUpdatingPauseTimePercent=5 \
+        -XX:SurvivorRatio=32 \
+        -XX:+PerfDisableSharedMem \
+        -XX:MaxTenuringThreshold=1 \
+        -jar fabric-server.jar nogui &
+      SERVER_PID=$!
+      
+      echo "✔ Server started (PID: $SERVER_PID)"
+      echo "⏳ Warming up (60 seconds)..."
+      sleep 60
+      
+      echo ""
+      echo "================================"
+      echo "🎮 MINECRAFT SERVER ONLINE!"
+      echo "================================"
+      echo "Version: Fabric 1.21.4"
+      echo "RAM: 14GB"
+      echo "Playit: $(docker ps | grep playit-agent > /dev/null && echo 'Active ✔' || echo 'Inactive ✘')"
+      echo "================================"
+      echo ""
+      
+      # Monitor and keep running
+      MAX_TIME=7000
+      ELAPSED=0
+      LAST_CHECK=0
+      
+      while [ $ELAPSED -lt $MAX_TIME ]; do
+        # Check if server is still running
+        if ! kill -0 $SERVER_PID 2>/dev/null; then
+          echo "❌ Server process died unexpectedly!"
+          break
+        fi
+        
+        # Show status every 10 minutes
+        if [ $((ELAPSED - LAST_CHECK)) -ge 600 ]; then
+          MINUTES=$((ELAPSED / 60))
+          echo "⏰ Running for $MINUTES minutes | Playit: $(docker ps | grep playit-agent > /dev/null && echo 'OK' || echo 'Down')"
+          LAST_CHECK=$ELAPSED
+          
+          # Check playit status and restart if needed
+          if ! docker ps | grep -q playit-agent; then
+            echo "⚠️ Playit died, restarting..."
+            docker rm -f playit-agent 2>/dev/null || true
+            docker run -d \
+              --name playit-agent \
+              --network host \
+              --restart unless-stopped \
+              -e SECRET_KEY="$PLAYIT_SECRET_KEY" \
+              ghcr.io/playit-cloud/playit-agent:latest
+          fi
+        fi
+        
+        sleep 30
+        ELAPSED=$((ELAPSED + 30))
+      done
+      
+      echo ""
+      echo "=== Shutting down ==="
+      
+      # Graceful shutdown
+      if kill -0 $SERVER_PID 2>/dev/null; then
+        kill -TERM $SERVER_PID 2>/dev/null || true
+        sleep 10
+        kill -9 $SERVER_PID 2>/dev/null || true
+      fi
+  
+  # Always cleanup
+  always:
+    cleanup_script:
+      - echo "🛑 Cleaning up..."
+      - docker stop playit-agent 2>/dev/null || true
+      - docker rm playit-agent 2>/dev/null || true
+      - echo "✔ Done"
